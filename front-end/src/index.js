@@ -4,11 +4,15 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <RecoilRoot>
+    {/*RecoilRoot provider를 이용하여 recoil을 사용할수 있도록 설정*/}
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </RecoilRoot>,
   document.getElementById("root")
 );
 
