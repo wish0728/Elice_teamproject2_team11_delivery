@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ID_MAX_LEN, ID_MIN_LEN, PWD_MIN_LEN } from "../constants/standard";
+import { Container } from "./common";
 
-const ModalContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: gray;
-  opacity: 0.8;
+const ModalContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: gray;
+  opacity: 0.8;
 `;
 
 const ModalContents = styled.div`
@@ -106,6 +105,7 @@ const Modal = () => {
     //id 최소길이 충족 못할시
     if (id.length < ID_MIN_LEN) {
       alert("아이디 길이가 너무 짧습니다. (최소 5자리)");
+
       //아이디 input 포커스
     } else if (pwd.length < PWD_MIN_LEN) {
       alert("비밀 번호 길이가 너무 짧습니다 (최소 8자리)");
