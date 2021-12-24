@@ -13,3 +13,9 @@ export const StyledLink = styled(Link)`
     text-decoration: none;
   }
 `;
+
+export const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+`;
