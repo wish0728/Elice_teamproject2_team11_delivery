@@ -18,13 +18,22 @@ services:
   #     - --collation-server=utf8mb4_unicode_ci
   #   volumes:
   #     - /Users/Shared/data/mysql-test:/var/lib/mysql # -v 옵션 (다렉토리 마운트 설정)
-      
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "mariadb"
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
   server:
     volumes:
       - ./back-end:/app
     build: ./back-end
     environment:
       FLASK_ENV: development
-    command: python3 app.py    
+    command: python3 app.py
     ports:
       - "5000:5000"
