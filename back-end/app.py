@@ -1,8 +1,9 @@
 from flask  import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_restful import Api, Resource, reqparse
-# from flask_cors import CORS #comment this on deployment
+from flask_restx import Api, apidoc, Resource, reqparse
+from flask_cors import CORS
+
 
 import config
 
@@ -10,16 +11,21 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    api = Api(app)
-
+    
     app.config.from_object(config) # config 에서 가져온 파일을 사용합니다.
     
+    # app.secret_key = "secret"
+    # app.config['SESSION_TYPE'] = 'filesystem'
+
+    CORS(app)
+
     db.init_app(app) # SQLAlchemy 객체를 app 객체와 이어줍니다.
     Migrate().init_app(app, db)
+    import models
+    from apis.delivery import deliveryfreq
+    api = Api(app)
+    api.add_namespace(deliveryfreq)
 
-    app.secret_key = "secret"
-    app.config['SESSION_TYPE'] = 'filesystem'
-    
     return app
 
 if __name__ == "__main__":

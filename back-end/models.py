@@ -2,51 +2,49 @@ from sqlalchemy.orm import relationship
 
 from app import db
 
+class deliveryfreq_by_time_area(db.Model):
+    __tablename__ = "deliveryfreq_by_time_area"
 
-class User(db.Model):
-    __tablename__ = "user"
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String(128), primary_key=True)
-    password = db.Column(db.String(256))
-    name = db.Column(db.String(256))
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Integer, nullable=False)
+    delivery_freq = db.Column(db.Integer, nullable=False)
+    area1_City_Do = db.Column(db.String(45), nullable=False)
+    area2_Si_Gun_Gu = db.Column(db.String(45), nullable=False)
+    area3_Dong = db.Column(db.String(45), nullable=False)
 
-    is_authenticated = True
-    is_active = True
+    
+class weather(db.Model):
+    __tablename__ = "weather"
 
-    def get_id(self):
-        return self.email
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    date = db.Column(db.Date, db.ForeignKey('deliveryfreq_by_time_area.date'), nullable=False)
+    time = db.Column(db.Integer, db.ForeignKey('deliveryfreq_by_time_area.time'), nullable=False)
+    area1_City_Do = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area1_City_Do'), nullable=False)
+    area2_Si_Gun_Gu = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area2_Si_Gun_Gu'), nullable=False)
+    area3_Dong = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area3_Dong'), nullable=False)
+
+    temperature = db.Column(db.Integer, nullable=True)
+    rain = db.Column(db.Float)
+    snow = db.Column(db.Float)
+    dust = db.Column(db.Float)
+    weather_alert = db.Column(db.String(45))
+
+    deliveryfreq_by_time_area = relationship('deliveryfreq_by_time_area')
+
+class Corona_info(db.Model):
+    __tablename__ = 'Corona_info'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    date = db.Column(db.Date, db.ForeignKey('deliveryfreq_by_time_area.date'), nullable=False)
+    area1_City_Do = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area1_City_Do'), nullable=False)
+    area2_Si_Gun_Gu = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area2_Si_Gun_Gu'))
+    area3_Dong = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area3_Dong'))
+
+    distancing_level = db.Column(db.Integer)
+    restrict_time = db.Column(db.Integer)
+    restrict_headcount = db.Column(db.Integer)
+
+    deliveryfreq_by_time_area = relationship('deliveryfreq_by_time_area')
 
 
-class Book(db.Model):
-    __tablename__ = "book"
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(256))
-    publisher = db.Column(db.String(256))
-    author = db.Column(db.String(256))
-    published_at = db.Column(db.Date)
-    page_count = db.Column(db.Integer)
-    isbn = db.Column(db.String(30))
-    description = db.Column(db.Text)
-    rating = db.Column(db.Integer)
-    stock = db.Column(db.Integer)
-    image_path = db.Column(db.String(256))
-
-
-class UserBookRent(db.Model):
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    rent_at = db.Column(db.Date)
-    returned_at = db.Column(db.Date, nullable=True, default=None)
-
-    book = relationship('Book')
-
-
-class BookComment(db.Model):
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    content = db.Column(db.Text)
-
-    rating = db.Column(db.Integer)
-    user = relationship('User')
