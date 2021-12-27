@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Container, StyledLink } from "../Components/common";
+import { MENU_BTN_1, MENU_BTN_2, MENU_BTN_3 } from "../constants/standard";
+import {
+  firstLocationState,
+  secondLocationState,
+  thridLocationState,
+} from "../state";
 
 const HomeContainer = styled(Container)`
   width: 100%;
@@ -63,6 +71,22 @@ const Button = styled.button`
 `;
 
 const Home = () => {
+  const isFirst = useRecoilValue(firstLocationState);
+  const isSecond = useRecoilValue(secondLocationState);
+  const isThrid = useRecoilValue(thridLocationState);
+  const resetFirst = useResetRecoilState(firstLocationState);
+  const resetSecond = useResetRecoilState(secondLocationState);
+
+  const homeLocation = useLocation().pathname;
+
+  useEffect(() => {
+    if (homeLocation === "/") {
+      console.log("homelocation", homeLocation);
+      resetFirst();
+      resetSecond();
+    }
+    console.log(isFirst, isSecond, isThrid, homeLocation);
+  }, [isFirst, isSecond, isThrid]);
   return (
     <HomeContainer>
       <BannerContainer>
@@ -76,12 +100,12 @@ const Home = () => {
       <MenuContainer>
         <ButtonContainer>
           <StyledLink to="/mytown">
-            <Button>우리 동네 배달건수 알아보기</Button>
+            <Button>{MENU_BTN_1}</Button>
           </StyledLink>
           <StyledLink to="othertown">
-            <Button>이웃 동네 배달건수 구경하기</Button>
+            <Button>{MENU_BTN_2}</Button>
           </StyledLink>
-          <Button>숫자로 보는 배달</Button>
+          <Button>{MENU_BTN_3}</Button>
         </ButtonContainer>
       </MenuContainer>
     </HomeContainer>
