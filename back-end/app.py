@@ -14,14 +14,16 @@ def create_app():
     
     app.config.from_object(config) # config 에서 가져온 파일을 사용합니다.
     
-    # app.secret_key = "secret"
-    # app.config['SESSION_TYPE'] = 'filesystem'
+    db.init_app(app) # SQLAlchemy 객체를 app 객체와 이어줍니다.
+    Migrate().init_app(app, db)
+
+    app.secret_key = "secret"
+    app.config['SESSION_TYPE'] = 'filesystem'
 
     CORS(app)
 
-    db.init_app(app) # SQLAlchemy 객체를 app 객체와 이어줍니다.
-    Migrate().init_app(app, db)
-    import models
+
+    # from . import models
     from apis.delivery import deliveryfreq
     api = Api(app)
     api.add_namespace(deliveryfreq)
@@ -29,4 +31,4 @@ def create_app():
     return app
 
 if __name__ == "__main__":
-    create_app().run(host='0.0.0.0', debug=True, port=3333)
+    create_app().run(host='0.0.0.0', debug=True, port=5000)
