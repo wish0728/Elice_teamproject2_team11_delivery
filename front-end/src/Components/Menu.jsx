@@ -13,8 +13,9 @@ import { StyledLink } from "./common";
 const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 50px 20px 30px;
   box-sizing: border-box;
+  align-items: center;
 `;
 
 const Wrap = styled.div`
@@ -22,7 +23,7 @@ const Wrap = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+  margin-bottom: 90px;
 `;
 
 const MenuBtn = styled.button`
@@ -31,6 +32,10 @@ const MenuBtn = styled.button`
   height: 30px;
   border-radius: 5px;
   background-color: ${(props) => (props.checked ? "#a538ff" : "#ffffff")};
+`;
+
+const EmptyDiv = styled.div`
+  flex-grow: 2;
 `;
 
 const Menu = () => {
@@ -58,6 +63,7 @@ const Menu = () => {
   }, [isFirst, isSecond, isThrid]);
   return (
     <MenuContainer>
+      <EmptyDiv />
       <Wrap>
         <StyledLink to="/mytown">
           <MenuBtn checked={isFirst}>{MENU_BTN_1}</MenuBtn>
@@ -73,6 +79,7 @@ const Menu = () => {
           <MenuBtn checked={isThrid}>{MENU_BTN_3}</MenuBtn>
         </StyledLink>
       </Wrap>
+      <EmptyDiv />
     </MenuContainer>
   );
 };
