@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Container } from "../Components/common";
 import Menu from "../Components/Menu";
+import MenuHeader from "../Components/MenuHeader";
 
 const OthertownContainer = styled(Container)`
   display: flex;
@@ -43,7 +44,7 @@ const MainContents = styled.div`
 const Othertown = () => {
   return (
     <OthertownContainer>
-      <OthertownHeader />
+      <MenuHeader />
       <OthertownBody>
         <OthertownMenu />
         <MainContents />
