@@ -68,7 +68,7 @@ class getFreq(Resource):
                 data[time] = freq
                 a[time] = 1
         for key in data.keys():
-            data[key] /= a[key]
+            data[key] = round(data[key]/a[key])
         return jsonify(json_list=data)
 
 
@@ -76,7 +76,7 @@ class getFreq(Resource):
 @deliveryfreq.response(200, "Found")
 @deliveryfreq.response(404, "Not found")
 @deliveryfreq.response(500, "Internal Error")
-class getFreq(Resource): 
+class getFreqByYear(Resource): 
     def get(self,year,area1,area2):
         '''해당 연도와 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.'''
         start = date(year=year,month=1,day=1)
@@ -97,7 +97,7 @@ class getFreq(Resource):
                 data[time] = freq
                 a[time] = 1
         for key in data.keys():
-            data[key] /= a[key]
+            data[key] = round(data[key]/a[key])
         return jsonify(json_list=data)
 
 # 시군구 입력 -> 시간대별 총합
