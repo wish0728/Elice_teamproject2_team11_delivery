@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Container, StyledLink } from "../Components/common";
+import Logo from "../Components/Logo";
 import { MENU_BTN_1, MENU_BTN_2, MENU_BTN_3 } from "../constants/standard";
 import {
   firstLocationState,
@@ -19,28 +20,6 @@ const HomeContainer = styled(Container)`
   padding: 30px;
   background-color: white;
   box-sizing: border-box;
-`;
-
-const BannerContainer = styled.div`
-  flex-grow: 1.5;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-`;
-
-const LogoContainer = styled.div`
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-`;
-
-const Logo = styled.span`
-  font-size: 80px;
-  font-weight: 600;
 `;
 
 const MenuContainer = styled.div`
@@ -89,14 +68,7 @@ const Home = () => {
   }, [isFirst, isSecond, isThrid]);
   return (
     <HomeContainer>
-      <BannerContainer>
-        <LogoContainer>
-          <Logo>배달의</Logo>
-        </LogoContainer>
-        <LogoContainer>
-          <Logo>만족</Logo>
-        </LogoContainer>
-      </BannerContainer>
+      <Logo logoWidth="200px" logoFontSize="80px" />
       <MenuContainer>
         <ButtonContainer>
           <StyledLink to="/mytown">
