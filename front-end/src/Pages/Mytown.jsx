@@ -1,23 +1,15 @@
 import React, { useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { Container } from "../Components/common";
+import Loading from "../Components/Loading";
 import Menu from "../Components/Menu";
-import { firstLocationState } from "../state";
+import MenuHeader from "../Components/MenuHeader";
+import { firstLocationState, loadingState } from "../state";
 
 const MytownContainer = styled(Container)`
   display: flex;
   flex-direction: column;
-`;
-
-const MytownHeader = styled.div`
-  width: 100%;
-  height: 70px;
-  flex-grow: 2;
-  padding: 10px;
-  box-sizing: border-box;
-  border-bottom: 1px solid;
 `;
 
 const MytownBody = styled.div`
@@ -43,20 +35,36 @@ const MainContents = styled.div`
   border-left: 1px solid;
 `;
 
+const TestBtn = styled.button``;
+
 const Mytown = () => {
   const firstLocation = useRecoilValue(firstLocationState);
+  const [isLoading, setIsLoading] = useRecoilState(loadingState);
 
   useEffect(() => {
     console.log(firstLocation);
   }, [firstLocation]);
+
+  useEffect(() => {
+    console.log("상태변경", isLoading);
+  }, [isLoading]);
+
+  const loadingTest = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
+  };
+
   return (
     <MytownContainer>
-      <MytownHeader>
-        <div>1</div>
-      </MytownHeader>
+      <MenuHeader />
       <MytownBody>
         <MytownMenu />
-        <MainContents />
+        <MainContents>
+          <TestBtn onClick={loadingTest}>로딩 테스트</TestBtn>
+          {isLoading && <Loading />}
+        </MainContents>
       </MytownBody>
     </MytownContainer>
   );
