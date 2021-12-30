@@ -13,12 +13,12 @@ class deliveryfreq_by_time_area(db.Model):
     area2_Si_Gun_Gu = db.Column(db.String(45), nullable=False)
     area3_Dong = db.Column(db.String(45), nullable=False)
 
-class member(db.Model):
-    __tablename__ = "member"
+class user(db.Model):
+    __tablename__ = "user"
 
-    id = db.Column(db.String(10), primary_key=True, nullable=False)
-    pw = db.Column(db.String(10), nullable=False)
-    name = db.Column(db.String(10), nullable=False)
+    id = db.Column(db.String(126), primary_key=True, nullable=False)
+    password = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(256), nullable=False)
 class freqavg (db.Model):
     __tablename__ = "freqavg"
 
