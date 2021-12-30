@@ -70,4 +70,4 @@ class AuthLogin(Resource):
 @Auth.route('/logout/<string:id>')
 class AuthLogout(Resource):
     def get(self):
-
+        return 
