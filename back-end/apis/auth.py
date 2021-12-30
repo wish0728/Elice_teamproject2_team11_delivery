@@ -67,7 +67,8 @@ class AuthLogin(Resource):
                 "message": "login Success"
             }, 200
 # 로그아웃
-@Auth.route('/logout/<string:id>')
+@Auth.route('/logout/')
 class AuthLogout(Resource):
     def get(self):
-
+        db.session.clear()
+        return {"message":"logout success"}
