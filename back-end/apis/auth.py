@@ -19,11 +19,10 @@ class AuthRegisterCheckId(Resource):
     @Auth.response(200, "Available id")
     @Auth.response(404, "Not found")
     @Auth.response(500, "Unavailable id")
-    
     def get(self,id):
         '''회원가입시 ID유효성 검사'''
-        new_user = user.query.filter_by(id=id).first()
-        if new_user: return {"message":"Unavailable id"},500
+        new_user = user.query.filter_by(id=id).first() # id 가 동일한 유저의 정보 저장
+        if new_user: return {"message":"Unavailable id"},500 #결과값이 있다면 = 등록된 유저
         else: return {"message":"Available id"},200
 #회원가입 요청
 
@@ -33,13 +32,14 @@ class AuthRegisterSignup(Resource):
     @Auth.response(500, "Unavailable id")
     def post(self, id, name, password,password2):
         '''회원가입 성공시 DB에 저장'''
+        # 1차, 2차 비밀번호 검증
         if password == password2:
             encrypted_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
             new_user = user(id=id, name=name, password=encrypted_pw)
             db.session.add(new_user)
             db.session.commit()
-            return {"message":"User Information saved"},200
-        else: return{"message":"2차 비밀번호를 다시 입력해주십시오"},500
+            return {"message":"User Information saved"},200 #성공
+        else: return{"message":"2차 비밀번호를 다시 입력해주십시오"},500 #실패
 
 
 # 로그인
@@ -71,9 +71,3 @@ class AuthLogin(Resource):
 class AuthLogout(Resource):
     def get(self):
 
-# #확인
-# @Auth.route('/get')
-# class AuthGet(Resource):
-#     @Auth.doc(responses={200: 'Success'})
-#     @Auth.doc(responses={404: 'Login Failed'})
-#     def get(self):
