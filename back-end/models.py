@@ -13,14 +13,12 @@ class deliveryfreq_by_time_area(db.Model):
     area2_Si_Gun_Gu = db.Column(db.String(45), nullable=False)
     area3_Dong = db.Column(db.String(45), nullable=False)
 
-<<<<<<< Updated upstream
 class member(db.Model):
     __tablename__ = "member"
 
     id = db.Column(db.String(10), primary_key=True, nullable=False)
     pw = db.Column(db.String(10), nullable=False)
     name = db.Column(db.String(10), nullable=False)
-=======
 class deliveryfreq_avg_by_time_area2 (db.Model):
     __tablename__ = "deliveryfreq_avg_by_time_area2"
 
@@ -28,7 +26,6 @@ class deliveryfreq_avg_by_time_area2 (db.Model):
     area2= db.Column(db.String(45), nullable=False)
     time = db.Column(db.Integer, nullable=False)
     freqavg = db.Column(db.Integer, nullable=False)
->>>>>>> Stashed changes
 
 class weather(db.Model):
     __tablename__ = "weather"
