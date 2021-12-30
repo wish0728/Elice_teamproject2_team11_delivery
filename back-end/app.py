@@ -19,14 +19,23 @@ def create_app():
     from apis.auth import Auth
     app.config.from_object(config) # config 에서 가져온 파일을 사용합니다.
     
-    # app.secret_key = "secret"
-    # app.config['SESSION_TYPE'] = 'filesystem'
-
-    CORS(app)
-
     db.init_app(app) # SQLAlchemy 객체를 app 객체와 이어줍니다.
     Migrate().init_app(app, db)
 
+    app.secret_key = "secret"
+    app.config['SESSION_TYPE'] = 'filesystem'
+
+    CORS(app)
+
+<<<<<<< HEAD
+    db.init_app(app) # SQLAlchemy 객체를 app 객체와 이어줍니다.
+    Migrate().init_app(app, db)
+
+=======
+
+    # from . import models
+    from apis.delivery import deliveryfreq
+>>>>>>> cd0ec64aa6502ee1c09906dcb6512a3fcb31978f
     api = Api(app)
     api.add_namespace(deliveryfreq)
     api.add_namespace(Auth,'/auth')

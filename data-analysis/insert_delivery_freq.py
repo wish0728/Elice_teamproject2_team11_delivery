@@ -10,10 +10,10 @@ connection = sqlite3.connect('../NaplessRabbit.db')
 cursor = connection.cursor()
 
 # Opening the Books_info.csv file
-df_2019=pd.read_csv("../rawdata/elicer_2019_col_name.csv")
-df_2020_1=pd.read_csv("../rawdata/elicer_2020_1_col_name.csv", encoding = 'cp949')
-df_2020_2=pd.read_csv("../rawdata/elicer_2020_2_col_name.csv")
-df_2021=pd.read_csv("../rawdata/elicer_2021_col_name.csv", encoding = 'cp949')
+df_2019=pd.read_csv("../rawdata/시간-지역별배달주문건수/elicer_2019_col_name.csv")
+df_2020_1=pd.read_csv("../rawdata/시간-지역별배달주문건수/elicer_2020_1_col_name.csv", encoding = 'cp949')
+df_2020_2=pd.read_csv("../rawdata/시간-지역별배달주문건수/elicer_2020_2_col_name.csv")
+df_2021=pd.read_csv("../rawdata/시간-지역별배달주문건수/elicer_2021_col_name.csv", encoding = 'cp949')
 
 df = pd.concat([df_2019, df_2020_1, df_2020_2, df_2021], ignore_index=True)
 
