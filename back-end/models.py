@@ -19,9 +19,10 @@ class member(db.Model):
     id = db.Column(db.String(10), primary_key=True, nullable=False)
     pw = db.Column(db.String(10), nullable=False)
     name = db.Column(db.String(10), nullable=False)
-class deliveryfreq_avg_by_time_area2 (db.Model):
-    __tablename__ = "deliveryfreq_avg_by_time_area2"
+class freqavg (db.Model):
+    __tablename__ = "freqavg"
 
+    id = db.Column(db.String(10), primary_key=True, nullable=False)
     area1= db.Column(db.String(45), nullable=False)
     area2= db.Column(db.String(45), nullable=False)
     time = db.Column(db.Integer, nullable=False)

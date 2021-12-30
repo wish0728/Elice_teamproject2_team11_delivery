@@ -2,7 +2,7 @@ from flask import jsonify
 from flask_restx import Resource, Namespace
 from sqlalchemy.orm import query
 from models import deliveryfreq_by_time_area as d
-from models import deliveryfreq_avg_by_time_area2 as da
+from models import freqavg as fa
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 import numpy as np
@@ -64,8 +64,8 @@ class getFreq(Resource):
         if area2 == '전체':
             rows = d.query.filter_by(area1_City_Do=area1).all()
         else:
-            rows = da.query.filter_by(
-                area1_City_Do=area1, area2_Si_Gun_Gu=area2).all()
+            rows = fa.query.filter_by(
+                area1=area1, area2=area2).all()
         data = {}
         for i in range(24): # 초기화용
             data[i] = 0
