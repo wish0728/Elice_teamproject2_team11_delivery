@@ -79,7 +79,7 @@ const Mytown = () => {
   }, [firstLocation]);
 
   useEffect(() => {
-    console.log(apiRes);
+    console.log("api state 변경 : ", apiRes);
   }, [apiRes]);
 
   //시군구 테스트 버튼에 연결
@@ -92,24 +92,10 @@ const Mytown = () => {
     try {
       //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 )
       setIsLoading(true);
-      await deliveryApi
-        .get_Time_Average(area, dAreaValue)
-        .then((response) => {
-          //API에서 넘어온 데이터가 객체 배열이 아닌 객체여서 변환 작업
-          const res_key = Object.keys(response.data.json_list); //key 값들이 담길 변수
-          const res_value = Object.values(response.data.json_list); //value 값이 담길 변수
-          const res_obj = [];
-          //두 배열을 객체 배열로 변환하는 과정
-          res_key.reduce((acc, curr, idx) => {
-            res_obj.push({ time: curr, value: Math.round(res_value[idx]) });
-          }, []);
-          console.log("옵젝:", typeof res_obj, res_obj);
-          return res_obj;
-        })
-        .then((res_obj) => {
-          setApiRes(res_obj);
-          console.log("", res_obj);
-        });
+      await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
+        setApiRes(response.data);
+        console.log("옵젝:", typeof response.data, response.data);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -154,7 +140,9 @@ const Mytown = () => {
             </Select>
           )}
           <TestBtn onClick={searchArea}>시군구 테스트</TestBtn>
-
+          {!isLoading && apiRes.length !== 0 && (
+            <MyResponsiveBar data={apiRes} />
+          )}
           {isLoading && <Loading />}
         </MainContents>
       </MytownBody>
