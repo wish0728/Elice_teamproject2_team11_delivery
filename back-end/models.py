@@ -13,7 +13,56 @@ class deliveryfreq_by_time_area(db.Model):
     area2_Si_Gun_Gu = db.Column(db.String(45), nullable=False)
     area3_Dong = db.Column(db.String(45), nullable=False)
 
+class user(db.Model):
+    __tablename__ = "user"
+
+    id = db.Column(db.String(126), primary_key=True, nullable=False)
+    password = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(256), nullable=False)
     
+class freqavg (db.Model):
+    __tablename__ = "freqavg"
+
+    id = db.Column(db.String(10), primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    area2= db.Column(db.String(45), nullable=False)
+    time = db.Column(db.Integer, nullable=False)
+    freqavg = db.Column(db.Integer, nullable=False)
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['time','freqavg']}
+
+
+
+class freqavg_by_area1 (db.Model):
+    __tablename__ = "freqavg_by_area1"
+
+    id = db.Column(db.String(10), primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    time = db.Column(db.Integer, nullable=False)
+    freqavg = db.Column(db.Integer, nullable=False)
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['time','freqavg']}
+
+                
+
+class area1_for_exception (db.Model):
+    __tablename__ = "area1_for_exception"
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.String(10), primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+
+class area2_for_exception (db.Model):
+    __tablename__ = "area2_for_exception"
+    __table_args__ = {'extend_existing': True}
+    
+    id = db.Column(db.String(10), primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    area2= db.Column(db.String(45), nullable=False)
+
+
 class weather(db.Model):
     __tablename__ = "weather"
 
@@ -23,12 +72,6 @@ class weather(db.Model):
     area1_City_Do = db.Column(db.String(45), nullable=False)
     area2_Si_Gun_Gu = db.Column(db.String(45), nullable=False)
     area3_Dong = db.Column(db.String(45), nullable=False)
-
-    # date = db.Column(db.Date, db.ForeignKey('deliveryfreq_by_time_area.date'), nullable=False)
-    # time = db.Column(db.Integer, db.ForeignKey('deliveryfreq_by_time_area.time'), nullable=False)
-    # area1_City_Do = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area1_City_Do'), nullable=False)
-    # area2_Si_Gun_Gu = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area2_Si_Gun_Gu'), nullable=False)
-    # area3_Dong = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area3_Dong'), nullable=False)
 
     temperature = db.Column(db.Integer, nullable=True)
     rain = db.Column(db.Float)
@@ -46,11 +89,6 @@ class Corona_info(db.Model):
     area1_City_Do = db.Column(db.String(45), nullable=False)
     area2_Si_Gun_Gu = db.Column(db.String(45))
     area3_Dong = db.Column(db.String(45))
-
-    # date = db.Column(db.Date, db.ForeignKey('deliveryfreq_by_time_area.date'), nullable=False)
-    # area1_City_Do = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area1_City_Do'), nullable=False)
-    # area2_Si_Gun_Gu = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area2_Si_Gun_Gu'))
-    # area3_Dong = db.Column(db.String(45), db.ForeignKey('deliveryfreq_by_time_area.area3_Dong'))
 
     distancing_level = db.Column(db.Integer)
     restrict_time = db.Column(db.Integer)
