@@ -1,5 +1,5 @@
-from flask import jsonify, request
-from flask_restx import Resource, Namespace
+from flask import Flask, jsonify, request,session
+from flask_restx import Resource, Namespace,fields
 from models import user
 from flask_sqlalchemy import SQLAlchemy
 # import pandas as pd 
@@ -9,7 +9,17 @@ import bcrypt #pip install bcrypt (암호화, 암호일치 확인)
 db = SQLAlchemy()
 
 Auth = Namespace(name="auth", description="사용자 인증")
+user_fields = Auth.model('User', {  # Model 객체 생성
+    'id': fields.String(description='a User Id', required=True, example="CCH@naver.com")
+})
 
+user_fields_auth = Auth.inherit('User Auth', user_fields, {
+    'password': fields.String(description='Password', required=True, example="password")
+})
+
+user_fields_auth = Auth.inherit('User Auth', user_fields, {
+    'name': fields.String(description='name', required=True, example="CCH")
+})
 
 users = []
 
@@ -24,32 +34,39 @@ class AuthRegisterCheckId(Resource):
         new_user = user.query.filter_by(id=id).first() # id 가 동일한 유저의 정보 저장
         if new_user: return {"message":"Unavailable id"},500 #결과값이 있다면 = 등록된 유저
         else: return {"message":"Available id"},200
+
+
+
 #회원가입 요청
 
-@Auth.route('/register/<string:id>/<string:name>/<string:password>/<string:password2>')
-class AuthRegisterSignup(Resource):
+@Auth.route('/register')
+class AuthRegister(Resource):
+    @Auth.expect(user_fields_auth)
     @Auth.response(200, "Available id")
     @Auth.response(500, "Unavailable id")
-    def post(self, id, name, password,password2):
+    def post(self):
         '''회원가입 성공시 DB에 저장'''
         # 1차, 2차 비밀번호 검증
-        if password == password2:
-            encrypted_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
-            new_user = user(id=id, name=name, password=encrypted_pw)
-            db.session.add(new_user)
-            db.session.commit()
-            return {"message":"User Information saved"},200 #성공
-        else: return{"message":"2차 비밀번호를 다시 입력해주십시오"},500 #실패
+        id = request.json['id']
+        name = request.json['name']
+        password = request.json['password']
+        encrypted_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
+        new_user = user(id=id, name=name, password=encrypted_pw)
+        db.session.add(new_user)
+        db.session.commit()
+        return {"message":"User Information saved"},200 #성공
 
-
-# 로그인
-@Auth.route('/login/<string:id>/<string:password>')
+@Auth.route('/login')
 class AuthLogin(Resource):
+    @Auth.expect(user_fields_auth)
     @Auth.response(200, "login Success")
     @Auth.response(404, "Not found")
     @Auth.response(500, "login Failed")
-    def post(self,id,password):
+    def post(self):
         '''로그인 기능'''
+        id = request.json['id']
+        password = request.json['password']
+
         saved_user = user.query.filter_by(id=id).first()
         saved_user_pw = saved_user.password
         # encrypted_pw = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
@@ -63,12 +80,58 @@ class AuthLogin(Resource):
                 "message": "Auth Failed"
             }, 500
         # 모두 일치
-        else: return {
+        else: 
+            session['login'] = saved_user.id
+            return {
                 "message": "login Success"
             }, 200
+
 # 로그아웃
-@Auth.route('/logout/')
+@Auth.route('/logout')
 class AuthLogout(Resource):
-    def get(self):
-        db.session.clear()
-        return {"message":"logout success"}
+    def post(self):
+        session.clear()
+        return {"message":"logout success"},200
+
+
+# #회원가입 요청
+
+# @Auth.route('/register/<string:id>/<string:name>/<string:password>/<string:password2>')
+# class AuthRegisterSignup(Resource):
+#     @Auth.response(200, "Available id")
+#     @Auth.response(500, "Unavailable id")
+#     def post(self, id, name, password,password2):
+#         '''회원가입 성공시 DB에 저장'''
+#         # 1차, 2차 비밀번호 검증
+#         if password == password2:
+#             encrypted_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
+#             new_user = user(id=id, name=name, password=encrypted_pw)
+#             db.session.add(new_user)
+#             db.session.commit()
+#             return {"message":"User Information saved"},200 #성공
+#         else: return{"message":"2차 비밀번호를 다시 입력해주십시오"},500 #실패
+# 
+# 로그인
+# @Auth.route('/login/<string:id>/<string:password>')
+# class AuthLogin(Resource):
+#     @Auth.response(200, "login Success")
+#     @Auth.response(404, "Not found")
+#     @Auth.response(500, "login Failed")
+#     def post(self,id,password):
+#         '''로그인 기능'''
+#         saved_user = user.query.filter_by(id=id).first()
+#         saved_user_pw = saved_user.password
+#         # encrypted_pw = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
+#         #유효하지 않은 ID
+#         if not user: return{
+#                 "message": "User Not Found"
+#             }, 404
+#         # 비밀번호 미일치
+#         elif not bcrypt.checkpw(password.encode("utf-8"),saved_user_pw):
+#             return {
+#                 "message": "Auth Failed"
+#             }, 500
+#         # 모두 일치
+#         else: return {
+#                 "message": "login Success"
+#             }, 200
