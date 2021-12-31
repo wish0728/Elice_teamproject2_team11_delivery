@@ -31,7 +31,7 @@ class getFreq(Resource):
         result = list({'time':i, 'freqavg':0} for i in range(24))
         if area2 == '전체':
             rows = fa1.query.filter_by(area1=area1).all()
-        else:
+        else:   
             rows = fa.query.filter_by(area1=area1, area2=area2).all()
         items = [row.as_dict() for row in rows]
         timeLst = [row.time for row in rows]
