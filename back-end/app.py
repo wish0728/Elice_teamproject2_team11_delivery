@@ -14,6 +14,8 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
+    
     import models
     from apis.delivery import deliveryfreq
     from apis.auth import Auth
@@ -25,7 +27,7 @@ def create_app():
     app.secret_key = "secret"
     app.config['SESSION_TYPE'] = 'filesystem'
 
-    CORS(app)
+    
 
 
     # from . import models
