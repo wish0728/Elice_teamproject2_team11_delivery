@@ -19,6 +19,7 @@ class user(db.Model):
     id = db.Column(db.String(126), primary_key=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     name = db.Column(db.String(256), nullable=False)
+    
 class freqavg (db.Model):
     __tablename__ = "freqavg"
 
@@ -28,6 +29,11 @@ class freqavg (db.Model):
     time = db.Column(db.Integer, nullable=False)
     freqavg = db.Column(db.Integer, nullable=False)
 
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['time','freqavg']}
+
+
+
 class freqavg_by_area1 (db.Model):
     __tablename__ = "freqavg_by_area1"
 
@@ -35,6 +41,11 @@ class freqavg_by_area1 (db.Model):
     area1= db.Column(db.String(45), nullable=False)
     time = db.Column(db.Integer, nullable=False)
     freqavg = db.Column(db.Integer, nullable=False)
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['time','freqavg']}
+
+                
 
 class area1_for_exception (db.Model):
     __tablename__ = "area1_for_exception"

@@ -1,15 +1,9 @@
 from flask import jsonify
 from flask_restx import Resource, Namespace
-from sqlalchemy.orm import query
 from models import deliveryfreq_by_time_area as d
-from models import freqavg as fa
-from models import freqavg_by_area1 as fa1
-from models import area1_for_exception as a1
-from models import area2_for_exception as a2
+from models import freqavg as fa, freqavg_by_area1 as fa1
+from models import area1_for_exception as a1, area2_for_exception as a2
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import func
-import numpy as np
-import pandas as pd
 from datetime import date
 
 db = SQLAlchemy()
@@ -22,9 +16,7 @@ deliveryfreq = Namespace("delivery", description="deliveryfreq_by_time_area")
 
 def exceptionForArea(area1,area2):
     area1_list = [row.area1 for row in a1.query.all()]
-    area2_list = [row.area2 for row in a2.query.filter_by(area1=area1).all()]
-    area2_list += ["전체"]
-    print(area2_list)
+    area2_list = ["전체"] + [row.area2 for row in a2.query.filter_by(area1=area1).all()]
     if area1 not in area1_list:
         return {"message":"Unavailable area1"}, 400
     elif area2 not in area2_list:
@@ -35,31 +27,26 @@ def exceptionForArea(area1,area2):
 class getFreq(Resource):
     def get(self, area1, area2):
         '''해당 연도와 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.''' 
-        if exceptionForArea(area1,area2):
-            return exceptionForArea(area1,area2)
-
+        if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
+        result = list({'time':i, 'freqavg':0} for i in range(24))
         if area2 == '전체':
             rows = fa1.query.filter_by(area1=area1).all()
         else:
-            rows = fa.query.filter_by(
-                area1=area1, area2=area2).all()
-        data = {}
-        for i in range(24): # 초기화용
-            data[i] = 0
-        for row in rows:
-            data[row.time] = row.freqavg
-        return jsonify(json_list=data)
+            rows = fa.query.filter_by(area1=area1, area2=area2).all()
+        items = [row.as_dict() for row in rows]
+        timeLst = [row.time for row in rows]
+        i=0
+        for time in timeLst:
+            result[time]["freqavg"] = items[i]["freqavg"]
+            i+=1
+        return jsonify(result)
 
 
 @deliveryfreq.route('/getFreqByYear/<int:year>/<string:area1>/<string:area2>')
-@deliveryfreq.response(200, "Found")
-@deliveryfreq.response(404, "Not found")
-@deliveryfreq.response(500, "Internal Error")
 class getFreqByYear(Resource): 
     def get(self,year,area1,area2):
         '''해당 연도와 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.'''
-        if exceptionForArea(area1,area2):
-            return exceptionForArea(area1,area2)
+        if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
 
         start = date(year=year, month=1, day=1)
         end = date(year=year, month=12, day=31)
@@ -89,13 +76,9 @@ class getFreqByYear(Resource):
 
 
 @deliveryfreq.route('/getSum/<int:year>/<string:area1>/<string:area2>')
-@deliveryfreq.response(200, "Found")
-@deliveryfreq.response(404, "Not found")
-@deliveryfreq.response(500, "Internal Error")
 class getSum(Resource):
     def get(self, year, area1, area2):
-        if exceptionForArea(area1,area2):
-            return exceptionForArea(area1,area2)
+        if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
             
         '''해당 연도와 시군구와 일치하는 시간대별 배달건수 총합을 가져옵니다.'''
         start = date(year=year, month=1, day=1)
