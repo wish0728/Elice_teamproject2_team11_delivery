@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Container } from "../Components/common";
@@ -23,6 +24,8 @@ const Register = () => {
   const [passwd, setPasswd] = useState("");
   const [pwCheck, setPwCheck] = useState("");
 
+  const [idValid, setIdValid] = useState(false);
+
   const onNameChange = (e) => {
     setName(e.target.value);
   };
@@ -39,14 +42,46 @@ const Register = () => {
     setPwCheck(e.target.value);
   };
 
+  const checkValidId = () => {
+    isExist();
+  };
+
+  const isExist = async () => {
+    try {
+      await axios
+        .get("http://127.0.0.1:5000/auth/register", {
+          params: {
+            id: id,
+          },
+        })
+        .then((response) => console.log(response));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const submitRegist = () => {
+    api_regist();
     console.log(id, name, passwd, pwCheck);
   };
 
   //api 실행 메소드
-  //   const api_regist = async() =>{
-  //     const result = await
-  //   }
+  const api_regist = async () => {
+    try {
+      await axios
+        .post("http://127.0.0.1:5000/auth/register", {
+          params: {
+            id: id,
+            name: name,
+            password: passwd,
+            password2: pwCheck,
+          },
+        })
+        .then((response) => console.log(response));
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <RegisterContainer>
@@ -56,6 +91,7 @@ const Register = () => {
         <Input onChange={onNameChange} value={name} />
         <Label>아이디</Label>
         <Input onChange={onIdChange} value={id} />
+        <button onClick={checkValidId}>아이디 확인</button>
         <Label>비밀번호</Label>
         <Input onChange={onPasswdChange} value={passwd} type={"password"} />
         <Label>비밀번호 확인</Label>

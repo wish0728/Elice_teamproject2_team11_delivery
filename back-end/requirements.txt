@@ -3,3 +3,5 @@ Flask-Migrate==3.1.0
 flask-restx==0.5.1    
 Flask-SQLAlchemy==2.5.1  
 Flask-Cors==3.0.10
+PyJWT==2.3.0
+bcrypt==3.2.0
