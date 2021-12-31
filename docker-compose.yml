@@ -1,17 +1,17 @@
 version: "3.7"
 
 services:
-  client:
-    # depends_on:
-    #   - server
-    volumes:
-      - "./front-end:/client"
-    build: ./front-end
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
+  # client:
+  #   # depends_on:
+  #   #   - server
+  #   volumes:
+  #     - "./front-end:/client"
+  #   build: ./front-end
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - CHOKIDAR_USEPOLLING=true
 
   server:
     volumes:

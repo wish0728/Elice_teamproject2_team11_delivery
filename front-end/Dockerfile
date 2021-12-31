@@ -12,6 +12,7 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm install 
 # RUN npm install --slient
+RUN npm i @nivo/core
 RUN npm install react-scripts@3.0.1 -g
 COPY . ./
 CMD ["npm","run","start"]
