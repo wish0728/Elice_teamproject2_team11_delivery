@@ -101,7 +101,7 @@ const Mytown = () => {
           const res_obj = [];
           //두 배열을 객체 배열로 변환하는 과정
           res_key.reduce((acc, curr, idx) => {
-            res_obj.push({ [curr]: Math.round(res_value[idx]) });
+            res_obj.push({ time: curr, value: Math.round(res_value[idx]) });
           }, []);
           console.log("옵젝:", typeof res_obj, res_obj);
           return res_obj;
