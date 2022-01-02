@@ -1,5 +1,5 @@
 from flask import jsonify
-from flask_restx import Resource, Namespace
+from flask_restx import Resource, Namespace,fields
 from models import deliveryfreq_by_time_area as d
 from models import freqavg as fa, freqavg_by_area1 as fa1
 from models import area1_for_exception as a1, area2_for_exception as a2
@@ -9,11 +9,10 @@ from datetime import date
 
 db = SQLAlchemy()
 deliveryfreq = Namespace("delivery", description="deliveryfreq_by_time_area")
-
-
-# 시군구 입력 -> 시간대별 평균
-# area1과 area2에 따라 0~23에 해당하는 배달건수 평균값 보내주기
-# 시군구 전체 데이터를 보고 싶으면 area2에 '전체'를 보내주기
+area = deliveryfreq.model('Area', {  # Model 객체 생성
+    'area1': fields.String(description='area1_City_Do', required=True, example="서울특별시"),
+    'area2': fields.String(description='area2_Si_Gun_Gu', required=True, example="강남구")
+})
 
 def exceptionForArea(area1,area2):
     area1_list = [row.area1 for row in a1.query.all()]
@@ -24,10 +23,14 @@ def exceptionForArea(area1,area2):
         return {"message":"Unavailable area2"}, 400
     return 
 
+# 시군구 입력 -> 시간대별 평균
+# area1과 area2에 따라 0~23에 해당하는 배달건수 평균값 보내주기
+# 시군구 전체 데이터를 보고 싶으면 area2에 '전체'를 보내주기
 @deliveryfreq.route('/getFreq/<string:area1>/<string:area2>')
 class getFreq(Resource):
+    @deliveryfreq.expect(area)
     def get(self, area1, area2):
-        '''해당 연도와 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.''' 
+        '''해당 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.''' 
         if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
         result = list({'time':i, 'freqavg':0} for i in range(24))
         if area2 == '전체':
@@ -44,8 +47,9 @@ class getFreq(Resource):
 
 @deliveryfreq.route('/getFreqByDay/<string:area1>/<string:area2>')
 class getFreqByDay(Resource):
+    @deliveryfreq.expect(area)
     def get(self, area1, area2):
-        '''해당 연도와 시군구와 일치하는 요일별 배달건수 평균을 가져옵니다.''' 
+        '''해당 시군구와 일치하는 요일별 배달건수 평균을 가져옵니다.''' 
         if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
         # dayLst = ['월', '화', '수', '목', '금', '토','일']
         # result = list({'day':i, 'freqavg': 0} for i in dayLst)

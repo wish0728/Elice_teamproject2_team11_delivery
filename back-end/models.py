@@ -1,4 +1,4 @@
-from sqlalchemy.orm import relationship
+
 
 from app import db
 
@@ -81,6 +81,8 @@ class area1_for_exception (db.Model):
 
     id = db.Column(db.String(10), primary_key=True, nullable=False)
     area1= db.Column(db.String(45), nullable=False)
+    
+    
 
 class area2_for_exception (db.Model):
     __tablename__ = "area2_for_exception"
@@ -122,6 +124,44 @@ class Corona_info(db.Model):
     restrict_time = db.Column(db.Integer)
     restrict_headcount = db.Column(db.Integer)
 
+class lon_lat_level1(db.Model):
+    __tablename__ = 'lon_lat_level1'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    area1 = db.Column(db.String(45), nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
     
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['longitude','latitude']}
+
+    
+class lon_lat_level2(db.Model):
+    __tablename__ = 'lon_lat_level2'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    area1 = db.Column(db.String(45), nullable=False)
+    area2 = db.Column(db.String(45), nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['longitude','latitude']}
+
+    
+class lon_lat_level3(db.Model):
+    __tablename__ = 'lon_lat_level3'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    area1 = db.Column(db.String(45), nullable=False)
+    area2 = db.Column(db.String(45), nullable=False)
+    area3 = db.Column(db.String(45), nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['longitude','latitude']}
+
+ 
 
 
