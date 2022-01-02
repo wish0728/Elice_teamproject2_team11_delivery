@@ -3,6 +3,7 @@ from flask_restx import Resource, Namespace
 from models import deliveryfreq_by_time_area as d
 from models import freqavg as fa, freqavg_by_area1 as fa1
 from models import area1_for_exception as a1, area2_for_exception as a2
+from models import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 
@@ -31,7 +32,7 @@ class getFreq(Resource):
         result = list({'time':i, 'freqavg':0} for i in range(24))
         if area2 == '전체':
             rows = fa1.query.filter_by(area1=area1).all()
-        else:
+        else:   
             rows = fa.query.filter_by(area1=area1, area2=area2).all()
         items = [row.as_dict() for row in rows]
         timeLst = [row.time for row in rows]
@@ -40,6 +41,23 @@ class getFreq(Resource):
             result[time]["freqavg"] = items[i]["freqavg"]
             i+=1
         return jsonify(result)
+
+@deliveryfreq.route('/getFreqByDay/<string:area1>/<string:area2>')
+class getFreqByDay(Resource):
+    def get(self, area1, area2):
+        '''해당 연도와 시군구와 일치하는 요일별 배달건수 평균을 가져옵니다.''' 
+        if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
+        # dayLst = ['월', '화', '수', '목', '금', '토','일']
+        # result = list({'day':i, 'freqavg': 0} for i in dayLst)
+        if area2 == '전체':
+            rows = fd1.query.filter_by(area1=area1).all()
+        else:   
+            rows = fd2.query.filter_by(area1=area1, area2=area2).all()
+        items = [row.as_dict() for row in rows]
+        # Lst = [row.day for row in rows]
+        # print(f'items:{items}')
+        # print(f'Lst:{Lst}')
+        return jsonify(items)
 
 
 @deliveryfreq.route('/getFreqByYear/<int:year>/<string:area1>/<string:area2>')
