@@ -38,6 +38,13 @@ const MainContents = styled.div`
   border-left: 1px solid;
 `;
 
+const ContentsArea = styled.div`
+  width: 1200px;
+  height: 500px;
+  padding: 10px;
+  box-sizing: border-box;
+`;
+
 const Select = styled.select``;
 
 const Option = styled.option``;
@@ -140,10 +147,12 @@ const Mytown = () => {
             </Select>
           )}
           <TestBtn onClick={searchArea}>시군구 테스트</TestBtn>
-          {!isLoading && apiRes.length !== 0 && (
-            <MyResponsiveBar data={apiRes} />
-          )}
-          {isLoading && <Loading />}
+          <ContentsArea>
+            {!isLoading && apiRes.length !== 0 && (
+              <MyResponsiveBar data={apiRes} />
+            )}
+            {isLoading && <Loading />}
+          </ContentsArea>
         </MainContents>
       </MytownBody>
     </MytownContainer>
