@@ -1,11 +1,11 @@
 import "./App.css";
 import Home from "./Pages/Home";
 import { Routes, Route } from "react-router-dom";
-import Modal from "./Components/Modal.jsx";
 import AuthSetting from "./Pages/AuthSetting";
 import Mytown from "./Pages/Mytown";
 import Othertown from "./Pages/Othertown";
 import Register from "./Pages/Register";
+import LoginModal from "./Components/LoginModal";
 
 function App() {
   return (
