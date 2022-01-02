@@ -1,32 +1,17 @@
 version: "3.7"
 
 services:
-  # db: # 서비스 명
-  #   image: mysql:5.7 # 사용할 이미지
-  #   restart: always
-  #   command: --lower_case_table_names=1
-  #   container_name: mysql-test # 컨테이너 이름 설정
-  #   ports:
-  #     - "3307:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)  <- 컨테이너 내부는 무조건 3306
-  #   environment: # -e 옵션
-  #     - MYSQL_DATABASE=database이름넣음
-  #     - MYSQL_ROOT_PASSWORD=password넣음  # MYSQL 패스워드 설정 옵션
-  #     - TZ=Asia/Seoul
-
-  #   command: # 명령어 실행
-  #     - --character-set-server=utf8mb4
-  #     - --collation-server=utf8mb4_unicode_ci
+  # client:
+  #   # depends_on:
+  #   #   - server
   #   volumes:
-  #     - /Users/Shared/data/mysql-test:/var/lib/mysql # -v 옵션 (다렉토리 마운트 설정)
-  mariadb:
-    image: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: "mariadb"
-    volumes:
-      - ./data:/var/lib/mysql
-    ports:
-      - 3306:3306
+  #     - "./front-end:/client"
+  #   build: ./front-end
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - CHOKIDAR_USEPOLLING=true
 
   server:
     volumes:
@@ -34,6 +19,6 @@ services:
     build: ./back-end
     environment:
       FLASK_ENV: development
-    command: python3 app.py
+    command: python3 app.py runserver 5000:5000
     ports:
       - "5000:5000"
