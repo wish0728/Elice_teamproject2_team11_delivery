@@ -2,9 +2,9 @@ from flask import Flask, jsonify, request,session
 from flask_restx import Resource, Namespace,fields
 from models import user
 from flask_sqlalchemy import SQLAlchemy
-# import pandas as pd 
 import jwt #pip install PyJWT (암, 복호화 확인)
 import bcrypt #pip install bcrypt (암호화, 암호일치 확인)
+# import pandas as pd 
 
 db = SQLAlchemy()
 
@@ -12,16 +12,14 @@ Auth = Namespace(name="auth", description="사용자 인증")
 user_fields = Auth.model('User', {  # Model 객체 생성
     'id': fields.String(description='a User Id', required=True, example="CCH@naver.com")
 })
-
+user_fields_auth = Auth.inherit('User Auth', user_fields, {
+    'name': fields.String(description='name', required=True, example="CCH")
+})
 user_fields_auth = Auth.inherit('User Auth', user_fields, {
     'password': fields.String(description='Password', required=True, example="password")
 })
 
-user_fields_auth = Auth.inherit('User Auth', user_fields, {
-    'name': fields.String(description='name', required=True, example="CCH")
-})
-
-users = []
+# users = []
 
 # 회원가입 유효성
 @Auth.route('/register/<string:id>')
@@ -34,11 +32,7 @@ class AuthRegisterCheckId(Resource):
         new_user = user.query.filter_by(id=id).first() # id 가 동일한 유저의 정보 저장
         if new_user: return {"message":"Unavailable id"},500 #결과값이 있다면 = 등록된 유저
         else: return {"message":"Available id"},200
-
-
-
 #회원가입 요청
-
 @Auth.route('/register')
 class AuthRegister(Resource):
     @Auth.expect(user_fields_auth)
@@ -55,7 +49,7 @@ class AuthRegister(Resource):
         db.session.add(new_user)
         db.session.commit()
         return {"message":"User Information saved"},200 #성공
-
+# 로그인
 @Auth.route('/login')
 class AuthLogin(Resource):
     @Auth.expect(user_fields_auth)
