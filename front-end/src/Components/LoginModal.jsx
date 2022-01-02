@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import authApi from "../apis/auth";
 import { ID_MAX_LEN, ID_MIN_LEN, PWD_MIN_LEN } from "../constants/standard";
+import { loginState } from "../state";
 import { Container } from "./common";
 
 const ModalContainer = styled(Container)`
@@ -24,6 +27,23 @@ const ModalContents = styled.div`
   border-radius: 8px;
   background-color: black;
   color: white;
+  box-sizing: border-box;
+`;
+
+const ContentsHeader = styled.div`
+  width: 100%;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 30px;
+`;
+const CloseBtn = styled.button`
+  border: none;
+  border-radius: 8px;
+  background-color: black;
+  color: white;
+  margin-right: 10px;
 `;
 
 const ModalTitle = styled.div`
@@ -83,16 +103,21 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const Modal = () => {
+const LoginModal = () => {
   //아이디, 비밀번호에 대한 상태관리 작성 필요 (recoil)
-
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
+  const [modalOpen, setModalOpen] = useRecoilState(loginState);
+
+  //모달 닫기 버튼
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   const onIdChange = (e) => {
     setId(e.target.value);
     if (e.target.value.length > ID_MAX_LEN) {
-      alert("아이디는 15자리를 초과할수 없습니다!");
+      alert("아이디는 20자리를 초과할수 없습니다!");
       setId(e.target.value.slice(0, ID_MAX_LEN));
     }
   };
@@ -111,15 +136,28 @@ const Modal = () => {
       alert("비밀 번호 길이가 너무 짧습니다 (최소 8자리)");
     } else {
       //유저 데이터 넘겨줄 로직 작성 예정
+      loginPost();
       console.log(id, pwd);
       //넘겨준 뒤 초기화
       setId("");
       setPwd("");
     }
   };
+
+  const loginPost = async () => {
+    try {
+      await authApi.send_login({ id: id, password: pwd });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <ModalContainer>
       <ModalContents>
+        <ContentsHeader>
+          <CloseBtn onClick={closeModal}>X</CloseBtn>
+        </ContentsHeader>
         <ModalTitle>LOGIN</ModalTitle>
         <ModalEmail placeholder="email" value={id} onChange={onIdChange} />
         <ModalPwd placeholder="password" value={pwd} onChange={onPwdChange} />
@@ -131,4 +169,7 @@ const Modal = () => {
   );
 };
 
-export default Modal;
+export default LoginModal;
+
+//추후 바깥 영역 클릭시 모달 닫히도록 구현 예정
+//e.target.closet 사용
