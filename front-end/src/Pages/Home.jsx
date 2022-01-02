@@ -3,10 +3,13 @@ import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Container, StyledLink } from "../Components/common";
+import HomeHeader from "../Components/HomeHeader";
+import LoginModal from "../Components/LoginModal";
 import Logo from "../Components/Logo";
 import { MENU_BTN_1, MENU_BTN_2, MENU_BTN_3 } from "../constants/standard";
 import {
   firstLocationState,
+  loginState,
   secondLocationState,
   thridLocationState,
 } from "../state";
@@ -58,6 +61,8 @@ const Home = () => {
 
   const homeLocation = useLocation().pathname;
 
+  const isModalOpen = useRecoilValue(loginState);
+
   useEffect(() => {
     if (homeLocation === "/") {
       console.log("homelocation", homeLocation);
@@ -66,8 +71,11 @@ const Home = () => {
     }
     console.log(isFirst, isSecond, isThrid, homeLocation);
   }, [isFirst, isSecond, isThrid]);
-  return (
+  return isModalOpen ? (
+    <LoginModal />
+  ) : (
     <HomeContainer>
+      <HomeHeader />
       <Logo logoWidth="200px" logoFontSize="80px" />
       <MenuContainer>
         <ButtonContainer>
