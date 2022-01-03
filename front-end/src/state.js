@@ -7,19 +7,9 @@ const loginState = atom({
 });
 
 // menu atoms => 배열로 처리할수 있을지 개선해보기
-const firstLocationState = atom({
-  key: "first-location",
-  default: false,
-});
-
-const secondLocationState = atom({
-  key: "second-location",
-  default: false,
-});
-
-const thridLocationState = atom({
-  key: "thrid-location",
-  default: false,
+const menuState = atom({
+  key: "menu-location",
+  default: [false, false, false],
 });
 
 // loading atom
@@ -28,10 +18,4 @@ const loadingState = atom({
   default: false,
 });
 
-export {
-  loginState,
-  firstLocationState,
-  secondLocationState,
-  thridLocationState,
-  loadingState,
-};
+export { loginState, menuState, loadingState };

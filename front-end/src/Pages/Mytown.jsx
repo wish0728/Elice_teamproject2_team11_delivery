@@ -8,7 +8,7 @@ import Menu from "../Components/Menu";
 import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
-import { firstLocationState, loadingState } from "../state";
+import { firstLocationState, loadingState, menuState } from "../state";
 
 const MytownContainer = styled(Container)`
   display: flex;
@@ -55,7 +55,7 @@ const TestBtn = styled.button``;
 //===============삭제 예정==================
 
 const Mytown = () => {
-  const firstLocation = useRecoilValue(firstLocationState); //메뉴 버튼들 중 첫번째 메뉴를 의미
+  const firstLocation = useRecoilValue(menuState)[0]; //메뉴 버튼들 중 첫번째 메뉴를 의미
   const [isLoading, setIsLoading] = useRecoilState(loadingState);
   const [area, setArea] = useState(""); //첫번째 Select 도/시 선택시 값이 담길 변수
   const [detailArea, setDetailArea] = useState([]); //area가 결정되면 두번째 Select에 값 담기 위한 변수
