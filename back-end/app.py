@@ -4,15 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restx import Api, apidoc, Resource, reqparse
 from flask_cors import CORS
-
-# import models
-# from apis.delivery import deliveryfreq
-# from apis.auth import Auth
+from db_connect import db
 
 import config
-
-db = SQLAlchemy()
-
 
 def create_app():
     app = Flask(__name__)
