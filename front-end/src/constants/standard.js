@@ -1,7 +1,7 @@
 //로그인 관련
 export const ID_MAX_LEN = 20;
 export const ID_MIN_LEN = 5;
-export const PWD_MIN_LEN = 8;
+export const PWD_MIN_LEN = 4;
 
 //메뉴 버튼 이름
 export const MENU_BTN_1 = "우리 동네 배달건수 알아보기";
