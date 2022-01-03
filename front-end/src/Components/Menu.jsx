@@ -38,6 +38,7 @@ const Menu = () => {
   const location = useLocation().pathname;
   const [menuLocation, setMenuLocation] = useRecoilState(menuState);
 
+  //early return 패턴 적용
   useEffect(() => {
     if (location.includes("mytown")) {
       return setMenuLocation([true, false, false]);
