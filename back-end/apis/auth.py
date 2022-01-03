@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request,session
 from flask_restx import Resource, Namespace,fields
-from models import user
+from models.user import user
 from flask_sqlalchemy import SQLAlchemy
 import jwt #pip install PyJWT (암, 복호화 확인)
 import bcrypt #pip install bcrypt (암호화, 암호일치 확인)
@@ -63,6 +63,7 @@ class AuthLogin(Resource):
 
         saved_user = user.query.filter_by(id=id).first()
         saved_user_pw = saved_user.password
+        saved_username = saved_user.name
         # encrypted_pw = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
         #유효하지 않은 ID
         if not user: return{
@@ -77,8 +78,9 @@ class AuthLogin(Resource):
         else: 
             session['login'] = saved_user.id
             return {
-                "message": "login Success"
-            }, 200
+                # "message": "login Success ", 
+                "name":saved_username
+            },200
 
 # 로그아웃
 @Auth.route('/logout')

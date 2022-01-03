@@ -1,26 +1,20 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_restx import Api, apidoc, Resource, reqparse
+from flask_restx import Api
 from flask_cors import CORS
-
-# import models
-# from apis.delivery import deliveryfreq
-# from apis.auth import Auth
+from db_connect import db
 
 import config
-
-db = SQLAlchemy()
-
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
     
-    import models
-    from apis.delivery import deliveryfreq
+    #일단 services로 대체 -> 후에 resolver로 하기 
+    from apis.services.deliveryService import Deliveryfreq
     from apis.auth import Auth
+    from apis.services.mapService  import Map
     app.config.from_object(config)  # config 에서 가져온 파일을 사용합니다.
 
     db.init_app(app)  # SQLAlchemy 객체를 app 객체와 이어줍니다.
@@ -32,10 +26,10 @@ def create_app():
     
 
     # from . import models
-    from apis.delivery import deliveryfreq
     api = Api(app)
-    api.add_namespace(deliveryfreq)
+    api.add_namespace(Deliveryfreq, '/delivery')
     api.add_namespace(Auth, '/auth')
+    api.add_namespace(Map, '/map')
 
     return app
 

@@ -11,14 +11,20 @@ conn = sqlite3.connect('NaplessRabbit.db')
 cur = conn.cursor()
 
 # Opening the Books_info.csv file
-df = pd.read_csv('시간지역별배달주문건수_요일포함.csv')
+df = pd.read_csv('경도_위도_level3.csv')
 
-
+cur.execute('''CREATE TABLE lon_lat_level3(
+               id INTEGER PRIMARY KEY AUTOINCREMENT, 
+               area1 VARCHAR(45) NOT NULL,
+               area2 VARCHAR(45) NOT NULL,
+               area3 VARCHAR(45) NOT NULL,  
+               longitude FLOAT NOT NULL, 
+               latitude FLOAT NOT NULL) ''')
+i=0
 for row in df.itertuples():
-    cur.execute('''INSERT INTO deliveryfreq_including_dayweek (id, date, time, delivery_freq
-	, area1_City_Do, area2_Si_Gun_Gu, area3_Dong, dayweek) VALUES(?, ?, ?, ?, ?, ?, ?, ?)''', 
-	[row.번호,row.날짜,row.시간대,row.배달건수,row.광역시도,row.시군구,row.읍면동,row.요일])
-
+    cur.execute('''INSERT INTO lon_lat_level3 (id, area1, area2, area3, longitude, latitude) VALUES(?, ?, ?, ?, ?, ?)''', 
+	[i,row.광역시도,row.시군구,row.읍면동,row.경도,row.위도])
+    i+=1
 # select_all = "SELECT * FROM deliveryfreq_by_time_area LIMIT 5"
 # results = cur.execute(select_all).fetchall()
 #Committing the changes
