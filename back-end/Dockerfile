@@ -8,6 +8,8 @@ RUN pip install --upgrade pip \
 
 COPY app.py .
 
+RUN python app.py 
+
 # FROM python:3.8-alpine 
 
 # WORKDIR /app
