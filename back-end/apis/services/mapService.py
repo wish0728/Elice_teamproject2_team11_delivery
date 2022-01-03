@@ -1,10 +1,8 @@
 from flask import jsonify
 from flask_restx import Resource, Namespace,fields
-from models.delivery import area1_for_exception as a1, area2_for_exception as a2
+from models.exception import area1_for_exception as a1, area2_for_exception as a2
 from models.map import lon_lat_level1 as l1, lon_lat_level2 as l2, lon_lat_level3 as l3
-from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
 Map = Namespace("map", description="카카오 지도 api를 위한 위도, 경도 얻기")
 
 area = Map.model('Area', {  
