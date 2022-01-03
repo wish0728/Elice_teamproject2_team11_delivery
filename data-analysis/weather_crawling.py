@@ -79,10 +79,47 @@ class KMA:
 
     def cancel(self):
         self.thread.cancel()
+    
+    #이제 여기서 어떻게 next를 개수만큼 누르면서 계속 다운로드를 누르고 가져오지? 
+    #참고 https://steadiness-193.tistory.com/118
+    def move_next(self):
+        '''페이지바 찾기'''
+        page_bar = self.driver.find_elements_by_class_name('wrap_paging')[0] #find_elements_by_class_name의 리턴값은 리스트 형태이므로 첫번째 아이템을 가져와야한다.
+        
+        '''페이지바를 이용해 페이지들 찾기'''
+        # 현재 위치하고 있는 곳은 a태그에서 제외된다!
+        pages = page_bar.find_elements_by_css_selector('a')
+        
+        '''현재페이지 찾기'''
+        page_now = page_bar.find_elements_by_class_name('on')[0].text 
+        for page in pages:
+            page_num = page.text.strip()
+            #처음 페이지,이전 페이지,2,3,4,5,6,7,8,9,10,다음 페이지,끝 페이지
+            if page_num in ['처음 페이지', '이전 페이지', '끝 페이지']:
+                pass
+            elif page_num == '다음 페이지': #10페이지가 끝나면 다음 눌러서 11페이지로 가기
+                page.send_keys('\n')
+                #페이지 객체는 셀레늄의 send_keys('\n')으로 엔터를 입력해 페이지를 넘기는데 이용한다.
+                self.driver.implicitly_wait(3)
+                self.driver.find_element_by_id('checkAll').click() 
+                self.driver.execute_script('parameterSettingAndOrder();')
+                sleep(1)
+                return False
+            elif int(page_num) > int(page_now): #다음페이지로 넘어가기
+                print("다음페이지 넘기기", page_num)
+                page.send_keys('\n')
+                self.driver.implicitly_wait(3)
+                self.driver.find_element_by_id('checkAll').click() 
+                self.driver.execute_script('parameterSettingAndOrder();')
+                sleep(1)
+                return False
+        #지금 여기가 실행이 안된다. 마지막 페이지로 간 다음에 '선택된 자료가 없습니다!'라는 메시지가 뜬 뒤 종료된다.
+        print('끝 페이지')
+        return True
         
     #  자료를 다운로드 받는 함수
     def download(self,subTree_list,kma_id, kma_pass):
-        """ 사이트 이동 """
+        """ 사이트 이동 및 로그인"""
         try:   
             self.driver.get(f'https://data.kma.go.kr/data/rmt/rmtList.do?code=400&pgmNo=')
             A.login(kma_id, kma_pass)
@@ -97,15 +134,16 @@ class KMA:
             self.driver.find_element_by_id(subTree_list[i]).click() #지역선택
         self.driver.find_element_by_id('ztree1_5_check').click() #강수
         self.driver.find_element_by_id('ztree1_7_check').click() #기온
-          
+
+        #검색기간 최대 12개월  
         # (1) 2019.08~2020.07 / (2) 2020.08 ~ 2021-07 / (3) 2021.08~2021.08
         """ 시작 기간 설정 """ 
-        Select(self.driver.find_element_by_id('startDt')).select_by_visible_text('2019')
+        Select(self.driver.find_element_by_id('startDt')).select_by_visible_text('2021')
         Select(self.driver.find_element_by_id('startMt')).select_by_visible_text('08')
          
         """ 끝 기간 설정 """
-        Select(self.driver.find_element_by_id('endDt')).select_by_visible_text('2020')
-        Select(self.driver.find_element_by_id('endMt')).select_by_visible_text('07')
+        Select(self.driver.find_element_by_id('endDt')).select_by_visible_text('2021')
+        Select(self.driver.find_element_by_id('endMt')).select_by_visible_text('08')
           
         """ 조회 """
         self.driver.execute_script("searchData('btn');")
@@ -126,14 +164,11 @@ class KMA:
             1
         self.driver.execute_script('dataOrder();')
         
-        #이제 여기서 어떻게 next를 개수만큼 누르면서 계속 다운로드를 누르고 가져오지? 
-        #참고 https://steadiness-193.tistory.com/118
-        page_bar = self.driver.find_elements_by_class_name('wrap_paging')[0] #find_elements_by_class_name의 리턴값은 리스트 형태이므로 첫번째 아이템을 가져와야한다.
-        print(len(page_bar.find_elements_by_css_selector('a'))-4 + 1) #4: first, prev, next, last / 1 : 자기자신은 a태그에서 제외된다!
-        # for _ in range():
-            
-        #     self.driver.find_element_by_id('checkAll').click() 
-        #     self.driver.execute_script('parameterSettingAndOrder();')
+        '''페이지 넘기며 다운로드 반복'''
+        is_done=False
+
+        while(not is_done):
+            is_done=self.move_next()
 
 subtree_list1=['ztree_2_check', #서울특별시
                'ztree_454_check', #부산
@@ -160,6 +195,6 @@ subtree_list6=['ztree_3405_check', #경상남도
 
 A=KMA(time=60*3,download_path=r'/home/dahye/weathers')
 A.setting()
-A.download(subtree_list1, '아이디', '비빌번호')
+A.download(subtree_list1, '아이디','비밀번호')
 A.logout()
 A.quit()
