@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request,session
 from flask_restx import Resource, Namespace,fields
-from models import user
+from models.user import user
 from flask_sqlalchemy import SQLAlchemy
 import jwt #pip install PyJWT (암, 복호화 확인)
 import bcrypt #pip install bcrypt (암호화, 암호일치 확인)

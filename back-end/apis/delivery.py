@@ -1,15 +1,15 @@
 from flask import jsonify
 from flask_restx import Resource, Namespace,fields
-from models import deliveryfreq_by_time_area as d
-from models import freqavg as fa, freqavg_by_area1 as fa1
-from models import area1_for_exception as a1, area2_for_exception as a2
-from models import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
+from models.delivery import deliveryfreq_by_time_area as d
+from models.delivery  import freqavg as fa, freqavg_by_area1 as fa1
+from models.delivery  import area1_for_exception as a1, area2_for_exception as a2
+from models.delivery  import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 
 db = SQLAlchemy()
-deliveryfreq = Namespace("delivery", description="deliveryfreq_by_time_area")
-area = deliveryfreq.model('Area', {  # Model 객체 생성
+deliveryfreq = Namespace("delivery", description="배달 관련 api")
+area = deliveryfreq.model('Area', { 
     'area1': fields.String(description='area1_City_Do', required=True, example="서울특별시"),
     'area2': fields.String(description='area2_Si_Gun_Gu', required=True, example="강남구")
 })
