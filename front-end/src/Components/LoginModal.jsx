@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import authApi from "../apis/auth";
 import { ID_MAX_LEN, ID_MIN_LEN, PWD_MIN_LEN } from "../constants/standard";
 import { loginState } from "../state";
-import { Container } from "./common";
 
 const ModalContainer = styled.div`
   display: flex;
@@ -171,7 +170,9 @@ const LoginModal = () => {
         <ModalEmail placeholder="email" value={id} onChange={onIdChange} />
         <ModalPwd placeholder="password" value={pwd} onChange={onPwdChange} />
         <ModalSubmit onClick={onSubmit}>ok</ModalSubmit>
-        <ModalCreate>create account</ModalCreate>
+        <StyledLink to="/register">
+          <ModalCreate>create account</ModalCreate>
+        </StyledLink>
         <StyledLink to="/usersetting">forgot?</StyledLink>
       </ModalContents>
     </ModalContainer>
