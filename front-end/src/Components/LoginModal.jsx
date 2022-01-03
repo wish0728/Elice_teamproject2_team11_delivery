@@ -7,13 +7,19 @@ import { ID_MAX_LEN, ID_MIN_LEN, PWD_MIN_LEN } from "../constants/standard";
 import { loginState } from "../state";
 import { Container } from "./common";
 
-const ModalContainer = styled(Container)`
+const ModalContainer = styled.div`
   display: flex;
+  visibility: ${(props) => (props.visible ? "visible" : "hidden")};
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: gray;
-  opacity: 0.8;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
 `;
 
 const ModalContents = styled.div`
@@ -28,6 +34,7 @@ const ModalContents = styled.div`
   background-color: black;
   color: white;
   box-sizing: border-box;
+  z-index: 999;
 `;
 
 const ContentsHeader = styled.div`
@@ -146,14 +153,16 @@ const LoginModal = () => {
 
   const loginPost = async () => {
     try {
-      await authApi.send_login({ id: id, password: pwd });
+      await authApi
+        .send_login({ id: id, password: pwd })
+        .then((response) => console.log(response));
     } catch (e) {
       console.log(e);
     }
   };
 
   return (
-    <ModalContainer>
+    <ModalContainer visible={modalOpen}>
       <ModalContents>
         <ContentsHeader>
           <CloseBtn onClick={closeModal}>X</CloseBtn>
