@@ -10,6 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import threading 
 from selenium.webdriver.support.ui import Select
+import random
 
 #드라이버를 실행할 수 있는 권한을 준다.
 os.chmod('/home/dahye/Downloads/chromedriver', 755)
@@ -30,7 +31,7 @@ class KMA:
         try:
             self.driver.quit()
         except:
-            print("setting error")
+            print("setting")
         self.driver= webdriver.Chrome(self.driv_path, options=self.options)
         # self.driver.get('https://data.kma.go.kr/cmmn/main.do') #기상자료 개방포털 도메인
 
@@ -101,16 +102,14 @@ class KMA:
                 page.send_keys('\n')
                 #페이지 객체는 셀레늄의 send_keys('\n')으로 엔터를 입력해 페이지를 넘기는데 이용한다.
                 self.driver.implicitly_wait(3)
-                self.driver.find_element_by_id('checkAll').click() 
-                self.driver.execute_script('parameterSettingAndOrder();')
                 sleep(1)
+                #일정시간동안 쉬고 반복적으로 접근하는 것을 차단해놓은 곳도 있으므로 랜덤하게 쉬어주는것도 방법
+                # sleep(2+random.uniform(0,1)) 
                 return False
             elif int(page_num) > int(page_now): #다음페이지로 넘어가기
                 print("다음페이지 넘기기", page_num)
                 page.send_keys('\n')
                 self.driver.implicitly_wait(3)
-                self.driver.find_element_by_id('checkAll').click() 
-                self.driver.execute_script('parameterSettingAndOrder();')
                 sleep(1)
                 return False
         #지금 여기가 실행이 안된다. 마지막 페이지로 간 다음에 '선택된 자료가 없습니다!'라는 메시지가 뜬 뒤 종료된다.
@@ -169,6 +168,9 @@ class KMA:
 
         while(not is_done):
             is_done=self.move_next()
+            self.driver.find_element_by_id('checkAll').click() 
+            self.driver.execute_script('parameterSettingAndOrder();')
+            sleep(0.7)
 
 subtree_list1=['ztree_2_check', #서울특별시
                'ztree_454_check', #부산
