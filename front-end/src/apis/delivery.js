@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_END_POINT } from "../constants/standard";
 
-const API_END_POINT = "http://127.0.0.1:5000/delivery";
+const DELIVERY_END_POINT = `${API_END_POINT}/delivery`;
 
 const api = async (url) => {
   const result = await axios.get(url);
@@ -20,7 +21,7 @@ const api = async (url) => {
 
 const deliveryApi = {
   get_Time_Average: async (keyword1, keyword2) => {
-    return await api(`${API_END_POINT}/getFreq/${keyword1}/${keyword2}`);
+    return await api(`${DELIVERY_END_POINT}/getFreq/${keyword1}/${keyword2}`);
   },
 };
 

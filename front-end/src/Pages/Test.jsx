@@ -7,6 +7,8 @@ import Loading from "../Components/Loading";
 import Menu from "../Components/Menu";
 import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
+import Map from "../Components/Map/Map";
+
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 import { firstLocationState, loadingState, menuState } from "../state";
 
@@ -45,6 +47,24 @@ const ContentsArea = styled.div`
   box-sizing: border-box;
 `;
 
+//===============테스트용==================
+const TestContentsArea = styled.div`
+  display: inline-flex;
+  width: 50%;
+  height: 500px;
+  padding: 10px;
+  box-sizing: border-box;
+`;
+
+const MapContentsArea = styled.div`
+  display: inline-flex;
+  width: 50%;
+  height: 500px;
+  padding: 10px;
+  box-sizing: border-box;
+`;
+//===============테스트용==================
+
 const Select = styled.select``;
 
 const Option = styled.option``;
@@ -75,6 +95,12 @@ const Mytown = () => {
         }
       });
     }
+  }, [area]);
+
+  useEffect(() => {
+    console.log(area);
+    setDAreaValue("전체");
+    apiTest();
   }, [area]);
 
   useEffect(() => {
@@ -114,6 +140,11 @@ const Mytown = () => {
     setArea(e.target.value);
   };
 
+  const changeSelectOptionHadlerTest = (e) => {
+    console.log("작동중");
+    setArea(e.target.id);
+  };
+
   const changeTest = (e) => {
     setDAreaValue(e.target.value);
   };
@@ -124,7 +155,11 @@ const Mytown = () => {
       <MytownBody>
         <MytownMenu />
         <MainContents>
-          <Select name="areaData" onChange={changeSelectOptionHadler}>
+          <Select
+            name="areaData"
+            onChange={changeSelectOptionHadler}
+            value={area}
+          >
             <Option value="">도/시 선택</Option>
             {AREAS.map((item) => {
               return (
@@ -147,12 +182,16 @@ const Mytown = () => {
             </Select>
           )}
           <TestBtn onClick={searchArea}>시군구 테스트</TestBtn>
-          <ContentsArea>
+          <div />
+          <TestContentsArea>
             {!isLoading && apiRes.length !== 0 && (
               <MyResponsiveBar data={apiRes} />
             )}
             {isLoading && <Loading />}
-          </ContentsArea>
+          </TestContentsArea>
+          <MapContentsArea>
+            <Map setArea={setArea} />
+          </MapContentsArea>
         </MainContents>
       </MytownBody>
     </MytownContainer>

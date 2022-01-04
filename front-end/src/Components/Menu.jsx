@@ -3,11 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { MENU_BTN_1, MENU_BTN_2, MENU_BTN_3 } from "../constants/standard";
-import {
-  firstLocationState,
-  secondLocationState,
-  thridLocationState,
-} from "../state";
+import { menuState } from "../state";
 import { StyledLink } from "./common";
 
 const MenuContainer = styled.div`
@@ -40,43 +36,38 @@ const EmptyDiv = styled.div`
 
 const Menu = () => {
   const location = useLocation().pathname;
-  const [isFirst, setIsFirst] = useRecoilState(firstLocationState);
-  const [isSecond, setIsSecond] = useRecoilState(secondLocationState);
-  const [isThrid, setIsThrid] = useRecoilState(thridLocationState);
+  const [menuLocation, setMenuLocation] = useRecoilState(menuState);
 
+  //early return 패턴 적용
   useEffect(() => {
     if (location.includes("mytown")) {
-      setIsFirst(true);
-      setIsSecond(false);
-      setIsThrid(false);
+      return setMenuLocation([true, false, false]);
     } else if (location.includes("othertown")) {
-      setIsFirst(false);
-      setIsSecond(true);
-      setIsThrid(false);
       console.log("두번째 메뉴");
+      return setMenuLocation([false, true, false]);
     } else {
-      setIsFirst(false);
-      setIsSecond(false);
-      setIsThrid(false);
+      console.log("menu Location:", location, menuLocation);
+
+      return setMenuLocation([false, false, false]);
     }
-    console.log("menu Location:", location, isFirst, isSecond, isThrid);
-  }, [isFirst, isSecond, isThrid]);
+  }, [location]);
+
   return (
     <MenuContainer>
       <EmptyDiv />
       <Wrap>
         <StyledLink to="/mytown">
-          <MenuBtn checked={isFirst}>{MENU_BTN_1}</MenuBtn>
+          <MenuBtn checked={menuLocation[0]}>{MENU_BTN_1}</MenuBtn>
         </StyledLink>
       </Wrap>
       <Wrap>
         <StyledLink to="/othertown">
-          <MenuBtn checked={isSecond}>{MENU_BTN_2}</MenuBtn>
+          <MenuBtn checked={menuLocation[1]}>{MENU_BTN_2}</MenuBtn>
         </StyledLink>
       </Wrap>
       <Wrap>
         <StyledLink to="/">
-          <MenuBtn checked={isThrid}>{MENU_BTN_3}</MenuBtn>
+          <MenuBtn checked={menuLocation[2]}>{MENU_BTN_3}</MenuBtn>
         </StyledLink>
       </Wrap>
       <EmptyDiv />
