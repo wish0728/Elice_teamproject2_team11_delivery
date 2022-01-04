@@ -5,6 +5,7 @@ body {
   font-family: "Do Hyeon";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #d3d3d3;
 }
 
 code {
