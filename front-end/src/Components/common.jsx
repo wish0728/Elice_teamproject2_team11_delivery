@@ -19,3 +19,5 @@ export const Container = styled.div`
   height: 100%;
   padding: 15px;
 `;
+
+export const EmptyDiv = styled.div``;

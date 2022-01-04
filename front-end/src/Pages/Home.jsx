@@ -1,15 +1,19 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Container, StyledLink } from "../Components/common";
+import HomeHeader from "../Components/HomeHeader";
+import LoginModal from "../Components/LoginModal";
 import Logo from "../Components/Logo";
 import { MENU_BTN_1, MENU_BTN_2, MENU_BTN_3 } from "../constants/standard";
-import {
-  firstLocationState,
-  secondLocationState,
-  thridLocationState,
-} from "../state";
+import { loginState, menuState } from "../state";
+
+const HomeWrap = styled.div`
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+`;
 
 const HomeContainer = styled(Container)`
   width: 100%;
@@ -50,37 +54,45 @@ const Button = styled.button`
 `;
 
 const Home = () => {
-  const isFirst = useRecoilValue(firstLocationState);
-  const isSecond = useRecoilValue(secondLocationState);
-  const isThrid = useRecoilValue(thridLocationState);
-  const resetFirst = useResetRecoilState(firstLocationState);
-  const resetSecond = useResetRecoilState(secondLocationState);
+  const menuLocation = useRecoilValue(menuState);
+  const resetMenuLocation = useResetRecoilState(menuState);
 
   const homeLocation = useLocation().pathname;
+
+  //랜더링 자체가 안되게하는게 나은지 visible로 처리하는게 나은지
+  const isModalOpen = useRecoilValue(loginState);
 
   useEffect(() => {
     if (homeLocation === "/") {
       console.log("homelocation", homeLocation);
-      resetFirst();
-      resetSecond();
+      resetMenuLocation();
     }
-    console.log(isFirst, isSecond, isThrid, homeLocation);
-  }, [isFirst, isSecond, isThrid]);
+    console.log(menuLocation, homeLocation);
+  }, [homeLocation]);
+
+  useEffect(() => {
+    console.log("메뉴 변화 감지:", menuLocation);
+  }, [menuLocation]);
+
   return (
-    <HomeContainer>
-      <Logo logoWidth="200px" logoFontSize="80px" />
-      <MenuContainer>
-        <ButtonContainer>
-          <StyledLink to="/mytown">
-            <Button>{MENU_BTN_1}</Button>
-          </StyledLink>
-          <StyledLink to="othertown">
-            <Button>{MENU_BTN_2}</Button>
-          </StyledLink>
-          <Button>{MENU_BTN_3}</Button>
-        </ButtonContainer>
-      </MenuContainer>
-    </HomeContainer>
+    <HomeWrap>
+      <LoginModal />
+      <HomeContainer>
+        <HomeHeader />
+        <Logo logoWidth="200px" logoFontSize="80px" />
+        <MenuContainer>
+          <ButtonContainer>
+            <StyledLink to="/mytown">
+              <Button>{MENU_BTN_1}</Button>
+            </StyledLink>
+            <StyledLink to="othertown">
+              <Button>{MENU_BTN_2}</Button>
+            </StyledLink>
+            <Button>{MENU_BTN_3}</Button>
+          </ButtonContainer>
+        </MenuContainer>
+      </HomeContainer>
+    </HomeWrap>
   );
 };
 

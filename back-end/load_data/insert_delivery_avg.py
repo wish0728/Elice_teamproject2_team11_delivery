@@ -11,13 +11,10 @@ conn = sqlite3.connect('NaplessRabbit.db')
 cur = conn.cursor()
 
 # Opening the Books_info.csv file
-df = pd.read_csv('freqavg_by_area1.csv')
 
-i=1
-for row in df.itertuples():
-    cur.execute('''INSERT INTO freqavg_by_area1 (id,area1,time,freqavg) VALUES(?, ?, ?, ?)''', 
-	[i,row.area1,row.time,row.freqavg])
-    i+=1
+
+cur.execute("""UPDATE user SET password ='$2b$12$PCuuNZ1tMFXHmUHXCeJNYOt4KuNx7xafQ' WHERE name ='example' """)
+
 # select_all = "SELECT * FROM deliveryfreq_by_time_area LIMIT 5"
 # results = cur.execute(select_all).fetchall()
 

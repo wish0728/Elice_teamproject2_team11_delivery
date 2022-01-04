@@ -11,7 +11,7 @@ const LoadingImg = styled.img``;
 const Loading = () => {
   return (
     <LoadingContainer>
-      <LoadingImg src={LoadingSrc} />
+      <LoadingImg src={LoadingSrc} alt="로딩 이미지" />
     </LoadingContainer>
   );
 };
