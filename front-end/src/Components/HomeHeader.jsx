@@ -10,6 +10,7 @@ const HeaderContainer = styled.div`
   height: 40px;
   display: flex;
   flex-direction: row;
+  justify-content: baseline;
   align-items: flex-end;
 `;
 

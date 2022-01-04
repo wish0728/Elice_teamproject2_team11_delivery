@@ -22,7 +22,6 @@ const HomeContainer = styled(Container)`
   flex-direction: column;
   align-items: center;
   padding: 30px;
-  background-color: white;
   box-sizing: border-box;
 `;
 
