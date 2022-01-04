@@ -45,6 +45,7 @@ const CheckBox = styled.input`
   }
 `;
 
+//체크박스 옆에 이모지
 const ToggleSwitch = () => {
   return (
     <CheckBoxWrapper>
