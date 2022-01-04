@@ -12,13 +12,15 @@ Auth = Namespace(name="auth", description="사용자 인증")
 user_fields = Auth.model('User', {  # Model 객체 생성
     'id': fields.String(description='a User Id', required=True, example="CCH@naver.com")
 })
-user_fields_auth = Auth.inherit('User Auth', user_fields, {
+user_fields_auth1 = Auth.inherit('User Auth', user_fields, {
     'name': fields.String(description='name', required=True, example="CCH")
 })
-user_fields_auth = Auth.inherit('User Auth', user_fields, {
+user_fields_auth2 = Auth.inherit('User Auth', user_fields, {
     'password': fields.String(description='Password', required=True, example="password")
 })
-
+# user_fields_auth = Auth.inherit('User Auth', user_fields, {
+#     'area': fields.String(description='area', required=True, example="경기도 용인시")
+# })
 # users = []
 
 # 회원가입 유효성
@@ -35,7 +37,7 @@ class AuthRegisterCheckId(Resource):
 #회원가입 요청
 @Auth.route('/register')
 class AuthRegister(Resource):
-    @Auth.expect(user_fields_auth)
+    @Auth.expect(user_fields_auth1,user_fields_auth2)
     @Auth.response(200, "Available id")
     @Auth.response(500, "Unavailable id")
     def post(self):
@@ -44,15 +46,17 @@ class AuthRegister(Resource):
         id = request.json['id']
         name = request.json['name']
         password = request.json['password']
+        # area = request.json['area']
         encrypted_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
-        new_user = user(id=id, name=name, password=encrypted_pw)
+
+        new_user = user(id=id, name=name, password=encrypted_pw) #area도 추후 추가
         db.session.add(new_user)
         db.session.commit()
         return {"message":"User Information saved"},200 #성공
 # 로그인
 @Auth.route('/login')
 class AuthLogin(Resource):
-    @Auth.expect(user_fields_auth)
+    @Auth.expect(user_fields_auth2)
     @Auth.response(200, "login Success")
     @Auth.response(404, "Not found")
     @Auth.response(500, "login Failed")
@@ -62,15 +66,14 @@ class AuthLogin(Resource):
         password = request.json['password']
 
         saved_user = user.query.filter_by(id=id).first()
-        saved_user_pw = saved_user.password
-        saved_username = saved_user.name
+        # saved_user_area = saved_user.area
         # encrypted_pw = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
         #유효하지 않은 ID
-        if not user: return{
+        if not saved_user: return{
                 "message": "User Not Found"
             }, 404
         # 비밀번호 미일치
-        elif not bcrypt.checkpw(password.encode("utf-8"),saved_user_pw):
+        elif not bcrypt.checkpw(password.encode("utf-8"),saved_user.password ):
             return {
                 "message": "Auth Failed"
             }, 500
@@ -78,9 +81,32 @@ class AuthLogin(Resource):
         else: 
             session['login'] = saved_user.id
             return {
-                # "message": "login Success ", 
-                "name":saved_username
+                # "message": "login Success ",
+                # "area" : saved_user_area,
+                "name":saved_user.name
             },200
+#비밀번호 찾기
+@Auth.route('/findpw')
+class AuthFindpw(Resource):
+    @Auth.expect(user_fields_auth1)
+    @Auth.response(200, "Find password")
+    @Auth.response(404, "Not found")
+    @Auth.response(500, "Can't find password")
+    def post(self):
+        id = request.json['id']
+        name = request.json['name']
+        saved_user = user.query.filter_by(id=id).first()
+        saved_user_name = saved_user.name
+        saved_user_pw = saved_user.password
+        if not user: 
+            return{
+                "message":"User Not Found"
+            },404
+        elif name != saved_user_name:
+            return{
+                "message":"Wrong user Information"
+            },500
+        else: return {saved_user_pw},200
 
 # 로그아웃
 @Auth.route('/logout')
