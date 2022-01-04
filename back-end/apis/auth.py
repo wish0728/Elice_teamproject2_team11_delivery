@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 import jwt #pip install PyJWT (암, 복호화 확인)
 import bcrypt #pip install bcrypt (암호화, 암호일치 확인)
 # import pandas as pd 
-
+import sqlite3
 db = SQLAlchemy()
 
 Auth = Namespace(name="auth", description="사용자 인증")
@@ -42,7 +42,6 @@ class AuthRegister(Resource):
     @Auth.response(500, "Unavailable id")
     def post(self):
         '''회원가입 성공시 DB에 저장'''
-        # 1차, 2차 비밀번호 검증
         id = request.json['id']
         name = request.json['name']
         password = request.json['password']
@@ -64,7 +63,6 @@ class AuthLogin(Resource):
         '''로그인 기능'''
         id = request.json['id']
         password = request.json['password']
-
         saved_user = user.query.filter_by(id=id).first()
         # saved_user_area = saved_user.area
         # encrypted_pw = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
@@ -85,6 +83,34 @@ class AuthLogin(Resource):
                 # "area" : saved_user_area,
                 "name":saved_user.name
             },200
+# #비밀번호 찾기
+# @Auth.route('/findpw')
+# class AuthFindpw(Resource):
+#     @Auth.expect(user_fields_auth1)
+#     @Auth.response(200, "Find password")
+#     @Auth.response(404, "Not found")
+#     @Auth.response(500, "Can't find password")
+#     def post(self):
+#         '''유저 비밀번호 찾기'''
+#         id = request.json['id']
+#         name = request.json['name']
+#         new_password = request.json['password']
+#         saved_user = user.query.filter_by(id=id).first()
+#         # encrypted_pw = bcrypt.hashpw(new_password.encode('utf8'),bcrypt.gensalt())
+#         if not saved_user: 
+#             return{
+#                 "message":"User Not Found"
+#             },404
+#         elif name != saved_user.name:
+#             return{
+#                 "message":"Wrong user Information"
+#             },500
+#         else: 
+#             saved_user.password = new_password
+#             db.session.commit()
+#             return {
+#                 "message":"password changed"
+#             },200
 #비밀번호 찾기
 @Auth.route('/findpw')
 class AuthFindpw(Resource):
@@ -93,25 +119,37 @@ class AuthFindpw(Resource):
     @Auth.response(404, "Not found")
     @Auth.response(500, "Can't find password")
     def post(self):
+        '''유저 비밀번호 찾기'''
+        conn = sqlite3.connect('NaplessRabbit.db')
+        cur = conn.cursor()
         id = request.json['id']
         name = request.json['name']
+        new_password = request.json['password']
         saved_user = user.query.filter_by(id=id).first()
-        saved_user_name = saved_user.name
-        saved_user_pw = saved_user.password
-        if not user: 
+        sql = "UPDATE user SET password =? WHERE name =?"
+        encrypted_pw = bcrypt.hashpw(new_password.encode('utf8'),bcrypt.gensalt())
+        if not saved_user: 
             return{
                 "message":"User Not Found"
             },404
-        elif name != saved_user_name:
+        elif name != saved_user.name:
             return{
                 "message":"Wrong user Information"
             },500
-        else: return {saved_user_pw},200
+        else: 
+            cur.execute(sql, (encrypted_pw, saved_user.name))
+            # cur.execute(sql, (new_password, saved_user.name))
+            conn.commit()
+            return {
+                "message":"password changed"
+            },200
+
 
 # 로그아웃
 @Auth.route('/logout')
 class AuthLogout(Resource):
     def post(self):
+        '''로그아웃 기능'''
         session.clear()
         return {"message":"logout success"},200
 
