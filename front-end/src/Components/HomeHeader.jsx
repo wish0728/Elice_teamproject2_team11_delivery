@@ -3,7 +3,7 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { EmptyDiv, StyledLink } from "./common";
 import ToggleSwitch from "./ToggleSwitch";
-import { loginState } from "../state";
+import { loginState, modalState } from "../state";
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -39,7 +39,7 @@ const LoginContainer = styled.div`
 const LoginBtn = styled.button``;
 
 const HomeHeader = () => {
-  const [modalOpen, setModalOpen] = useRecoilState(loginState);
+  const [modalOpen, setModalOpen] = useRecoilState(modalState);
 
   useEffect(() => {
     console.log("모달 열림. : ", modalOpen);
