@@ -1,12 +1,18 @@
 import { atom } from "recoil";
 
-//login atom
-const loginState = atom({
-  key: "login",
+//login modal atom
+const modalState = atom({
+  key: "modal",
   default: false,
 });
 
-// menu atoms => 배열로 처리할수 있을지 개선해보기
+//login atom
+const loginState = atom({
+  key: "login",
+  default: { isLoggedIn: false, name: "" },
+});
+
+// menu atoms    to do : 객체로 개선
 const menuState = atom({
   key: "menu-location",
   default: [false, false, false],
@@ -18,4 +24,4 @@ const loadingState = atom({
   default: false,
 });
 
-export { loginState, menuState, loadingState };
+export { modalState, loginState, menuState, loadingState };
