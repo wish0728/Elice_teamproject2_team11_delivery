@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import authApi from "../apis/auth";
 import { ID_MAX_LEN, ID_MIN_LEN, PWD_MIN_LEN } from "../constants/standard";
-import { loginState } from "../state";
+import { loginState, modalState } from "../state";
 
 const ModalContainer = styled.div`
   display: flex;
@@ -110,10 +110,21 @@ const StyledLink = styled(Link)`
 `;
 
 const LoginModal = () => {
-  //아이디, 비밀번호에 대한 상태관리 작성 필요 (recoil)
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
-  const [modalOpen, setModalOpen] = useRecoilState(loginState);
+  const [modalOpen, setModalOpen] = useRecoilState(modalState);
+  //로그인 상태
+  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
+  const { isLoggedIn: isLoggedInValue } = useRecoilValue(loginState); //로그인 여부
+  const { name: userName } = useRecoilValue(loginState); //로그인한 유저 이름
+
+  useEffect(() => {
+    console.log(isLoggedInValue, userName);
+  }, [modalOpen]);
+
+  useEffect(() => {
+    console.log(loginStatus);
+  }, [isLoggedInValue, userName]);
 
   //모달 닫기 버튼
   const closeModal = () => {
@@ -154,7 +165,11 @@ const LoginModal = () => {
     try {
       await authApi
         .send_login({ id: id, password: pwd })
-        .then((response) => console.log(response));
+        .then((response) =>
+          response.status === 200
+            ? setLoginStatus({ isLoggedIn: true, name: response.data.name })
+            : console.log("로그인 실패")
+        );
     } catch (e) {
       console.log(e);
     }
