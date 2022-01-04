@@ -5,6 +5,7 @@ import AuthSetting from "./Pages/AuthSetting";
 import Mytown from "./Pages/Mytown";
 import Othertown from "./Pages/Othertown";
 import Register from "./Pages/Register";
+import Test from "./Pages/Test";
 import LoginModal from "./Components/LoginModal";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route exact path="/mytown" element={<Mytown />} />
       <Route exact path="/othertown" element={<Othertown />} />
       <Route exact path="/register" element={<Register />} />
+      <Route exact path="/map" element={<Test />} />
       {/* 경로 임시 설정 추후 변경 */}
     </Routes>
   );
