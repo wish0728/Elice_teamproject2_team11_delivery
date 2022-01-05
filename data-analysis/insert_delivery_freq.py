@@ -9,7 +9,7 @@ connection = sqlite3.connect('../NaplessRabbit.db')
 # SQL queries on a database table
 cursor = connection.cursor()
 
-# Opening the Books_info.csv file
+# Opening csv files
 df_2019=pd.read_csv("../rawdata/시간-지역별배달주문건수/elicer_2019_col_name.csv",parse_dates=['날짜'])
 df_2020_1=pd.read_csv("../rawdata/시간-지역별배달주문건수/elicer_2020_1_col_name.csv",parse_dates=['날짜'])
 df_2020_2=pd.read_csv("../rawdata/시간-지역별배달주문건수/elicer_2020_2_col_name.csv",parse_dates=['날짜'])
