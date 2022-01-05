@@ -1,3 +1,9 @@
+'''
+freqavg_by_mealtime.py가 cursor.execute(insert...)를 사용해서 데이터 프레임의 각 row를 하나씩 DB 넣는다면
+freqavg_by_mealtime_to_sql.py는 for문을 사용하지 않고 테이블로 만들고자 하는 데이터프레임을 하나로 모아서 to_sql을 사용해 DB에 저장하였다.
+두 코드는 같은 결과를 얻는다.
+'''
+
 import sqlite3
 import pandas as pd
 
@@ -38,6 +44,7 @@ peakTime_list = [(11,13, 'launch'), (17,20,'dinner'), (21,23,'night')]
 level1_list = list(df['광역시도'].unique())
 region_list = df.groupby(['광역시도','시군구']).nunique().reset_index()[['광역시도','시군구']].values
 
+area1_list=[]
 '''광역시도 단위'''
 for area1 in level1_list:
   #기준이 되는 지역
@@ -45,15 +52,25 @@ for area1 in level1_list:
   for time in peakTime_list:
     #원하는 시간대만 추출한 뒤 평균 배달건수가 가장 많은 3지역만 얻는다. (3개보다 적을 수 있다.)
     peak_df = region_df[(region_df['시간대']>= time[0]) & (region_df['시간대']<=time[1])]
-    peak_df = peak_df.groupby(['광역시도','시군구', '읍면동'])['배달건수'].mean().sort_values(ascending=False).reset_index().head(3)
-    peak_df['배달건수'] = peak_df['배달건수'].round()
-    peak_df = peak_df.astype({'배달건수':'int'})
-    #insert
-    for row in peak_df.itertuples():
-           cursor.execute('''INSERT INTO freqavg_by_mealtime1 (area1, area2, area3, mealtime, freqavg) VALUES(?, ?, ?, ?, ?)''', 
-      [row.광역시도, row.시군구, row.읍면동, time[2], row.배달건수])
+    # AUTOINCREMENT를 제외하고 컬럼과 테이블의 속성명은 일치해야한다. 컬럼과 같은 이름을 가진 항목으로 값이 저장된다.
+    peak_df.rename(columns={'광역시도':'area1','시군구':'area2','읍면동':'area3','배달건수':'freqavg'}, inplace = True)
+    
+    peak_df = peak_df.groupby(['area1','area2', 'area3'])['freqavg'].mean().sort_values(ascending=False).reset_index().head(3)
+    # 'A value is trying to be set on a copy of a slice from a DataFrame' warining 발생하는데 groupby를 사용해서 loc등을 사용하는 방법을 잘 모르겠다.
+    # .copy()를 이용해 해결해야할까?
+
+    peak_df['freqavg'] = peak_df['freqavg'].round()
+    peak_df = peak_df.astype({'freqavg':'int'})
+    peak_df['mealtime'] = time[2]
+    peak_df = peak_df[['area1','area2','area3','mealtime','freqavg']]
+    area1_list.append(peak_df)
+
+area1_df = pd.concat(area1_list,ignore_index=True)
+# to_sql을 이용해서 이미 있는 테이블에 값만 넣고 싶다면 if_exists=append로 설정한다. 
+area1_df.to_sql('freqavg_by_mealtime1', conn, if_exists='append', index=False)
 
 '''시군구 단위'''
+area2_list=[]
 for area1, area2 in region_list:
   #세종특별자치시는 전체지역 테이블에 저장
   if area1 == '세종특별자치시': 
@@ -64,14 +81,22 @@ for area1, area2 in region_list:
   for time in peakTime_list:
     #원하는 시간대만 추출한 뒤 평균 배달건수가 가장 많은 3지역만 얻는다. (3개보다 적을 수 있다.)
     peak_df = region_df[(region_df['시간대']>= time[0]) & (region_df['시간대']<=time[1])]
-    peak_df = peak_df.groupby(['광역시도','시군구', '읍면동'])['배달건수'].mean().sort_values(ascending=False).reset_index().head(3)
-    peak_df['배달건수'] = peak_df['배달건수'].round()
-    peak_df = peak_df.astype({'배달건수':'int'})
-    #insert
-    for row in peak_df.itertuples():
-      cursor.execute('''INSERT INTO freqavg_by_mealtime2 (area1, area2, area3, mealtime, freqavg) VALUES(?, ?, ?, ?, ?)''', 
-      [row.광역시도, row.시군구, row.읍면동, time[2], row.배달건수])
-       
+    # AUTOINCREMENT를 제외하고 컬럼과 테이블의 속성명은 일치해야한다. 컬럼과 같은 이름을 가진 항목으로 값이 저장된다.
+    peak_df.rename(columns={'광역시도':'area1','시군구':'area2','읍면동':'area3','배달건수':'freqavg'}, inplace = True)
+   
+    peak_df = peak_df.groupby(['area1','area2', 'area3'])['freqavg'].mean().sort_values(ascending=False).reset_index().head(3)
+     # 'A value is trying to be set on a copy of a slice from a DataFrame' warining 발생하는데 groupby를 사용해서 loc등을 사용하는 방법을 잘 모르겠다.
+    # .copy()를 이용해 해결해야할까?
+    
+    peak_df['freqavg'] = peak_df['freqavg'].round()
+    peak_df = peak_df.astype({'freqavg':'int'})
+    peak_df['mealtime'] = time[2]
+    peak_df = peak_df[['area1','area2','area3','mealtime','freqavg']]
+    area2_list.append(peak_df)
+
+area2_df = pd.concat(area2_list,ignore_index=True)
+area2_df.to_sql('freqavg_by_mealtime2', conn, if_exists='append', index=False)     
+
 #Committing the changes
 conn.commit()
 
