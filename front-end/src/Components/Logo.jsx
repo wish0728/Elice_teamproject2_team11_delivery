@@ -22,6 +22,7 @@ const LogoContainer = styled.div`
 const LogoText = styled.span`
   font-size: ${(props) => props.fontsize || "18px"};
   font-weight: 600;
+  color: ${(props) => props.theme.titleColor};
 `;
 
 const Logo = ({ logoWidth, logoHeight, logoFontSize }) => {
