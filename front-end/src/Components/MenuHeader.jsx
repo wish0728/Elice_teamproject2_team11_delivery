@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import Logo from "./Logo";
 import LogoSrc from "../img/chef.png";
+import { useRecoilValue } from "recoil";
+import { loginState } from "../state";
 
 const MytownHeader = styled.div`
   width: 100%;
@@ -29,12 +31,18 @@ const LogoImg = styled.img`
   margin-right: 20px;
 `;
 
+const Username = styled.div``;
+
 const MenuHeader = () => {
+  const { isLoggedIn: isLoggedInValue } = useRecoilValue(loginState); //로그인 상태 감지
+  const { name: userName } = useRecoilValue(loginState); //로그인한 유저 이름
+
   return (
     <MytownHeader>
       <HedaerLogo logoWidth="50px" logoHeight="50px" logoFontSize="43px" />
       <EmptyDiv />
-      <LogoImg src={LogoSrc} />
+      {isLoggedInValue && <Username>{userName}님</Username>}
+      <LogoImg src={LogoSrc} alt="메뉴이미지" />
     </MytownHeader>
   );
 };

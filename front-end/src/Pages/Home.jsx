@@ -7,7 +7,7 @@ import HomeHeader from "../Components/HomeHeader";
 import LoginModal from "../Components/LoginModal";
 import Logo from "../Components/Logo";
 import { MENU_BTN_1, MENU_BTN_2, MENU_BTN_3 } from "../constants/standard";
-import { menuState, modalState } from "../state";
+import { loginState, menuState, modalState, themeState } from "../state";
 
 const HomeWrap = styled.div`
   width: 100vw;
@@ -23,6 +23,7 @@ const HomeContainer = styled(Container)`
   align-items: center;
   padding: 30px;
   box-sizing: border-box;
+  background-color: ${(props) => props.theme.bgColor};
 `;
 
 const MenuContainer = styled.div`
@@ -50,6 +51,13 @@ const Button = styled.button`
   font-weight: 500;
   border-radius: 5px;
   color: #a538ff;
+`;
+
+const UserContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Home = () => {
