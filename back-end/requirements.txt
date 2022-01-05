@@ -5,3 +5,4 @@ Flask-SQLAlchemy==2.5.1
 Flask-Cors==3.0.10
 PyJWT==2.3.0
 bcrypt
+selenium==3.141.0
