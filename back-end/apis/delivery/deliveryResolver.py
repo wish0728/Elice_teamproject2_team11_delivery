@@ -1,7 +1,6 @@
 from flask_restx import Resource, Namespace,fields
 # from services.deliveryService import getFreq, getFreqByDay
-from ..services.deliveryService import *
-
+from . import deliveryService
 Deliveryfreq = Namespace("delivery", description="배달 관련 api")
 
 area = Deliveryfreq.model('Area', { 
@@ -18,14 +17,14 @@ class getFreq(Resource):
     @Deliveryfreq.expect(area)
     def get(self, area1, area2):
         '''해당 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.''' 
-        return getFreq.get(area1,area2)
+        return deliveryService.getFreq(area1,area2)
 
 @Deliveryfreq.route('/getFreqByDay/<string:area1>/<string:area2>')
 class getFreqByDay(Resource):
     @Deliveryfreq.expect(area)
     def get(self, area1, area2):
         '''해당 시군구와 일치하는 요일별 배달건수 평균을 가져옵니다.''' 
-        return getFreqByDay.get(area1,area2)
+        return deliveryService.getFreqByDay(area1,area2)
 
 
 # @Deliveryfreq.route('/getFreqByYear/<int:year>/<string:area1>/<string:area2>')

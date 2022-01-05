@@ -12,9 +12,9 @@ def create_app():
     CORS(app)
     
     #일단 services로 대체 -> 후에 resolver로 하기 
-    from apis.services.deliveryService import Deliveryfreq
+    from apis.delivery.deliveryResolver import Deliveryfreq
     from apis.auth import Auth
-    from apis.services.mapService  import Map
+    from apis.map.mapResolver  import Map
     app.config.from_object(config)  # config 에서 가져온 파일을 사용합니다.
 
     db.init_app(app)  # SQLAlchemy 객체를 app 객체와 이어줍니다.
