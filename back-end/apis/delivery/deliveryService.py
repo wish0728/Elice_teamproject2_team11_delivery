@@ -1,16 +1,11 @@
 from flask import jsonify
-from flask_restx import Resource, Namespace,fields
 from models.delivery import deliveryfreq_by_time_area as d
 from models.delivery  import freqavg as fa, freqavg_by_area1 as fa1
 from models.exception  import area1_for_exception as a1, area2_for_exception as a2
 from models.delivery  import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
 
 
-Deliveryfreq = Namespace("delivery", description="배달 관련 api")
-area = Deliveryfreq.model('Area', { 
-    'area1': fields.String(description='area1_City_Do', required=True, example="서울특별시"),
-    'area2': fields.String(description='area2_Si_Gun_Gu', required=True, example="강남구")
-})
+
 
 def exceptionForArea(area1,area2):
     area1_list = [row.area1 for row in a1.query.all()]
@@ -24,42 +19,38 @@ def exceptionForArea(area1,area2):
 # 시군구 입력 -> 시간대별 평균
 # area1과 area2에 따라 0~23에 해당하는 배달건수 평균값 보내주기
 # 시군구 전체 데이터를 보고 싶으면 area2에 '전체'를 보내주기
-@Deliveryfreq.route('/getFreq/<string:area1>/<string:area2>')
-class getFreq(Resource):
-    @Deliveryfreq.expect(area)
-    def get(self, area1, area2):
-        '''해당 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.''' 
-        if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
-        result = list({'time':i, 'freqavg':0} for i in range(24))
-        if area2 == '전체':
-            rows = fa1.query.filter_by(area1=area1).all()
-        else:   
-            rows = fa.query.filter_by(area1=area1, area2=area2).all()
-        items = [row.as_dict() for row in rows]
-        timeLst = [row.time for row in rows]
-        i=0
-        for time in timeLst:
-            result[time]["freqavg"] = items[i]["freqavg"]
-            i+=1
-        return jsonify(result)
 
-@Deliveryfreq.route('/getFreqByDay/<string:area1>/<string:area2>')
-class getFreqByDay(Resource):
-    @Deliveryfreq.expect(area)
-    def get(self, area1, area2):
-        '''해당 시군구와 일치하는 요일별 배달건수 평균을 가져옵니다.''' 
-        if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
-        # dayLst = ['월', '화', '수', '목', '금', '토','일']
-        # result = list({'day':i, 'freqavg': 0} for i in dayLst)
-        if area2 == '전체':
-            rows = fd1.query.filter_by(area1=area1).all()
-        else:   
-            rows = fd2.query.filter_by(area1=area1, area2=area2).all()
-        items = [row.as_dict() for row in rows]
-        # Lst = [row.day for row in rows]
-        # print(f'items:{items}')
-        # print(f'Lst:{Lst}')
-        return jsonify(items)
+def getFreq(area1, area2):
+    '''해당 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.''' 
+    if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
+    result = list({'time':i, 'freqavg':0} for i in range(24))
+    if area2 == '전체':
+        rows = fa1.query.filter_by(area1=area1).all()
+    else:   
+        rows = fa.query.filter_by(area1=area1, area2=area2).all()
+    items = [row.as_dict() for row in rows]
+    timeLst = [row.time for row in rows]
+    i=0
+    for time in timeLst:
+        result[time]["freqavg"] = items[i]["freqavg"]
+        i+=1
+    return jsonify(result)
+
+
+def getFreqByDay(self, area1, area2):
+    '''해당 시군구와 일치하는 요일별 배달건수 평균을 가져옵니다.''' 
+    if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
+    # dayLst = ['월', '화', '수', '목', '금', '토','일']
+    # result = list({'day':i, 'freqavg': 0} for i in dayLst)
+    if area2 == '전체':
+        rows = fd1.query.filter_by(area1=area1).all()
+    else:   
+        rows = fd2.query.filter_by(area1=area1, area2=area2).all()
+    items = [row.as_dict() for row in rows]
+    # Lst = [row.day for row in rows]
+    # print(f'items:{items}')
+    # print(f'Lst:{Lst}')
+    return jsonify(items)
 
 
 # @Deliveryfreq.route('/getFreqByYear/<int:year>/<string:area1>/<string:area2>')
