@@ -145,24 +145,6 @@ class AuthChangepw(Resource):
             return {
                 "message":"password changed"
             },200
-# 이메일 인증
-@Auth.route('/findpw')
-class AuthFindpw(Resource):
-    @Auth.expect(user_fields_auth1)
-    @Auth.response(200, "Find password")
-    @Auth.response(404, "Not found")
-    @Auth.response(500, "Can't find password")
-    def post(self):
-        _LENGTH = 6 
-        string_pool = string.digits # "0123456789" 
-        randNum = "" # 결과 값 
-        for i in range(_LENGTH) : # 랜덤한 하나의 숫자를 뽑아서, 문자열 결합. 
-            randNum += random.choice(string_pool) 
-        randNum = int(randNum) #랜덤 숫자 생성
-        # pip install flask flask-mail python-dotenvpip flask-mail-sendgrid
-
-
-
 
 # 로그아웃
 @Auth.route('/logout')
