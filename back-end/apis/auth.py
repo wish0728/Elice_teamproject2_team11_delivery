@@ -6,6 +6,8 @@ import jwt #pip install PyJWT (암, 복호화 확인)
 import bcrypt #pip install bcrypt (암호화, 암호일치 확인)
 # import pandas as pd 
 import sqlite3
+import string 
+import random
 db = SQLAlchemy()
 
 Auth = Namespace(name="auth", description="사용자 인증")
@@ -15,6 +17,7 @@ user_fields = Auth.model('User', {  # Model 객체 생성
 user_fields_auth1 = Auth.inherit('User Auth', user_fields, {
     'name': fields.String(description='name', required=True, example="CCH")
 })
+
 user_fields_auth2 = Auth.inherit('User Auth', user_fields, {
     'password': fields.String(description='Password', required=True, example="password")
 })
@@ -34,10 +37,11 @@ class AuthRegisterCheckId(Resource):
         new_user = user.query.filter_by(id=id).first() # id 가 동일한 유저의 정보 저장
         if new_user: return {"message":"Unavailable id"},500 #결과값이 있다면 = 등록된 유저
         else: return {"message":"Available id"},200
+
 #회원가입 요청
 @Auth.route('/register')
 class AuthRegister(Resource):
-    @Auth.expect(user_fields_auth1,user_fields_auth2)
+    @Auth.expect(user_fields_auth1)
     @Auth.response(200, "Available id")
     @Auth.response(500, "Unavailable id")
     def post(self):
@@ -65,7 +69,6 @@ class AuthLogin(Resource):
         password = request.json['password']
         saved_user = user.query.filter_by(id=id).first()
         # saved_user_area = saved_user.area
-        # encrypted_pw = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
         #유효하지 않은 ID
         if not saved_user: return{
                 "message": "User Not Found"
@@ -111,15 +114,15 @@ class AuthLogin(Resource):
 #             return {
 #                 "message":"password changed"
 #             },200
-#비밀번호 찾기
-@Auth.route('/findpw')
-class AuthFindpw(Resource):
+#비밀번호 변경
+@Auth.route('/changepw')
+class AuthChangepw(Resource):
     @Auth.expect(user_fields_auth1)
-    @Auth.response(200, "Find password")
+    @Auth.response(200, "password Changed")
     @Auth.response(404, "Not found")
-    @Auth.response(500, "Can't find password")
+    @Auth.response(500, "password change fail")
     def post(self):
-        '''유저 비밀번호 찾기'''
+        '''유저 비밀번호 변경하기'''
         conn = sqlite3.connect('NaplessRabbit.db')
         cur = conn.cursor()
         id = request.json['id']
@@ -138,11 +141,27 @@ class AuthFindpw(Resource):
             },500
         else: 
             cur.execute(sql, (encrypted_pw, saved_user.name))
-            # cur.execute(sql, (new_password, saved_user.name))
             conn.commit()
             return {
                 "message":"password changed"
             },200
+# 이메일 인증
+@Auth.route('/findpw')
+class AuthFindpw(Resource):
+    @Auth.expect(user_fields_auth1)
+    @Auth.response(200, "Find password")
+    @Auth.response(404, "Not found")
+    @Auth.response(500, "Can't find password")
+    def post(self):
+        _LENGTH = 6 
+        string_pool = string.digits # "0123456789" 
+        randNum = "" # 결과 값 
+        for i in range(_LENGTH) : # 랜덤한 하나의 숫자를 뽑아서, 문자열 결합. 
+            randNum += random.choice(string_pool) 
+        randNum = int(randNum) #랜덤 숫자 생성
+        # pip install flask flask-mail python-dotenvpip flask-mail-sendgrid
+
+
 
 
 # 로그아웃
