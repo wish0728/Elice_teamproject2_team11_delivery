@@ -9,11 +9,13 @@ import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 import { loadingState, menuState } from "../state";
-import { CONTENTS_BUTTON } from "../constants/Mytown_data";
+import { CONTENTS_ARTICLE, CONTENTS_BUTTON } from "../constants/Mytown_data";
 
 const MytownContainer = styled(Container)`
   display: flex;
   flex-direction: column;
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.titleColor};
 `;
 
 const MytownBody = styled.div`

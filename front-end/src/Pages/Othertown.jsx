@@ -7,15 +7,8 @@ import MenuHeader from "../Components/MenuHeader";
 const OthertownContainer = styled(Container)`
   display: flex;
   flex-direction: column;
-`;
-
-const OthertownHeader = styled.div`
-  width: 100%;
-  height: 70px;
-  flex-grow: 2;
-  padding: 10px;
-  box-sizing: border-box;
-  border-bottom: 1px solid;
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.titleColor};
 `;
 
 const OthertownBody = styled.div`
