@@ -190,7 +190,7 @@ const Mytown = () => {
             {isLoading && <Loading />}
           </TestContentsArea>
           <MapContentsArea>
-            <Map setArea={setArea} />
+            <Map area={area} setArea={setArea} />
           </MapContentsArea>
         </MainContents>
       </MytownBody>

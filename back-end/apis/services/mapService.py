@@ -33,4 +33,4 @@ class getGeocode(Resource):
             rows = l2.query.filter_by(area1=area1, area2=area2).all()
         result = [row.as_dict() for row in rows]
         print(result)
-        return jsonify(result)
+        
