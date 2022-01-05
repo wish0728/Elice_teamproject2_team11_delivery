@@ -10,6 +10,7 @@ area = Map.model('Area', {
     'area2': fields.String(description='area2_Si_Gun_Gu', required=True, example="강남구")
 })
 
+
 @Map.route('/getGeocode/<string:area1>/<string:area2>')
 class getGeocode(Resource):
     @Map.expect(area)
