@@ -1,26 +1,26 @@
-from flask import Flask, jsonify, request,session
+from flask import request,session
 from flask_restx import Resource, Namespace,fields
 from models.user import user
 from flask_sqlalchemy import SQLAlchemy
-import jwt #pip install PyJWT (암, 복호화 확인)
 import bcrypt #pip install bcrypt (암호화, 암호일치 확인)
 # import pandas as pd 
 import sqlite3
-import string 
-import random
+
 db = SQLAlchemy()
 
 Auth = Namespace(name="auth", description="사용자 인증")
 user_fields = Auth.model('User', {  # Model 객체 생성
-    'id': fields.String(description='a User Id', required=True, example="CCH@naver.com")
-})
-user_fields_auth1 = Auth.inherit('User Auth', user_fields, {
-    'name': fields.String(description='name', required=True, example="CCH")
-})
-
-user_fields_auth2 = Auth.inherit('User Auth', user_fields, {
+    'id': fields.String(description='a User Id', required=True, example="CCH@naver.com"),
+    'name': fields.String(description='name', required=True, example="CCH"),
     'password': fields.String(description='Password', required=True, example="password")
 })
+# user_fields_auth1 = Auth.inherit('User Auth', user_fields, {
+#     'name': fields.String(description='name', required=True, example="CCH")
+# })
+
+# user_fields_auth2 = Auth.inherit('User Auth', user_fields, {
+#     'password': fields.String(description='Password', required=True, example="password")
+# })
 # user_fields_auth = Auth.inherit('User Auth', user_fields, {
 #     'area': fields.String(description='area', required=True, example="경기도 용인시")
 # })
@@ -41,7 +41,7 @@ class AuthRegisterCheckId(Resource):
 #회원가입 요청
 @Auth.route('/register')
 class AuthRegister(Resource):
-    @Auth.expect(user_fields_auth1)
+    @Auth.expect(user_fields)
     @Auth.response(200, "Available id")
     @Auth.response(500, "Unavailable id")
     def post(self):
@@ -59,7 +59,7 @@ class AuthRegister(Resource):
 # 로그인
 @Auth.route('/login')
 class AuthLogin(Resource):
-    @Auth.expect(user_fields_auth2)
+    @Auth.expect(user_fields)
     @Auth.response(200, "login Success")
     @Auth.response(404, "Not found")
     @Auth.response(500, "login Failed")
@@ -117,7 +117,7 @@ class AuthLogin(Resource):
 #비밀번호 변경
 @Auth.route('/changepw')
 class AuthChangepw(Resource):
-    @Auth.expect(user_fields_auth1)
+    @Auth.expect(user_fields)
     @Auth.response(200, "password Changed")
     @Auth.response(404, "Not found")
     @Auth.response(500, "password change fail")
@@ -145,24 +145,6 @@ class AuthChangepw(Resource):
             return {
                 "message":"password changed"
             },200
-# 이메일 인증
-@Auth.route('/findpw')
-class AuthFindpw(Resource):
-    @Auth.expect(user_fields_auth1)
-    @Auth.response(200, "Find password")
-    @Auth.response(404, "Not found")
-    @Auth.response(500, "Can't find password")
-    def post(self):
-        _LENGTH = 6 
-        string_pool = string.digits # "0123456789" 
-        randNum = "" # 결과 값 
-        for i in range(_LENGTH) : # 랜덤한 하나의 숫자를 뽑아서, 문자열 결합. 
-            randNum += random.choice(string_pool) 
-        randNum = int(randNum) #랜덤 숫자 생성
-        # pip install flask flask-mail python-dotenvpip flask-mail-sendgrid
-
-
-
 
 # 로그아웃
 @Auth.route('/logout')
