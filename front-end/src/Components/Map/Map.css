@@ -3,6 +3,6 @@ path:hover {
   opacity: 0.5;
 }
 .active {
-  fill: #a538ff;
+  fill: orange;
   opacity: 0.5;
 }
