@@ -125,10 +125,12 @@ const Mytown = () => {
     try {
       //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 )
       setIsLoading(true);
-      await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
-        setApiRes(response.data);
-        console.log("옵젝:", typeof response.data, response.data);
-      });
+      await deliveryApi
+        .get_Time_Average_By_Day(area, dAreaValue)
+        .then((response) => {
+          setApiRes(response.data);
+          console.log("옵젝:", typeof response.data, response.data);
+        });
     } catch (e) {
       console.log(e);
     }

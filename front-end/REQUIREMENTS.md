@@ -19,6 +19,7 @@ npm i axios
 ## nivo
 
 npm i @nivo/bar
+npm i @nivo/line
 
 ## @svg-maps/south-korea
 

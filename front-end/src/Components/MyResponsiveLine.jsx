@@ -1,32 +1,21 @@
 import React from "react";
-import { ResponsiveBar } from "@nivo/bar";
+import { ResponsiveLine } from "@nivo/line";
 
-const colors = {
-  월: "blue",
-  화: "blue",
-  수: "blue",
-  목: "blue",
-  금: "blue",
-  토: "red",
-  일: "red",
-};
-const getColor = (bar) => colors[bar.indexValue];
-const MyResponsiveBar = ({ data }) => {
+const MyResponsiveLine = ({ data }) => {
   return (
-    <ResponsiveBar
-      colors={getColor}
+    <ResponsiveLine
       data={data}
       keys={["freqavg"]}
-      indexBy="day"
+      indexBy="time"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.4}
       valueScale={{ type: "linear" }}
+      colors="#3182CE"
       animate={true}
       enableLabel={false}
       axisTop={null}
       axisRight={null}
       axisLeft={{
-        format: (e) => Math.floor(e) === e && e,
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
@@ -38,4 +27,4 @@ const MyResponsiveBar = ({ data }) => {
   );
 };
 
-export default MyResponsiveBar;
+export default MyResponsiveLine;
