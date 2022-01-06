@@ -117,15 +117,18 @@ const Mytown = () => {
           setDetailArea(element.value); //두번째 Select를 위한 값 설정
         }
       });
+      console.log(area);
+      //지도 클릭시 dAreaValue 값 전체로 설정
+      setDAreaValue("전체");
     }
   }, [area]);
 
-  //지도 클릭시 dAreaValue 값 전체로 설정
+  //바로 실행되지 않는 문제 해결
   useEffect(() => {
-    console.log(area);
-    setDAreaValue("전체");
-    apiTest();
-  }, [area]);
+    if (dAreaValue === "전체") {
+      apiExecute();
+    }
+  }, [area, dAreaValue]);
 
   //확인하러 가기 버튼에 연결
   const searchArea = () => {
@@ -138,38 +141,42 @@ const Mytown = () => {
       alert("군/구를 선택해주세요!");
       return;
     }
-    apiTest();
+    apiExecute();
   };
 
   //api 받아오는 메소드
-  const apiTest = async () => {
+  const apiExecute = async () => {
     try {
       //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 ) 굳이 필요는 없음
       setIsLoading(true);
-      switch (standardBy) {
-        case "by_time":
-          console.log("시간에 따라");
-          await deliveryApi
-            .get_Time_Average(area, dAreaValue)
-            .then((response) => {
-              setApiRes(response.data);
-              response.data.map((i, idx) =>
-                console.log(i["time"], i["freqavg"])
-              );
-            });
-          break;
-        case "by_day":
-          console.log("요일에 따라");
-          await deliveryApi
-            .get_Day_Average(area, dAreaValue)
-            .then((response) => {
-              setApiRes(response.data);
-              response.data.map((i, idx) =>
-                console.log(i["time"], i["freqavg"])
-              );
-            });
-          break;
-      }
+      // switch (standardBy) {
+      //   case "by_time":
+      //     console.log("시간에 따라");
+      //     await deliveryApi
+      //       .get_Time_Average(area, dAreaValue)
+      //       .then((response) => {
+      //         setApiRes(response.data);
+      //         response.data.map((i, idx) =>
+      //           console.log(i["time"], i["freqavg"])
+      //         );
+      //       });
+      //     break;
+      //   case "by_day":
+      //     console.log("요일에 따라");
+      //     await deliveryApi
+      //       .get_Day_Average(area, dAreaValue)
+      //       .then((response) => {
+      //         setApiRes(response.data);
+      //         response.data.map((i, idx) =>
+      //           console.log(i["time"], i["freqavg"])
+      //         );
+      //       });
+      //     break;
+      // }
+      await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
+        setApiRes(response.data);
+        response.data.map((i, idx) => console.log(i["time"], i["freqavg"]));
+      });
     } catch (e) {
       console.log(e);
     }
