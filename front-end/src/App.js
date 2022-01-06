@@ -8,7 +8,6 @@ import Register from "./Pages/Register";
 import { ThemeProvider } from "styled-components";
 import { useRecoilValue } from "recoil";
 import { themeState } from "./state";
-import Test from "./Pages/Test";
 
 function App() {
   //localStorage 작업 해야함
@@ -23,7 +22,6 @@ function App() {
         <Route exact path="/mytown" element={<Mytown />} />
         <Route exact path="/othertown" element={<Othertown />} />
         <Route exact path="/register" element={<Register />} />
-        <Route exact path="/map" element={<Test />} />
         {/* 경로 임시 설정 추후 변경 */}
       </Routes>
     </ThemeProvider>
