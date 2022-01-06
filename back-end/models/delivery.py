@@ -65,7 +65,6 @@ class freqavg_by_mealtime1(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     area1= db.Column(db.String(45), nullable=False)
     area2= db.Column(db.String(45), nullable=False)
-    area3= db.Column(db.String(45), nullable=False)
     mealtime = db.Column(db.String(10), nullable=False)
     freqavg = db.Column(db.Integer, nullable=False)
 

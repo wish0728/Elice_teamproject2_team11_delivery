@@ -19,11 +19,10 @@ cursor.execute('''CREATE TABLE freqavg_by_mealtime1 (
                id INTEGER PRIMARY KEY AUTOINCREMENT, 
                area1 VARCHAR(45) NOT NULL, 
                area2 VARCHAR(45) NOT NULL,
-               area3 VARCHAR(45) NOT NULL, 
                mealtime VARCHAR(10) NOT NULL, 
                freqavg INT NOT NULL) ''')
 
-#시군구 단위별로 점심,저녁,야식시간대별 top3지역을 저장한다. (세종특별자치시 미포함)
+# 시군구 단위별로 점심,저녁,야식시간대별 top3지역을 저장한다. (세종특별자치시 미포함)
 cursor.execute('''CREATE TABLE freqavg_by_mealtime2 (
                id INTEGER PRIMARY KEY AUTOINCREMENT, 
                area1 VARCHAR(45) NOT NULL, 
@@ -51,16 +50,16 @@ for area1 in level1_list:
     #원하는 시간대만 추출한 뒤 평균 배달건수가 가장 많은 3지역만 얻는다. (3개보다 적을 수 있다.)
     peak_df = region_df[(region_df['시간대']>= time[0]) & (region_df['시간대']<=time[1])]
     # AUTOINCREMENT를 제외하고 컬럼과 테이블의 속성명은 일치해야한다. 컬럼과 같은 이름을 가진 항목으로 값이 저장된다.
-    peak_df.rename(columns={'광역시도':'area1','시군구':'area2','읍면동':'area3','배달건수':'freqavg'}, inplace = True)
+    peak_df.rename(columns={'광역시도':'area1','시군구':'area2','배달건수':'freqavg'}, inplace = True)
     
-    peak_df = peak_df.groupby(['area1','area2', 'area3'])['freqavg'].mean().sort_values(ascending=False).reset_index().head(3).copy()
+    peak_df = peak_df.groupby(['area1','area2'])['freqavg'].mean().sort_values(ascending=False).reset_index().head(3).copy()
     # 'A value is trying to be set on a copy of a slice from a DataFrame' warining 발생하는데 groupby를 사용해서 loc등을 사용하는 방법을 잘 모르겠다.
     # .copy()를 이용해 해결해야할까?
 
     peak_df['freqavg'] = peak_df['freqavg'].round()
     peak_df = peak_df.astype({'freqavg':'int'})
     peak_df['mealtime'] = time[2]
-    peak_df = peak_df[['area1','area2','area3','mealtime','freqavg']]
+    peak_df = peak_df[['area1','area2','mealtime','freqavg']]
     area1_list.append(peak_df)
 
 area1_df = pd.concat(area1_list,ignore_index=True)
