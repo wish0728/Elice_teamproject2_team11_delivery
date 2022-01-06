@@ -12,7 +12,8 @@ Auth = Namespace(name="auth", description="사용자 인증")
 user_fields = Auth.model('User', {  # Model 객체 생성
     'id': fields.String(description='a User Id', required=True, example="CCH@naver.com"),
     'name': fields.String(description='name', required=True, example="CCH"),
-    'password': fields.String(description='Password', required=True, example="password")
+    'password': fields.String(description='Password', required=True, example="password"),
+    'area': fields.String(description='area', required=True, example="경기도 용인시")
 })
 # user_fields_auth1 = Auth.inherit('User Auth', user_fields, {
 #     'name': fields.String(description='name', required=True, example="CCH")
@@ -49,10 +50,10 @@ class AuthRegister(Resource):
         id = request.json['id']
         name = request.json['name']
         password = request.json['password']
-        # area = request.json['area']
+        area = request.json['area']
         encrypted_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
 
-        new_user = user(id=id, name=name, password=encrypted_pw) #area도 추후 추가
+        new_user = user(id=id, name=name, password=encrypted_pw,area=area) #area도 추후 추가
         db.session.add(new_user)
         db.session.commit()
         return {"message":"User Information saved"},200 #성공
@@ -84,7 +85,8 @@ class AuthLogin(Resource):
             return {
                 # "message": "login Success ",
                 # "area" : saved_user_area,
-                "name":saved_user.name
+                "name":saved_user.name,
+                "area":saved_user.area
             },200
 # #비밀번호 찾기
 # @Auth.route('/findpw')
