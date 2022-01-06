@@ -13,7 +13,6 @@ cursor.execute('''CREATE TABLE freqavg_by_mealtime1 (
                id INTEGER PRIMARY KEY AUTOINCREMENT, 
                area1 VARCHAR(45) NOT NULL, 
                area2 VARCHAR(45) NOT NULL,
-               area3 VARCHAR(45) NOT NULL, 
                mealtime VARCHAR(10) NOT NULL, 
                freqavg INT NOT NULL) ''')
 
