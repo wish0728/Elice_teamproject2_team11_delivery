@@ -23,6 +23,11 @@ const deliveryApi = {
   get_Time_Average: async (keyword1, keyword2) => {
     return await api(`${DELIVERY_END_POINT}/getFreq/${keyword1}/${keyword2}`);
   },
+  get_Day_Average: async (keyword1, keyword2) => {
+    return await api(
+      `${DELIVERY_END_POINT}/getFreqByDay/${keyword1}/${keyword2}`
+    );
+  },
 };
 
 export default deliveryApi;

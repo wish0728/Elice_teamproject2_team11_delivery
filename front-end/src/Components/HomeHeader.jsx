@@ -67,6 +67,7 @@ const HomeHeader = () => {
   const onClickModal = () => {
     setModalOpen((current) => !current);
   };
+
   return (
     <HeaderContainer>
       <HeaderEmptyDiv />

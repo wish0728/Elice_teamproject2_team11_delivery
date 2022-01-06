@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { themeState } from "../state";
 import { Dark, Light } from "../Themes/theme";
@@ -7,6 +7,7 @@ import { Dark, Light } from "../Themes/theme";
 const CheckBoxWrapper = styled.div`
   position: relative;
 `;
+
 const CheckBoxLabel = styled.label`
   position: absolute;
   top: 0;
@@ -28,6 +29,7 @@ const CheckBoxLabel = styled.label`
     transition: 0.2s;
   }
 `;
+
 const CheckBox = styled.input`
   opacity: 0;
   z-index: 1;
@@ -53,7 +55,11 @@ const ToggleSwitch = () => {
   const [theme, setTheme] = useRecoilState(themeState);
 
   //새로 랜더링 될때마다 라이트모드로 돌아감 => 홈으로 갈때마다 라이트 모드로 돌아감
-  const [isDarkMode, setIsDarkMode] = useState(false); //체크 감지
+  const { name: themeName } = useRecoilValue(themeState);
+  //삼항 연산자를 사용하여 홈으로 돌아갈때마다 false로 초기화 되지 않도록 바꿈
+  const [isDarkMode, setIsDarkMode] = useState(
+    themeName === "light" ? false : true
+  ); //체크 감지
 
   //토글 변경될때마다 isDarkMode 값 변경
   const onChangeToggle = () => {
