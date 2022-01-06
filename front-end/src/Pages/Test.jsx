@@ -124,10 +124,12 @@ const Mytown = () => {
   const apiTest = async () => {
     try {
       setIsLoading(true);
-      await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
-        setApiRes(response.data);
-        console.log("옵젝:", typeof response.data, response.data);
-      });
+      await deliveryApi
+        .get_Time_Average_By_Day(area, dAreaValue)
+        .then((response) => {
+          setApiRes(response.data);
+          console.log("옵젝:", typeof response.data, response.data);
+        });
     } catch (e) {
       console.log(e);
     }
