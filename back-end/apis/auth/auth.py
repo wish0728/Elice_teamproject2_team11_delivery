@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 import bcrypt #pip install bcrypt (암호화, 암호일치 확인)
 # import pandas as pd 
 import sqlite3
-
 db = SQLAlchemy()
 
 Auth = Namespace(name="auth", description="사용자 인증")
@@ -15,17 +14,6 @@ user_fields = Auth.model('User', {  # Model 객체 생성
     'password': fields.String(description='Password', required=True, example="password"),
     'area': fields.String(description='area', required=True, example="경기도 용인시")
 })
-# user_fields_auth1 = Auth.inherit('User Auth', user_fields, {
-#     'name': fields.String(description='name', required=True, example="CCH")
-# })
-
-# user_fields_auth2 = Auth.inherit('User Auth', user_fields, {
-#     'password': fields.String(description='Password', required=True, example="password")
-# })
-# user_fields_auth = Auth.inherit('User Auth', user_fields, {
-#     'area': fields.String(description='area', required=True, example="경기도 용인시")
-# })
-# users = []
 
 # 회원가입 유효성
 @Auth.route('/register/<string:id>')
@@ -88,34 +76,7 @@ class AuthLogin(Resource):
                 "name":saved_user.name,
                 "area":saved_user.area
             },200
-# #비밀번호 찾기
-# @Auth.route('/findpw')
-# class AuthFindpw(Resource):
-#     @Auth.expect(user_fields_auth1)
-#     @Auth.response(200, "Find password")
-#     @Auth.response(404, "Not found")
-#     @Auth.response(500, "Can't find password")
-#     def post(self):
-#         '''유저 비밀번호 찾기'''
-#         id = request.json['id']
-#         name = request.json['name']
-#         new_password = request.json['password']
-#         saved_user = user.query.filter_by(id=id).first()
-#         # encrypted_pw = bcrypt.hashpw(new_password.encode('utf8'),bcrypt.gensalt())
-#         if not saved_user: 
-#             return{
-#                 "message":"User Not Found"
-#             },404
-#         elif name != saved_user.name:
-#             return{
-#                 "message":"Wrong user Information"
-#             },500
-#         else: 
-#             saved_user.password = new_password
-#             db.session.commit()
-#             return {
-#                 "message":"password changed"
-#             },200
+
 #비밀번호 변경
 @Auth.route('/changepw')
 class AuthChangepw(Resource):
