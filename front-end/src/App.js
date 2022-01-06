@@ -5,6 +5,7 @@ import AuthSetting from "./Pages/AuthSetting";
 import Mytown from "./Pages/Mytown";
 import Othertown from "./Pages/Othertown";
 import Register from "./Pages/Register";
+import Test from "./Pages/Test";
 import { ThemeProvider } from "styled-components";
 import { useRecoilValue } from "recoil";
 import { themeState } from "./state";
@@ -23,6 +24,7 @@ function App() {
         <Route exact path="/othertown" element={<Othertown />} />
         <Route exact path="/register" element={<Register />} />
         {/* 경로 임시 설정 추후 변경 */}
+        <Route exact path="/test" element={<Test />} />
       </Routes>
     </ThemeProvider>
   );
