@@ -3,7 +3,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_restx import Api
 from flask_cors import CORS
-from db_connect import db
+from .db_connect import db
 
 import config
 
