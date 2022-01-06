@@ -105,6 +105,7 @@ const Mytown = () => {
   const [dAreaValue, setDAreaValue] = useState(""); //두번째 Select의 값
   const [apiRes, setApiRes] = useState([]); //api 통신 값을 담을 변수
   const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
+  const [year, setYear] = useState();
 
   useEffect(() => {
     //첫번째 Select가 초기화 될경우
@@ -174,6 +175,17 @@ const Mytown = () => {
               );
             });
           break;
+        case "by_holiday":
+          console.log("공휴일에 따라");
+          await deliveryApi
+            .get_Holiday_Average(area, dAreaValue)
+            .then((response) => {
+              let res = response.data.filter((it) => it.year == year);
+              console.log(res);
+              setApiRes(res);
+              res.map((i, idx) => console.log(i["year"], typeof i["year"]));
+            });
+          break;
       }
       // await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
       //   setApiRes(response.data);
@@ -198,6 +210,12 @@ const Mytown = () => {
 
   const changeStandardBySelect = (e) => {
     setStandardBy(e.target.value);
+  };
+
+  const changeYear = (e) => {
+    console.log(typeof parseInt(e.target.value));
+    console.log(parseInt(e.target.value));
+    setYear(parseInt(e.target.value));
   };
 
   return (
@@ -234,7 +252,15 @@ const Mytown = () => {
             <Select onChange={changeStandardBySelect} value={standardBy}>
               <Option value="by_time">시간에 따라</Option>
               <Option value="by_day">요일에 따라</Option>
+              <Option value="by_holiday">공휴일에 따라</Option>
             </Select>
+            {standardBy === "by_holiday" && (
+              <Select onChange={changeYear} value={year}>
+                <Option value="2019">2019</Option>
+                <Option value="2020">2020</Option>
+                <Option value="2021">2021</Option>
+              </Select>
+            )}
             <SubmitButton onClick={searchArea}>{CONTENTS_BUTTON}</SubmitButton>
           </SubmitBtnContainer>
           <ContentsArea>
