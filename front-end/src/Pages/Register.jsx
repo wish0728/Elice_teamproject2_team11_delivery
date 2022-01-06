@@ -20,6 +20,7 @@ const InputContainer = styled.div`
   align-items: center;
   font-size: 20px;
 `;
+
 const Label = styled.label``;
 
 const Input = styled.input``;
@@ -68,12 +69,15 @@ const Register = () => {
       await authApi.valid_id(id).then((response) => {
         switch (response.status) {
           case 200:
-            return setIdValid(true);
+            setIdValid(true);
+            return;
           //해당 부분 오류 있는듯 함. 500번이 돌아오면 바로 catch문으로 들어가는듯
           case 500:
-            return setIdValid(false);
+            setIdValid(false);
+            return;
           default:
-            return setIdValid(false);
+            setIdValid(false);
+            return;
         }
       });
     } catch (e) {
@@ -88,7 +92,8 @@ const Register = () => {
       //아이디 유효성 검사 버튼 클릭 안했을시
       alert(REGIST_ID_VALID_CHECK);
       return setCheckIdValid(false);
-    } else if (!idValid) {
+    }
+    if (!idValid) {
       //아이디 중복 검사에 걸렸을시
       alert(REGIST_ID_ERROR);
       return setIdValid(false);
@@ -113,6 +118,7 @@ const Register = () => {
         .post("http://127.0.0.1:5000/auth/register", {
           id: id,
           password: passwd,
+          name: name,
         })
         .then((response) => console.log(response));
     } catch (e) {
@@ -124,15 +130,18 @@ const Register = () => {
   const valid_password = () => {
     if (passwd === pwCheck) {
       //동일할 경우 (성공적인 경우)
-      return setPwdValid(true);
+      setPwdValid(true);
+      return;
     } else if (pwCheck === "") {
       //비밀번호 체크란이 비어있을 경우
       alert(REGIST_PWD_EMPTY);
-      return setPwdValid(false);
+      setPwdValid(false);
+      return;
     } else {
       // 비밀번호와 비밀번호 체크가 동일하지 않을 경우
       alert(REGIST_PWD_ERROR);
-      return setPwdValid(false);
+      setPwdValid(false);
+      return;
     }
   };
 

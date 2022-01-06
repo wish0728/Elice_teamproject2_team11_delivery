@@ -18,6 +18,7 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   padding: 15px;
+  background-color: ${(props) => props.theme.bgColor};
 `;
 
 export const EmptyDiv = styled.div``;

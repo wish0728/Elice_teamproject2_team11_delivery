@@ -41,15 +41,16 @@ const Menu = () => {
   //early return 패턴 적용
   useEffect(() => {
     if (location.includes("mytown")) {
-      return setMenuLocation([true, false, false]);
-    } else if (location.includes("othertown")) {
-      console.log("두번째 메뉴");
-      return setMenuLocation([false, true, false]);
-    } else {
-      console.log("menu Location:", location, menuLocation);
-
-      return setMenuLocation([false, false, false]);
+      setMenuLocation([true, false, false]);
+      return;
     }
+    if (location.includes("othertown")) {
+      console.log("두번째 메뉴");
+      setMenuLocation([false, true, false]);
+      return;
+    }
+    console.log("menu Location:", location, menuLocation);
+    setMenuLocation([false, false, false]);
   }, [location]);
 
   return (

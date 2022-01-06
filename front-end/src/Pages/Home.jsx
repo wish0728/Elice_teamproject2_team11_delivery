@@ -7,7 +7,7 @@ import HomeHeader from "../Components/HomeHeader";
 import LoginModal from "../Components/LoginModal";
 import Logo from "../Components/Logo";
 import { MENU_BTN_1, MENU_BTN_2, MENU_BTN_3 } from "../constants/standard";
-import { loginState, menuState } from "../state";
+import { loginState, menuState, modalState, themeState } from "../state";
 
 const HomeWrap = styled.div`
   width: 100vw;
@@ -22,8 +22,8 @@ const HomeContainer = styled(Container)`
   flex-direction: column;
   align-items: center;
   padding: 30px;
-  background-color: white;
   box-sizing: border-box;
+  background-color: ${(props) => props.theme.bgColor};
 `;
 
 const MenuContainer = styled.div`
@@ -53,6 +53,13 @@ const Button = styled.button`
   color: #a538ff;
 `;
 
+const UserContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Home = () => {
   const menuLocation = useRecoilValue(menuState);
   const resetMenuLocation = useResetRecoilState(menuState);
@@ -60,7 +67,7 @@ const Home = () => {
   const homeLocation = useLocation().pathname;
 
   //랜더링 자체가 안되게하는게 나은지 visible로 처리하는게 나은지
-  const isModalOpen = useRecoilValue(loginState);
+  const isModalOpen = useRecoilValue(modalState);
 
   useEffect(() => {
     if (homeLocation === "/") {
