@@ -10,6 +10,7 @@ export default function Map({ area, setArea }) {
 
   const handleClick = (e) => {
     setArea(e.target.id);
+    console.log(e.target.id);
   };
 
   useEffect(() => {

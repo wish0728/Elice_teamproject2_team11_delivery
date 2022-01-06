@@ -3,7 +3,7 @@ import { atom } from "recoil";
 //theme atom
 const themeState = atom({
   key: "theme",
-  default: { titleColor: "#000000", bgColor: "#e9ecef" },
+  default: { name: "light", titleColor: "#000000", bgColor: "#e9ecef" },
 });
 
 //login modal atom
