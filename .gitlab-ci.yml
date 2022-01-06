@@ -14,6 +14,6 @@ Deploy:
     - team-11-runner
   script:
     - docker stop $(docker ps -aq) || true
-    - docker build -t docker-test .
+    - docker build -t docker-test back-end
     - docker run -p 8080:80 docker-test
 
