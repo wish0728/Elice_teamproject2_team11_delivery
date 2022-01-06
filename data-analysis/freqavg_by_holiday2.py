@@ -15,9 +15,10 @@ print(df.head())
 conn = sqlite3.connect("NaplessRabbit.db")
 cursor = conn.cursor()
 
-cursor.execute('''CREATE TABLE freqavg_by_holiday1(
+cursor.execute('''CREATE TABLE freqavg_by_holiday2(
                id INTEGER PRIMARY KEY AUTOINCREMENT, 
                area1 VARCHAR(45) NOT NULL,
+               area2 VARCHAR(45) NOT NULL,
                year INT NOT NULL, 
                holiday VARCHAR(1) NOT NULL, 
                freqavg INT NOT NULL) ''')
@@ -28,19 +29,15 @@ level1_list = list(df['광역시도'].unique())
 # level2_list = list(df[df['광역시도']==Si_Do]['시군구'].unique() for Si_Do in level1_list)
 print(level1_list)
 for Si_Do in level1_list:
-  for target_year in [2019, 2020, 2021]:
-    df_dayFreq = df[(df['날짜'].dt.year==target_year) & (df['광역시도']==Si_Do)]
-    print("1\n")
-    print(df_dayFreq)
-    df_dayFreq = df_dayFreq.groupby(['날짜','day_name']).sum().reset_index()
-    print("2\n")
-    print(df_dayFreq)
-    df_dayFreq = df_dayFreq.groupby('day_name').mean().reset_index()
-    print("3\n")
-    print(df_dayFreq)
-    for row in df_dayFreq.itertuples():    
-      cursor.execute('''INSERT INTO freqavg_by_holiday1 (area1,year,holiday,freqavg) VALUES(?, ?, ?, ?)''', 
-      [Si_Do, target_year, row.day_name, int(round(row.배달건수))])
+  level2_list = list(df[df['광역시도']==Si_Do]['시군구'].unique())
+  for SiGunGu in level2_list:
+    for target_year in [2019, 2020, 2021]:
+      df_dayFreq = df[(df['날짜'].dt.year==target_year) & (df['시군구']==SiGunGu)]
+      df_dayFreq = df_dayFreq.groupby(['날짜','day_name']).sum().reset_index()
+      df_dayFreq = df_dayFreq.groupby('day_name').mean().reset_index()
+      for row in df_dayFreq.itertuples():    
+        cursor.execute('''INSERT INTO freqavg_by_holiday2 (area1,area2, year,holiday,freqavg) VALUES(?, ?, ?, ?, ?)''', 
+        [Si_Do, SiGunGu, target_year, row.day_name, int(round(row.배달건수))])
 #Committing the changes
 conn.commit()
 
