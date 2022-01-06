@@ -29,10 +29,14 @@ level1_list = list(df['광역시도'].unique())
 print(level1_list)
 for Si_Do in level1_list:
   for target_year in [2019, 2020, 2021]:
-    df_dayFreq = df[df['날짜'].dt.year==target_year] 
-    df_dayFreq = df[(df['광역시도'] == Si_Do)].groupby(['날짜','day_name']).sum().reset_index()
+    df_dayFreq = df[(df['날짜'].dt.year==target_year) & (df['광역시도']==Si_Do)]
+    print("1\n")
+    print(df_dayFreq)
+    df_dayFreq = df_dayFreq.groupby(['날짜','day_name']).sum().reset_index()
+    print("2\n")
     print(df_dayFreq)
     df_dayFreq = df_dayFreq.groupby('day_name').mean().reset_index()
+    print("3\n")
     print(df_dayFreq)
     # for row in df_dayFreq.itertuples():    
     #   cursor.execute('''INSERT INTO freqavg_by_holiday1 (area1,year,holiday,freqavg) VALUES(?, ?, ?)''', 

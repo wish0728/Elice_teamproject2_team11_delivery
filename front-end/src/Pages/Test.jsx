@@ -198,7 +198,6 @@ const Mytown = () => {
 
   const changeStandardBySelect = (e) => {
     setStandardBy(e.target.value);
-    console.log("동작한다!");
   };
 
   return (
@@ -235,7 +234,6 @@ const Mytown = () => {
             <Select onChange={changeStandardBySelect} value={standardBy}>
               <Option value="by_time">시간에 따라</Option>
               <Option value="by_day">요일에 따라</Option>
-              <Option value="by_day">공휴일에 따라</Option>
             </Select>
             <SubmitButton onClick={searchArea}>{CONTENTS_BUTTON}</SubmitButton>
           </SubmitBtnContainer>
