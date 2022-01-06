@@ -1,26 +1,27 @@
-from flask import Flask, jsonify, request,session
+from flask import request,session
 from flask_restx import Resource, Namespace,fields
 from models.user import user
 from flask_sqlalchemy import SQLAlchemy
-import jwt #pip install PyJWT (암, 복호화 확인)
 import bcrypt #pip install bcrypt (암호화, 암호일치 확인)
 # import pandas as pd 
 import sqlite3
-import string 
-import random
+
 db = SQLAlchemy()
 
 Auth = Namespace(name="auth", description="사용자 인증")
 user_fields = Auth.model('User', {  # Model 객체 생성
-    'id': fields.String(description='a User Id', required=True, example="CCH@naver.com")
+    'id': fields.String(description='a User Id', required=True, example="CCH@naver.com"),
+    'name': fields.String(description='name', required=True, example="CCH"),
+    'password': fields.String(description='Password', required=True, example="password"),
+    'area': fields.String(description='area', required=True, example="경기도 용인시")
 })
-user_fields_auth1 = Auth.inherit('User Auth', user_fields, {
-    'name': fields.String(description='name', required=True, example="CCH")
-})
+# user_fields_auth1 = Auth.inherit('User Auth', user_fields, {
+#     'name': fields.String(description='name', required=True, example="CCH")
+# })
 
-user_fields_auth2 = Auth.inherit('User Auth', user_fields, {
-    'password': fields.String(description='Password', required=True, example="password")
-})
+# user_fields_auth2 = Auth.inherit('User Auth', user_fields, {
+#     'password': fields.String(description='Password', required=True, example="password")
+# })
 # user_fields_auth = Auth.inherit('User Auth', user_fields, {
 #     'area': fields.String(description='area', required=True, example="경기도 용인시")
 # })
@@ -41,7 +42,7 @@ class AuthRegisterCheckId(Resource):
 #회원가입 요청
 @Auth.route('/register')
 class AuthRegister(Resource):
-    @Auth.expect(user_fields_auth1)
+    @Auth.expect(user_fields)
     @Auth.response(200, "Available id")
     @Auth.response(500, "Unavailable id")
     def post(self):
@@ -49,17 +50,17 @@ class AuthRegister(Resource):
         id = request.json['id']
         name = request.json['name']
         password = request.json['password']
-        # area = request.json['area']
+        area = request.json['area']
         encrypted_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
 
-        new_user = user(id=id, name=name, password=encrypted_pw) #area도 추후 추가
+        new_user = user(id=id, name=name, password=encrypted_pw,area=area) #area도 추후 추가
         db.session.add(new_user)
         db.session.commit()
         return {"message":"User Information saved"},200 #성공
 # 로그인
 @Auth.route('/login')
 class AuthLogin(Resource):
-    @Auth.expect(user_fields_auth2)
+    @Auth.expect(user_fields)
     @Auth.response(200, "login Success")
     @Auth.response(404, "Not found")
     @Auth.response(500, "login Failed")
@@ -84,7 +85,8 @@ class AuthLogin(Resource):
             return {
                 # "message": "login Success ",
                 # "area" : saved_user_area,
-                "name":saved_user.name
+                "name":saved_user.name,
+                "area":saved_user.area
             },200
 # #비밀번호 찾기
 # @Auth.route('/findpw')
@@ -117,7 +119,7 @@ class AuthLogin(Resource):
 #비밀번호 변경
 @Auth.route('/changepw')
 class AuthChangepw(Resource):
-    @Auth.expect(user_fields_auth1)
+    @Auth.expect(user_fields)
     @Auth.response(200, "password Changed")
     @Auth.response(404, "Not found")
     @Auth.response(500, "password change fail")
