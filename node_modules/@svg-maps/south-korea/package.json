@@ -1,0 +1,21 @@
+{
+	"name": "@svg-maps/south-korea",
+	"version": "1.0.1",
+	"description": "Map of South Korea",
+	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/VictorCazanave/svg-maps/tree/master/packages/south-korea"
+	},
+	"keywords": [
+		"svg",
+		"map",
+		"south korea"
+	],
+	"author": "Victor Cazanave <victor.cazanave@gmail.com>",
+	"publishConfig": {
+		"access": "public"
+	},
+	"license": "CC-BY-4.0",
+	"gitHead": "f5a051e06671e7bb4108a57f2255da9d569357aa"
+}

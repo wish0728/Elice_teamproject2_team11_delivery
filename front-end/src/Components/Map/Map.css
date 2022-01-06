@@ -1,0 +1,8 @@
+path:hover {
+  fill: orange;
+  opacity: 0.5;
+}
+.active {
+  fill: orange;
+  opacity: 0.5;
+}
