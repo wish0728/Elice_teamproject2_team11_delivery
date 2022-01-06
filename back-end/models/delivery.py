@@ -92,6 +92,48 @@ class freqavg_by_mealtime2(db.Model):
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['area1','area2','area3','mealtime','freqavg']}
 
+class freqavg_by_mealtime2(db.Model):
+    __tablename__ = "freqavg_by_mealtime2"
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    area2= db.Column(db.String(45), nullable=False)
+    area3= db.Column(db.String(45), nullable=False)
+    mealtime = db.Column(db.String(10), nullable=False)
+    freqavg = db.Column(db.Integer, nullable=False)
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['area1','area2','area3','mealtime','freqavg']}
+
+
+class freqavg_by_holiday1(db.Model):
+    __tablename__ = "freqavg_by_holiday1"
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    year = db.Column(db.Integer, nullable=False)
+    holiday = db.Column(db.String(1), nullable=False)
+    freqavg = db.Column(db.Integer, nullable=False)
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['area1','year','holiday','freqavg']}
+
+class freqavg_by_holiday2(db.Model):
+    __tablename__ = "freqavg_by_holiday2"
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    area2= db.Column(db.String(45), nullable=False)
+    year = db.Column(db.Integer, nullable=False)
+    holiday = db.Column(db.String(1), nullable=False)
+    freqavg = db.Column(db.Integer, nullable=False)
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['area1','area2','year','holiday','freqavg']}
+
 def init_db():
     db.create_all()
     
