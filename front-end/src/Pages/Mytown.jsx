@@ -8,11 +8,15 @@ import Menu from "../Components/Menu";
 import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
-import { firstLocationState, loadingState, menuState } from "../state";
+import { loadingState, menuState } from "../state";
+import { CONTENTS_ARTICLE, CONTENTS_BUTTON } from "../constants/Mytown_data";
+import Map from "../Components/Map/Map";
 
 const MytownContainer = styled(Container)`
   display: flex;
   flex-direction: column;
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.titleColor};
 `;
 
 const MytownBody = styled.div`
@@ -36,32 +40,71 @@ const MainContents = styled.div`
   box-sizing: border-box;
   flex-grow: 4;
   border-left: 1px solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ContentsArea = styled.div`
+  display: flex;
+  flex-direction: row;
   width: 1200px;
   height: 500px;
   padding: 10px;
   box-sizing: border-box;
 `;
 
-const Select = styled.select``;
+const MapContentsArea = styled.div`
+  display: inline-flex;
+  width: 500px;
+  height: 500px;
+  padding: 10px;
+  box-sizing: border-box;
+  align-items: center;
+`;
 
-const Option = styled.option``;
+const SelectContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+`;
 
-//===============삭제 예정==================
-const TestBtn = styled.button``;
+//셀렉트를 위한
+const Select = styled.select`
+  padding: 5px;
+  border-radius: 5px;
+  margin-right: 8px;
+  width: 130px;
+`;
 
-//===============삭제 예정==================
+const Option = styled.option`
+  border-radius: 5px;
+`;
+
+const SelectMessage = styled.div`
+  font-size: 22px;
+`;
+
+const SubmitBtnContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-top: 20px;
+`;
+const SubmitButton = styled.button`
+  border-radius: 3px;
+  height: 28px;
+`;
 
 const Mytown = () => {
   const firstLocation = useRecoilValue(menuState)[0]; //메뉴 버튼들 중 첫번째 메뉴를 의미
   const [isLoading, setIsLoading] = useRecoilState(loadingState);
   const [area, setArea] = useState(""); //첫번째 Select 도/시 선택시 값이 담길 변수
   const [detailArea, setDetailArea] = useState([]); //area가 결정되면 두번째 Select에 값 담기 위한 변수
-
-  const [dAreaValue, setDAreaValue] = useState("");
+  const [dAreaValue, setDAreaValue] = useState(""); //두번째 Select의 값
   const [apiRes, setApiRes] = useState([]); //api 통신 값을 담을 변수
+  const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
 
   useEffect(() => {
     //첫번째 Select가 초기화 될경우
@@ -74,34 +117,65 @@ const Mytown = () => {
           setDetailArea(element.value); //두번째 Select를 위한 값 설정
         }
       });
+      console.log(area);
+      //지도 클릭시 dAreaValue 값 전체로 설정
+      setDAreaValue("전체");
     }
   }, [area]);
 
+  //바로 실행되지 않는 문제 해결
   useEffect(() => {
-    console.log(detailArea);
-  }, [detailArea]);
+    if (dAreaValue === "전체") {
+      apiExecute();
+    }
+  }, [area, dAreaValue]);
 
-  useEffect(() => {
-    console.log(firstLocation);
-  }, [firstLocation]);
-
-  useEffect(() => {
-    console.log("api state 변경 : ", apiRes);
-  }, [apiRes]);
-
-  //시군구 테스트 버튼에 연결
+  //확인하러 가기 버튼에 연결
   const searchArea = () => {
-    apiTest();
+    //첫번째 셀렉트가 입력이 안된경우
+    if (area === "") {
+      alert("도/시를 선택해주세요!");
+      return;
+    }
+    if (dAreaValue === "") {
+      alert("군/구를 선택해주세요!");
+      return;
+    }
+    apiExecute();
   };
 
   //api 받아오는 메소드
-  const apiTest = async () => {
+  const apiExecute = async () => {
     try {
-      //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 )
+      //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 ) 굳이 필요는 없음
       setIsLoading(true);
+      // switch (standardBy) {
+      //   case "by_time":
+      //     console.log("시간에 따라");
+      //     await deliveryApi
+      //       .get_Time_Average(area, dAreaValue)
+      //       .then((response) => {
+      //         setApiRes(response.data);
+      //         response.data.map((i, idx) =>
+      //           console.log(i["time"], i["freqavg"])
+      //         );
+      //       });
+      //     break;
+      //   case "by_day":
+      //     console.log("요일에 따라");
+      //     await deliveryApi
+      //       .get_Day_Average(area, dAreaValue)
+      //       .then((response) => {
+      //         setApiRes(response.data);
+      //         response.data.map((i, idx) =>
+      //           console.log(i["time"], i["freqavg"])
+      //         );
+      //       });
+      //     break;
+      // }
       await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
         setApiRes(response.data);
-        console.log("옵젝:", typeof response.data, response.data);
+        response.data.map((i, idx) => console.log(i["time"], i["freqavg"]));
       });
     } catch (e) {
       console.log(e);
@@ -110,12 +184,18 @@ const Mytown = () => {
     setIsLoading(false);
   };
 
-  const changeSelectOptionHadler = (e) => {
+  //첫번째 셀렉트 변화 감지
+  const changeFirstSelect = (e) => {
     setArea(e.target.value);
   };
 
-  const changeTest = (e) => {
+  //두번째 셀렉트 변화 감지
+  const changeSecondSelect = (e) => {
     setDAreaValue(e.target.value);
+  };
+
+  const changeStandardBySelect = (e) => {
+    setStandardBy(e.target.value);
   };
 
   return (
@@ -124,20 +204,10 @@ const Mytown = () => {
       <MytownBody>
         <MytownMenu />
         <MainContents>
-          <Select name="areaData" onChange={changeSelectOptionHadler}>
-            <Option value="">도/시 선택</Option>
-            {AREAS.map((item) => {
-              return (
-                <Option key={`key_${item}`} value={item}>
-                  {item}
-                </Option>
-              );
-            })}
-          </Select>
-          {detailArea.length !== 0 && (
-            <Select onChange={changeTest}>
-              <Option value="">군/구 선택</Option>
-              {detailArea.map((item) => {
+          <SelectContainer>
+            <Select name="areaData" onChange={changeFirstSelect} value={area}>
+              <Option value="">도/시 선택</Option>
+              {AREAS.map((item) => {
                 return (
                   <Option key={`key_${item}`} value={item}>
                     {item}
@@ -145,9 +215,30 @@ const Mytown = () => {
                 );
               })}
             </Select>
-          )}
-          <TestBtn onClick={searchArea}>시군구 테스트</TestBtn>
+            <Select onChange={changeSecondSelect} value={dAreaValue}>
+              <Option value="">군/구 선택</Option>
+              {detailArea.length !== 0 &&
+                detailArea.map((item) => {
+                  return (
+                    <Option key={`key_${item}`} value={item}>
+                      {item}
+                    </Option>
+                  );
+                })}
+            </Select>
+            <SelectMessage>지역의 배달 주문량</SelectMessage>
+          </SelectContainer>
+          <SubmitBtnContainer>
+            <Select onChange={changeStandardBySelect} value={standardBy}>
+              <Option value="by_time">시간에 따라</Option>
+              <Option value="by_day">요일에 따라</Option>
+            </Select>
+            <SubmitButton onClick={searchArea}>{CONTENTS_BUTTON}</SubmitButton>
+          </SubmitBtnContainer>
           <ContentsArea>
+            <MapContentsArea>
+              <Map area={area} setArea={setArea} />
+            </MapContentsArea>
             {!isLoading && apiRes.length !== 0 && (
               <MyResponsiveBar data={apiRes} />
             )}

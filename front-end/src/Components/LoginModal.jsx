@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import authApi from "../apis/auth";
 import { ID_MAX_LEN, ID_MIN_LEN, PWD_MIN_LEN } from "../constants/standard";
-import { loginState } from "../state";
+import { loginState, modalState } from "../state";
 
 const ModalContainer = styled.div`
   display: flex;
@@ -30,8 +30,8 @@ const ModalContents = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  background-color: black;
-  color: white;
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.titleColor};
   box-sizing: border-box;
   z-index: 999;
 `;
@@ -44,11 +44,12 @@ const ContentsHeader = styled.div`
   align-items: flex-end;
   margin-bottom: 30px;
 `;
+
 const CloseBtn = styled.button`
   border: none;
   border-radius: 8px;
-  background-color: black;
-  color: white;
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.titleColor};
   margin-right: 10px;
 `;
 
@@ -84,7 +85,8 @@ const ModalSubmit = styled.button`
   width: 200px;
   height: 30px;
   border-radius: 8px;
-  color: black;
+  color: ${(props) => props.theme.titleColor};
+  background-color: ${(props) => props.theme.btnColor};
   margin-bottom: 15px;
 `;
 
@@ -98,7 +100,7 @@ const ModalCreate = styled.button`
 `;
 
 const StyledLink = styled(Link)`
-  color: white;
+  color: ${(props) => props.theme.titleColor};
   text-decoration: none;
   &:focus,
   &:hover,
@@ -110,13 +112,27 @@ const StyledLink = styled(Link)`
 `;
 
 const LoginModal = () => {
-  //아이디, 비밀번호에 대한 상태관리 작성 필요 (recoil)
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
-  const [modalOpen, setModalOpen] = useRecoilState(loginState);
+  const [modalOpen, setModalOpen] = useRecoilState(modalState);
+  //로그인 상태
+  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
+  const { isLoggedIn: isLoggedInValue } = useRecoilValue(loginState); //로그인 여부
+  const { name: userName } = useRecoilValue(loginState); //로그인한 유저 이름
+
+  useEffect(() => {
+    console.log(isLoggedInValue, userName);
+  }, [modalOpen]);
+
+  useEffect(() => {
+    console.log(loginStatus);
+  }, [isLoggedInValue, userName]);
 
   //모달 닫기 버튼
   const closeModal = () => {
+    //아이디 비밀번호 입력 칸 비우기
+    setId("");
+    setPwd("");
     setModalOpen(false);
   };
 
@@ -144,18 +160,25 @@ const LoginModal = () => {
       //유저 데이터 넘겨줄 로직 작성 예정
       loginPost();
       console.log(id, pwd);
-      //넘겨준 뒤 초기화
-      setId("");
-      setPwd("");
     }
   };
 
+  //로그인 통신
   const loginPost = async () => {
     try {
-      await authApi
-        .send_login({ id: id, password: pwd })
-        .then((response) => console.log(response));
+      await authApi.send_login({ id: id, password: pwd }).then((response) => {
+        if (response.status === 200) {
+          //로그인 성공적이면 입력창 초기화
+          setId("");
+          setPwd("");
+          //데이터 넘겨줌
+          setLoginStatus({ isLoggedIn: true, name: response.data.name });
+          //모달 닫기
+          closeModal();
+        }
+      });
     } catch (e) {
+      alert("아이디나 비밀번호를 다시 확인해주세요.");
       console.log(e);
     }
   };

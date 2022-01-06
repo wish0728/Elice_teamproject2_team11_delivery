@@ -123,7 +123,6 @@ const Mytown = () => {
   //api 받아오는 메소드
   const apiTest = async () => {
     try {
-      //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 )
       setIsLoading(true);
       await deliveryApi
         .get_Time_Average_By_Day(area, dAreaValue)
@@ -172,7 +171,7 @@ const Mytown = () => {
             })}
           </Select>
           {detailArea.length !== 0 && (
-            <Select onChange={changeTest}>
+            <Select onChange={changeTest} value={dAreaValue}>
               <Option value="">군/구 선택</Option>
               {detailArea.map((item) => {
                 return (
@@ -184,16 +183,16 @@ const Mytown = () => {
             </Select>
           )}
           <TestBtn onClick={searchArea}>시군구 테스트</TestBtn>
+
           <div />
           <TestContentsArea>
+            <MapContentsArea>
+              <Map area={area} setArea={setArea} />
+            </MapContentsArea>
             {!isLoading && apiRes.length !== 0 && (
               <MyResponsiveBar data={apiRes} />
             )}
-            {isLoading && <Loading />}
           </TestContentsArea>
-          <MapContentsArea>
-            <Map area={area} setArea={setArea} />
-          </MapContentsArea>
         </MainContents>
       </MytownBody>
     </MytownContainer>
