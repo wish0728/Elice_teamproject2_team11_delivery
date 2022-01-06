@@ -28,7 +28,9 @@ level1_list = list(df['광역시도'].unique())
 for Si_Do in level1_list:
   level2_list = list(df[df['광역시도']==Si_Do]['시군구'].unique())
   for SiGunGu in level2_list:
-    df_dayFreq = df[(df['광역시도'] == Si_Do) &  (df['시군구']==SiGunGu)].groupby('요일').mean().reset_index().sort_values(by='요일정렬')
+    #날짜로 그룹핑을 해주어야 하루동안의 총 배달량을 알 수 있다.
+    df_dayFreq = df[(df['광역시도'] == Si_Do) &  (df['시군구']==SiGunGu)].groupby(['날짜','요일']).sum().reset_index()
+    df_dayFreq = df_dayFreq.groupby('요일').mean().reset_index().sort_values(by='요일정렬')
     for row in df_dayFreq.itertuples():
       # print(Si_Do, SiGunGu, row.요일, int(round(row.배달건수)))
       cursor.execute('''INSERT INTO freqavg_by_day2 (area1,area2, day, freqavg) VALUES(?, ?, ?, ?)''', 
