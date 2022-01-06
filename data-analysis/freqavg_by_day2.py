@@ -14,14 +14,14 @@ df['요일정렬'] = df['요일'].map(sort_mapping['index'])
 conn = sqlite3.connect("NaplessRabbit.db")
 cursor = conn.cursor()
 
-# cursor.execute('''CREATE TABLE freqavg_by_day2(
-#                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-#                area1 VARCHAR(45) NOT NULL, 
-#                area2 VARCHAR(45) NOT NULL, 
-#                day VARCHAR(1) NOT NULL, 
-#                freqavg INT NOT NULL) ''')
+cursor.execute('''CREATE TABLE freqavg_by_day2(
+               id INTEGER PRIMARY KEY AUTOINCREMENT, 
+               area1 VARCHAR(45) NOT NULL, 
+               area2 VARCHAR(45) NOT NULL, 
+               day VARCHAR(1) NOT NULL, 
+               freqavg INT NOT NULL) ''')
 
-# cursor.execute(""" SELECT name FROM sqlite_master WHERE type='table' """ )
+cursor.execute(""" SELECT name FROM sqlite_master WHERE type='table' """ )
 
 level1_list = list(df['광역시도'].unique())
 
