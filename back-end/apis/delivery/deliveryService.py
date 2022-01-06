@@ -1,13 +1,10 @@
 from flask import jsonify
-from models.delivery import deliveryfreq_by_time_area as d
-from models.delivery  import freqavg as fa, freqavg_by_area1 as fa1
 from models.exception  import area1_for_exception as a1, area2_for_exception as a2
+from models.delivery  import freqavg as fa, freqavg_by_area1 as fa1
 from models.delivery  import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
+from models.delivery  import freqavg_by_mealtime1 as fm1, freqavg_by_mealtime2 as fm2
 
-
-
-
-def exceptionForArea(area1,area2):
+def exceptionForArea(area1: str,area2: str):
     area1_list = [row.area1 for row in a1.query.all()]
     area2_list = ["전체"] + [row.area2 for row in a2.query.filter_by(area1=area1).all()]
     if area1 not in area1_list:
@@ -16,12 +13,7 @@ def exceptionForArea(area1,area2):
         return {"message":"Unavailable area2"}, 400
     return 
 
-# 시군구 입력 -> 시간대별 평균
-# area1과 area2에 따라 0~23에 해당하는 배달건수 평균값 보내주기
-# 시군구 전체 데이터를 보고 싶으면 area2에 '전체'를 보내주기
-
-def getFreq(area1, area2):
-    '''해당 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.''' 
+def getFreq(area1: str, area2: str):
     if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
     result = list({'time':i, 'freqavg':0} for i in range(24))
     if area2 == '전체':
@@ -36,9 +28,8 @@ def getFreq(area1, area2):
         i+=1
     return jsonify(result)
 
-
-def getFreqByDay(self, area1, area2):
-    '''해당 시군구와 일치하는 요일별 배달건수 평균을 가져옵니다.''' 
+# 초기화 처리하기
+def getFreqByDay(area1: str, area2: str):
     if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
     # dayLst = ['월', '화', '수', '목', '금', '토','일']
     # result = list({'day':i, 'freqavg': 0} for i in dayLst)
@@ -50,6 +41,15 @@ def getFreqByDay(self, area1, area2):
     # Lst = [row.day for row in rows]
     # print(f'items:{items}')
     # print(f'Lst:{Lst}')
+    return jsonify(items)
+
+def getFreqByMealtime(area1: str, area2: str):
+    if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
+    if area2 == '전체':
+        rows = fm1.query.filter_by(area1=area1).all()
+    else:   
+        rows = fm2.query.filter_by(area1=area1, area2=area2).all()
+    items = [row.as_dict() for row in rows]
     return jsonify(items)
 
 
