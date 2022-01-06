@@ -149,34 +149,36 @@ const Mytown = () => {
     try {
       //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 ) 굳이 필요는 없음
       setIsLoading(true);
-      // switch (standardBy) {
-      //   case "by_time":
-      //     console.log("시간에 따라");
-      //     await deliveryApi
-      //       .get_Time_Average(area, dAreaValue)
-      //       .then((response) => {
-      //         setApiRes(response.data);
-      //         response.data.map((i, idx) =>
-      //           console.log(i["time"], i["freqavg"])
-      //         );
-      //       });
-      //     break;
-      //   case "by_day":
-      //     console.log("요일에 따라");
-      //     await deliveryApi
-      //       .get_Day_Average(area, dAreaValue)
-      //       .then((response) => {
-      //         setApiRes(response.data);
-      //         response.data.map((i, idx) =>
-      //           console.log(i["time"], i["freqavg"])
-      //         );
-      //       });
-      //     break;
-      // }
-      await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
-        setApiRes(response.data);
-        response.data.map((i, idx) => console.log(i["time"], i["freqavg"]));
-      });
+      switch (standardBy) {
+        case "by_time":
+          console.log("시간에 따라");
+          await deliveryApi
+            .get_Time_Average(area, dAreaValue)
+            .then((response) => {
+              setApiRes(response.data);
+              response.data.map((i, idx) =>
+                console.log(i["time"], i["freqavg"])
+              );
+            });
+          break;
+        case "by_day":
+          console.log("요일에 따라");
+          if (dAreaValue === "" || dAreaValue === "전체") {
+            alert("세부지역을 다시 설정해주세요.");
+            break;
+          }
+          await deliveryApi
+            .get_Day_Average(area, dAreaValue)
+            .then((response) => {
+              setApiRes(response.data);
+              console.log(response.data);
+            });
+          break;
+      }
+      // await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
+      //   setApiRes(response.data);
+      //   response.data.map((i, idx) => console.log(i["time"], i["freqavg"]));
+      // });
     } catch (e) {
       console.log(e);
     }
