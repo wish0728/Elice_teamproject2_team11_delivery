@@ -1,6 +1,6 @@
 from flask import jsonify
 from models.exception  import area1_for_exception as a1, area2_for_exception as a2
-from models.delivery  import freqavg as fa, freqavg_by_area1 as fa1
+from models.delivery  import freqavg_by_area2 as fa, freqavg_by_area1 as fa1
 from models.delivery  import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
 from models.delivery  import freqavg_by_mealtime1 as fm1, freqavg_by_mealtime2 as fm2
 
