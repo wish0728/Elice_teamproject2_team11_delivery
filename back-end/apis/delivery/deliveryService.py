@@ -9,7 +9,7 @@ def exceptionForArea(area1: str,area2: str):
     area2_list = ["전체"] + [row.area2 for row in a2.query.filter_by(area1=area1).all()]
     if area1 not in area1_list:
         return {"message":"Unavailable area1"}, 400
-    elif area2 not in area2_list:
+    elif area2 not in area2_list or (area1 =="세종특별자치시" and area2 !="전체"):
         return {"message":"Unavailable area2"}, 400
     return 
 
