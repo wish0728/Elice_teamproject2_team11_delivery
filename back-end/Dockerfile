@@ -9,7 +9,7 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-RUN python app.py 
+CMD ["python", "app.py"]
 
 # FROM python:3.8-alpine 
 
