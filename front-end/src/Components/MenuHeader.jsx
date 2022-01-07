@@ -14,7 +14,6 @@ const MytownHeader = styled.div`
   align-items: center;
   padding: 20px 20px 20px 30px;
   box-sizing: border-box;
-  border-bottom: 1px solid;
 `;
 
 const HedaerLogo = styled(Logo)`
