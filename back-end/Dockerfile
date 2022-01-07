@@ -7,9 +7,9 @@ RUN pip install --upgrade pip \
     &&  pip install --requirement requirements.txt
 
 COPY . .
-
-RUN python app.py 
 EXPOSE 5000
+RUN python app.py 
+
 # FROM python:3.8-alpine 
 
 # WORKDIR /app
