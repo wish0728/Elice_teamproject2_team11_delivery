@@ -2,12 +2,12 @@ FROM python:3.7-slim
 
 COPY requirements.txt /app/
 WORKDIR /app
-
+EXPOSE 5000
 RUN pip install --upgrade pip \
     &&  pip install --requirement requirements.txt
 
 COPY . .
-EXPOSE 5000
+
 RUN python app.py 
 
 # FROM python:3.8-alpine 

@@ -15,5 +15,5 @@ Deploy:
   script:
     - docker stop $(docker ps -aq) || true
     - docker build -t docker-test back-end
-    - docker run -p 5000:5000 docker-test
+    - docker run -it -p 5000:5000 docker-test
 
