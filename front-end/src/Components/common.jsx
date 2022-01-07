@@ -21,4 +21,16 @@ export const Container = styled.div`
   background-color: ${(props) => props.theme.bgColor};
 `;
 
+//셀렉트를 위한
+export const Select = styled.select`
+  padding: 5px;
+  border-radius: 5px;
+  margin-right: 8px;
+  width: 130px;
+`;
+
+export const Option = styled.option`
+  border-radius: 5px;
+`;
+
 export const EmptyDiv = styled.div``;
