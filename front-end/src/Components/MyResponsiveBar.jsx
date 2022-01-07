@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import { ResponsiveBar } from "@nivo/bar";
 
 const colors = {
@@ -10,14 +10,18 @@ const colors = {
   토: "red",
   일: "red",
 };
+const standard = {
+  by_time: "time",
+  by_day: "day",
+};
 const getColor = (bar) => colors[bar.indexValue];
-const MyResponsiveBar = ({ data }) => {
+const MyResponsiveBar = ({ data, standardBy }) => {
   return (
     <ResponsiveBar
       colors={getColor}
       data={data}
       keys={["freqavg"]}
-      indexBy="day"
+      indexBy={standard[standardBy]}
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.4}
       valueScale={{ type: "linear" }}
