@@ -191,12 +191,20 @@ const Mytown = () => {
         // 수정 필요 - 딕셔너리 합치기 위해서
         case "by_corona":
           console.log("코로나에 따라");
-          await deliveryApi.get_Delta_Sum(area).then((response) => {
-            console.log(response.data);
-            setApiRes(response.data);
+          await deliveryApi.get_Delta_Sum(area).then((res) => {
+            console.log(res.data);
+            const newData = res.data.map((data) => {
+              return {
+                year_month: data.year_month,
+                배달건수: data.sum,
+                "전달대비 확진자 증감수": data.delta,
+              };
+            });
+            setApiRes(newData);
           });
           break;
       }
+
       // await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
       //   setApiRes(response.data);
       //   response.data.map((i, idx) => console.log(i["time"], i["freqavg"]));

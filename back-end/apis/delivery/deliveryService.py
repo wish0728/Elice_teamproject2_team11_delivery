@@ -5,7 +5,6 @@ from models.delivery  import freqavg_by_area2 as fa, freqavg_by_area1 as fa1
 from models.delivery  import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
 from models.delivery  import freqavg_by_mealtime1 as fm1, freqavg_by_mealtime2 as fm2
 from models.delivery  import freqavg_by_holiday1 as fh1, freqavg_by_holiday2 as fh2
-from models.delivery  import sum_by_area1 as sa1, deltacorona_by_area1 as da1
 from models.delivery  import delta_sum_by_area1 as ds1
 
 def exceptionForArea1(area1: str):
@@ -77,17 +76,8 @@ def getDeltaSum(area1: str):
     items = [row.as_dict() for row in rows]
     return jsonify(items)
 
-# def getSum(area1: str):
-#     if exceptionForArea1(area1): return exceptionForArea1(area1,"")
-#     rows = sa1.query.filter_by(area1=area1).all()
-#     items = [row.as_dict() for row in rows]
-#     return jsonify(items)
 
-# def getDeltaCorona(area1: str):
-#     if exceptionForArea1(area1): return exceptionForArea1(area1)
-#     rows = da1.query.filter_by(area1=area1).all()
-#     items = [row.as_dict() for row in rows]
-#     return jsonify(items)
+
 
 
 
