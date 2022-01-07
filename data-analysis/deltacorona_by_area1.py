@@ -5,7 +5,7 @@ import numpy as np
 df= pd.read_csv('../cleaned_data/delivery_corona.csv')
 
 print(df.head())
-conn = sqlite3.connect("NaplessRabbit.db")
+conn = sqlite3.connect("test.db")
 cursor = conn.cursor()
 
 cursor.execute('''CREATE TABLE deltacorona_by_area1(

@@ -8,11 +8,11 @@ print(df.head())
 conn = sqlite3.connect("NaplessRabbit.db")
 cursor = conn.cursor()
 
-cursor.execute('''CREATE TABLE sum_by_area1(
-               id INTEGER PRIMARY KEY AUTOINCREMENT,
-               year_month VARCHAR(45) NOT NULL, 
-               area1 VARCHAR(45) NOT NULL,
-               sum INT NOT NULL) ''')
+# cursor.execute('''CREATE TABLE delta_sum_by_area1(
+#                id INTEGER PRIMARY KEY AUTOINCREMENT,
+#                year_month VARCHAR(45) NOT NULL, 
+#                area1 VARCHAR(45) NOT NULL,delta INT NOT NULL,
+#                sum INT NOT NULL) ''')
 
 cursor.execute(""" SELECT name FROM sqlite_master WHERE type='table' """ )
 local_dictionary = {'강원도':'강원', '경기도':'경기', '경상남도':'경남', '경상북도':'경북', '광주광역시':'광주', '대구광역시':'대구', 
@@ -32,14 +32,9 @@ print(level1_list)
 
 for Si_Do in level1_list:
   df_sum = df[df['지역']==Si_Do]
-  print("1\n")
-  print(df_sum)
-  df_sum = df_sum.groupby(['year_month']).sum().reset_index()
-  print("2\n")
-  print(df_sum)
   for row in df_sum.itertuples():    
-    cursor.execute('''INSERT INTO sum_by_area1 (area1, year_month, sum) VALUES(?, ?, ?)''', 
-    [Si_Do,  row.year_month, row.배달건수])
+    cursor.execute('''INSERT INTO delta_sum_by_area1 (area1, year_month, delta, sum) VALUES(?, ?, ?, ?)''', 
+    [Si_Do,  row.year_month, row.전일대비증감수, row.배달건수])
 # Committing the changes
 conn.commit()
 
