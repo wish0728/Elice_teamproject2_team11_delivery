@@ -1,24 +1,24 @@
-version: "3.7"
+# version: "3.7"
 
-services:
-  # client:
-  #   # depends_on:
-  #   #   - server
-  #   volumes:
-  #     - "./front-end:/client"
-  #   build: ./front-end
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     - NODE_ENV=development
-  #     - CHOKIDAR_USEPOLLING=true
+# services:
+#   # client:
+#   #   # depends_on:
+#   #   #   - server
+#   #   volumes:
+#   #     - "./front-end:/client"
+#   #   build: ./front-end
+#   #   ports:
+#   #     - "3000:3000"
+#   #   environment:
+#   #     - NODE_ENV=development
+#   #     - CHOKIDAR_USEPOLLING=true
 
-  server:
-    volumes:
-      - ./back-end:/app
-    build: ./back-end
-    environment:
-      FLASK_ENV: development
-    command: python3 app.py runserver 5000:5000
-    ports:
-      - "5000:5000"
+#   server:
+#     volumes:
+#       - ./back-end:/app
+#     build: ./back-end
+#     environment:
+#       FLASK_ENV: development
+#     command: python3 app.py runserver 5000:5000
+#     ports:
+#       - "5000:5000"

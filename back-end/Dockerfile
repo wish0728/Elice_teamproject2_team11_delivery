@@ -6,7 +6,7 @@ WORKDIR /app
 RUN pip install --upgrade pip \
     &&  pip install --requirement requirements.txt
 
-COPY app.py .
+COPY . .
 
 RUN python app.py 
 
