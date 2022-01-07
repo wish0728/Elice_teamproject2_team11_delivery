@@ -144,7 +144,7 @@ class sum_by_area1(db.Model):
     sum = db.Column(db.Integer, nullable=False)
 
     def as_dict(self):
-        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name}
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['year_month','area1','sum']}
 
 class deltacorona_by_area1(db.Model):
     __tablename__ = "deltacorona_by_area1"
@@ -154,6 +154,20 @@ class deltacorona_by_area1(db.Model):
     year_month = db.Column(db.String(45), nullable=False)
     area1= db.Column(db.String(45), nullable=False)
     delta = db.Column(db.Integer, nullable=False)
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['year_month','area1','delta']}
+
+class delta_sum_by_area1(db.Model):
+    __tablename__ = "delta_sum_by_area1"
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    year_month = db.Column(db.String(45), nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    delta = db.Column(db.Integer, nullable=False)
+    sum = db.Column(db.Integer, nullable=False)
+
 
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name}

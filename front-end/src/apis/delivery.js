@@ -33,12 +33,15 @@ const deliveryApi = {
       `${DELIVERY_END_POINT}/getFreqByHoliday/${keyword1}/${keyword2}`
     );
   },
-  get_Sum: async (keyword1) => {
-    return await api(`${DELIVERY_END_POINT}/getSum/${keyword1}`);
+  get_Delta_Sum: async (keyword1) => {
+    return await api(`${DELIVERY_END_POINT}/getDeltaSum/${keyword1}`);
   },
-  get_Delta: async (keyword1) => {
-    return await api(`${DELIVERY_END_POINT}/getDeltaCorona/${keyword1}`);
-  },
+  // get_Sum: async (keyword1) => {
+  //   return await api(`${DELIVERY_END_POINT}/getSum/${keyword1}`);
+  // },
+  // get_Delta: async (keyword1) => {
+  //   return await api(`${DELIVERY_END_POINT}/getDeltaCorona/${keyword1}`);
+  // },
 };
 
 export default deliveryApi;

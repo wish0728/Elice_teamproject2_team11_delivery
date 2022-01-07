@@ -7,6 +7,7 @@ import Loading from "../Components/Loading";
 import Menu from "../Components/Menu";
 import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
+import MyCombinedChart from "../Components/MyCombinedChart";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 import { loadingState, menuState } from "../state";
 import { CONTENTS_ARTICLE, CONTENTS_BUTTON } from "../constants/Mytown_data";
@@ -187,9 +188,10 @@ const Mytown = () => {
               res.map((i, idx) => console.log(i["year"], typeof i["year"]));
             });
           break;
+        // 수정 필요 - 딕셔너리 합치기 위해서
         case "by_corona":
           console.log("코로나에 따라");
-          await deliveryApi.get_Sum(area).then((response) => {
+          await deliveryApi.get_Delta_Sum(area).then((response) => {
             console.log(response.data);
             setApiRes(response.data);
           });
@@ -278,9 +280,17 @@ const Mytown = () => {
             <MapContentsArea>
               <Map area={area} setArea={setArea} />
             </MapContentsArea>
-            {!isLoading && apiRes.length !== 0 && (
-              <MyResponsiveBar data={apiRes} standardBy={standardBy} />
-            )}
+            {!isLoading &&
+              apiRes.length !== 0 &&
+              standardBy !== "by_corona" && (
+                <MyResponsiveBar data={apiRes} standardBy={standardBy} />
+              )}
+            {isLoading && <Loading />}
+            {!isLoading &&
+              apiRes.length !== 0 &&
+              standardBy === "by_corona" && (
+                <MyCombinedChart data={apiRes} standardBy={standardBy} />
+              )}
             {isLoading && <Loading />}
           </ContentsArea>
         </MainContents>
