@@ -148,9 +148,4 @@ class delta_sum_by_area1(db.Model):
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name}
 
-def init_db():
-    db.create_all()
-    
-if __name__ == '__main__':
-    init_db()
 
