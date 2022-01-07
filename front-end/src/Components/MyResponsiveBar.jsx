@@ -13,6 +13,7 @@ const colors = {
 const standard = {
   by_time: "time",
   by_day: "day",
+  by_holiday: "holiday",
 };
 const getColor = (bar) => colors[bar.indexValue];
 const MyResponsiveBar = ({ data, standardBy }) => {

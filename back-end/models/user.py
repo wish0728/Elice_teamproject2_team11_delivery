@@ -6,3 +6,9 @@ class user(db.Model):
     password = db.Column(db.String(256), nullable=False)
     name = db.Column(db.String(256), nullable=False)
     area = db.Column(db.String(256), nullable=False)
+
+def init_db():
+    db.create_all()
+    
+if __name__ == '__main__':
+    init_db()
