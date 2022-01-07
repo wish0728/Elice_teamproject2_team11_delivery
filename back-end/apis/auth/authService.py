@@ -16,10 +16,7 @@ def idckeck(id:str):
     
 # 회원가입 요청
 def userRegister(id:str,name:str, password:str, area:str):
-    id = request.json['id']
-    name = request.json['name']
-    password = request.json['password']
-    area = request.json['area']
+    
     encrypted_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
     new_user = user(id=id, name=name, password=encrypted_pw,area=area) #area도 추후 추가
     db.session.add(new_user)
@@ -28,8 +25,6 @@ def userRegister(id:str,name:str, password:str, area:str):
 
 # 로그인
 def userLogin(id: str, password:str):
-    id = request.json['id']
-    password = request.json['password']
     saved_user = user.query.filter_by(id=id).first()
     #유효하지 않은 ID
     if not saved_user: return{
@@ -51,12 +46,10 @@ def userLogin(id: str, password:str):
         },200
 
 #비밀번호 변경
-def changepw(id,name,new_password):
+def changepw(id,name,new_password,area):
     conn = sqlite3.connect('NaplessRabbit.db')
     cur = conn.cursor()
-    id = request.json['id']
-    name = request.json['name']
-    new_password = request.json['password']
+    
     saved_user = user.query.filter_by(id=id).first()
     sql = "UPDATE user SET password =? WHERE name =?"
     encrypted_pw = bcrypt.hashpw(new_password.encode('utf8'),bcrypt.gensalt())
@@ -66,7 +59,11 @@ def changepw(id,name,new_password):
         },404
     elif name != saved_user.name:
         return{
-            "message":"Wrong user Information"
+            "message":"User name isn't correct"
+        },500
+    elif area != saved_user.area:
+        return{
+            "message":"User area isn't correct"
         },500
     else: 
         cur.execute(sql, (encrypted_pw, saved_user.name))
