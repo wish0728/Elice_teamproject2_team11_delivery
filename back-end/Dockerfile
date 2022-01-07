@@ -4,12 +4,12 @@ COPY requirements.txt /app/
 EXPOSE 5000
 WORKDIR /app
 
-RUN pip install --upgrade pip \
-    &&  pip install --requirement requirements.txt
+RUN pip3 install --upgrade pip \
+    &&  pip3 install --requirement requirements.txt
 
 COPY . .
 
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
 
 # FROM python:3.8-alpine 
 
