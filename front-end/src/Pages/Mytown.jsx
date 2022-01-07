@@ -39,7 +39,6 @@ const MainContents = styled.div`
   padding: 20px;
   box-sizing: border-box;
   flex-grow: 4;
-  border-left: 1px solid;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -107,6 +106,10 @@ const Mytown = () => {
   const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
 
   useEffect(() => {
+    console.log(standardBy);
+  }, [standardBy]);
+
+  useEffect(() => {
     //첫번째 Select가 초기화 될경우
     if (area == "") {
       //두번째 Select도 초기화
@@ -127,6 +130,7 @@ const Mytown = () => {
   useEffect(() => {
     if (dAreaValue === "전체") {
       apiExecute();
+      return;
     }
   }, [area, dAreaValue]);
 
@@ -163,7 +167,7 @@ const Mytown = () => {
           break;
         case "by_day":
           console.log("요일에 따라");
-          if (dAreaValue === "" || dAreaValue === "전체") {
+          if (area !== "세종특별자치시" && dAreaValue === "전체") {
             alert("세부지역을 다시 설정해주세요.");
             break;
           }
@@ -242,7 +246,7 @@ const Mytown = () => {
               <Map area={area} setArea={setArea} />
             </MapContentsArea>
             {!isLoading && apiRes.length !== 0 && (
-              <MyResponsiveBar data={apiRes} />
+              <MyResponsiveBar data={apiRes} standardBy={standardBy} />
             )}
             {isLoading && <Loading />}
           </ContentsArea>
