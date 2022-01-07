@@ -11,6 +11,7 @@ import {
   REGIST_PWD_ERROR,
 } from "../constants/standard";
 import { AREAS } from "../constants/delivery_data";
+import { useNavigate } from "react-router-dom";
 
 const RegisterContainer = styled(Container)``;
 
@@ -45,6 +46,7 @@ const Option = styled.option`
 `;
 
 const Register = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [passwd, setPasswd] = useState("");
@@ -83,6 +85,36 @@ const Register = () => {
   const onChangeUserArea = (e) => {
     setUserArea(e.target.value);
   };
+
+  //초기화 메소드
+  const resetState = () => {
+    setName("");
+    setId("");
+    setPasswd("");
+    setPwCheck("");
+    setUserArea("");
+    setIdValid(false);
+    setPwdValid(false);
+    setCheckIdValid(false);
+  };
+
+  //첫 로드시 초기화 진행
+  useEffect(() => {
+    resetState();
+  }, []);
+
+  useEffect(() => {
+    console.log(
+      id,
+      name,
+      passwd,
+      pwCheck,
+      userArea,
+      idValid,
+      pwdValid,
+      checkIdValid
+    );
+  }, [id, name, passwd, pwCheck, userArea, idValid, pwdValid, checkIdValid]);
 
   //id 유효성 검사 메소드
   const isExist = async () => {
@@ -140,6 +172,7 @@ const Register = () => {
   //api 실행 메소드
   const api_regist = async () => {
     try {
+      console.log(id, passwd, name, userArea);
       await axios
         .post("http://127.0.0.1:5000/auth/register", {
           id: id,
@@ -147,7 +180,12 @@ const Register = () => {
           name: name,
           area: userArea,
         })
-        .then((response) => console.log(response));
+        .then((response) => {
+          if (response.status) {
+            resetState();
+            navigate("/", { replace: true });
+          }
+        });
     } catch (e) {
       console.log(e);
     }
