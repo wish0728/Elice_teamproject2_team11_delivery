@@ -1,9 +1,17 @@
 from flask import jsonify
+from flask_restx.fields import String
 from models.exception  import area1_for_exception as a1, area2_for_exception as a2
 from models.delivery  import freqavg_by_area2 as fa, freqavg_by_area1 as fa1
 from models.delivery  import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
 from models.delivery  import freqavg_by_mealtime1 as fm1, freqavg_by_mealtime2 as fm2
 from models.delivery  import freqavg_by_holiday1 as fh1, freqavg_by_holiday2 as fh2
+from models.delivery  import sum_by_area1 as sa1, deltacorona_by_area1 as da1
+
+def exceptionForArea1(area1: str):
+    area1_list = [row.area1 for row in a1.query.all()]
+    if area1 not in area1_list:
+        return {"message":"Unavailable area1"}, 400
+    return 
 
 def exceptionForArea(area1: str,area2: str):
     area1_list = [row.area1 for row in a1.query.all()]
@@ -61,6 +69,19 @@ def getFreqByHoliday(area1: str, area2: str):
         rows = fh2.query.filter_by(area1=area1, area2=area2).all()
     items = [row.as_dict() for row in rows]
     return jsonify(items)
+
+def getSum(area1: str):
+    if exceptionForArea1(area1): return exceptionForArea1(area1,"")
+    rows = sa1.query.filter_by(area1=area1).all()
+    items = [row.as_dict() for row in rows]
+    return jsonify(items)
+
+def getDeltaCorona(area1: str):
+    if exceptionForArea1(area1): return exceptionForArea1(area1)
+    rows = da1.query.filter_by(area1=area1).all()
+    items = [row.as_dict() for row in rows]
+    return jsonify(items)
+
 
 
 

@@ -10,7 +10,7 @@ cursor = conn.cursor()
 
 cursor.execute('''CREATE TABLE sum_by_area1(
                id INTEGER PRIMARY KEY AUTOINCREMENT,
-               year_month DATE NOT NULL, 
+               year_month VARCHAR(45) NOT NULL, 
                area1 VARCHAR(45) NOT NULL,
                sum INT NOT NULL) ''')
 
