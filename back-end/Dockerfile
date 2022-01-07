@@ -9,7 +9,7 @@ RUN pip install --upgrade pip \
 COPY . .
 
 RUN python app.py 
-
+EXPOSE 5000
 # FROM python:3.8-alpine 
 
 # WORKDIR /app
