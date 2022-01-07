@@ -6,11 +6,11 @@ from flask_cors import CORS
 from db_connect import db
 
 import config
-
+    
+ 
 def create_app():
     app = Flask(__name__)
     CORS(app)
-    
     #일단 services로 대체 -> 후에 resolver로 하기 
     from apis.delivery.deliveryResolver import Deliveryfreq
     from apis.auth.auth import Auth
