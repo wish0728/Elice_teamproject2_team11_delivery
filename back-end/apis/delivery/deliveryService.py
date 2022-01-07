@@ -40,16 +40,11 @@ def getFreq(area1: str, area2: str):
 # 초기화 처리하기
 def getFreqByDay(area1: str, area2: str):
     if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
-    # dayLst = ['월', '화', '수', '목', '금', '토','일']
-    # result = list({'day':i, 'freqavg': 0} for i in dayLst)
     if area2 == '전체':
         rows = fd1.query.filter_by(area1=area1).all()
     else:   
         rows = fd2.query.filter_by(area1=area1, area2=area2).all()
     items = [row.as_dict() for row in rows]
-    # Lst = [row.day for row in rows]
-    # print(f'items:{items}')
-    # print(f'Lst:{Lst}')
     return jsonify(items)
 
 def getFreqByMealtime(area1: str, area2: str):

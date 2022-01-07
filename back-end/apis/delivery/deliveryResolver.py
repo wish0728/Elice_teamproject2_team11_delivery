@@ -1,5 +1,4 @@
 from flask_restx import Resource, Namespace,fields
-# from services.deliveryService import getFreq, getFreqByDay
 from . import deliveryService
 Deliveryfreq = Namespace("delivery", description="배달 관련 api")
 
@@ -33,12 +32,6 @@ class getFreqByMealtime(Resource):
         '''해당 지역과 일치하는 점심(11-13), 저녁(17-20), 야식(21-23)에 해당하는 배달건수 Top3를 가져옵니다.''' 
         return deliveryService.getFreqByMealtime(area1,area2)
 
-@Deliveryfreq.route('/getFreqByMealtime/<string:area1>/<string:area2>')
-class getFreqByMealtime(Resource):
-    @Deliveryfreq.expect(area)
-    def get(self, area1, area2):
-        '''해당 지역과 일치하는 점심(11-13), 저녁(17-20), 야식(21-23)에 해당하는 배달건수 Top3를 가져옵니다.''' 
-        return deliveryService.getFreqByMealtime(area1,area2)
 
 @Deliveryfreq.route('/getFreqByHoliday/<string:area1>/<string:area2>')
 class getFreqByHoliday(Resource):
