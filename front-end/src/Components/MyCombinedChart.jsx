@@ -13,6 +13,7 @@ import {
 } from "recharts";
 
 const MyCombinedChart = ({ data, standardBy }) => {
+  console.log(data);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
@@ -28,13 +29,21 @@ const MyCombinedChart = ({ data, standardBy }) => {
       >
         <CartesianGrid stroke="#f5f5f5" />
         <XAxis dataKey="year_month" scale="band" />
-        <YAxis />
-        <YAxis yAxisId="left" />
+        <YAxis
+          type="number"
+          yAxisId="left"
+          label={{ value: "원", offset: 30, angle: 0, position: "left" }}
+        />
         <YAxis yAxisId="right" orientation="right" />
         <Tooltip />
         <Legend />
-        <Bar yAxisId="right" dataKey="sum" barSize={20} fill="#413ea0" />
-        <Line yAxisId="left" type="monotone" dataKey="delta" stroke="#ff7300" />
+        <Bar yAxisId="right" dataKey="배달건수" barSize={20} fill="#413ea0" />
+        <Line
+          yAxisId="left"
+          type="monotone"
+          dataKey="전달대비 확진자 증감수"
+          stroke="#ff7300"
+        />
       </ComposedChart>
     </ResponsiveContainer>
   );

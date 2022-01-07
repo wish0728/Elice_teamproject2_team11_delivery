@@ -50,20 +50,10 @@ class getFreqByHoliday(Resource):
 @Deliveryfreq.route('/getDeltaSum/<string:area1>')
 class getDeltaSum(Resource):
     def get(self, area1):
-        '''해당 지역에 일치하는 총배달건수합을 가져옵니다.(2019.08~2021.08)''' 
+        '''해당 지역에 일치하는 총배달건수합, 전달대비 코로나 확진자 증감수를 가져옵니다.(2019.08~2021.08)''' 
         return deliveryService.getDeltaSum(area1)
 
-# @Deliveryfreq.route('/getSum/<string:area1>')
-# class getSum(Resource):
-#     def get(self, area1):
-#         '''해당 지역에 일치하는 총배달건수합을 가져옵니다.(2019.08~2021.08)''' 
-#         return deliveryService.getSum(area1)
 
-# @Deliveryfreq.route('/getDeltaCorona/<string:area1>')
-# class getDeltaCorona(Resource):
-#     def get(self, area1):
-#         '''해당 지역과 일치하는 전달대비 코로나 확진자 증감수를 가져옵니다.(2019.08~2021.08)''' 
-#         return deliveryService.getDeltaCorona(area1)
 
 
 # @Deliveryfreq.route('/getFreqByYear/<int:year>/<string:area1>/<string:area2>')
