@@ -104,6 +104,7 @@ const Mytown = () => {
   const [detailArea, setDetailArea] = useState([]); //area가 결정되면 두번째 Select에 값 담기 위한 변수
   const [dAreaValue, setDAreaValue] = useState(""); //두번째 Select의 값
   const [apiRes, setApiRes] = useState([]); //api 통신 값을 담을 변수
+  const [apiRes2, setApiRes2] = useState([]); //api 통신 값을 담을 변수
   const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
   const [year, setYear] = useState();
 
@@ -186,6 +187,13 @@ const Mytown = () => {
               res.map((i, idx) => console.log(i["year"], typeof i["year"]));
             });
           break;
+        case "by_corona":
+          console.log("코로나에 따라");
+          await deliveryApi.get_Sum(area).then((response) => {
+            console.log(response.data);
+            setApiRes(response.data);
+          });
+          break;
       }
       // await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
       //   setApiRes(response.data);
@@ -235,17 +243,19 @@ const Mytown = () => {
                 );
               })}
             </Select>
-            <Select onChange={changeSecondSelect} value={dAreaValue}>
-              <Option value="">군/구 선택</Option>
-              {detailArea.length !== 0 &&
-                detailArea.map((item) => {
-                  return (
-                    <Option key={`key_${item}`} value={item}>
-                      {item}
-                    </Option>
-                  );
-                })}
-            </Select>
+            {standardBy !== "by_corona" && (
+              <Select onChange={changeSecondSelect} value={dAreaValue}>
+                <Option value="">군/구 선택</Option>
+                {detailArea.length !== 0 &&
+                  detailArea.map((item) => {
+                    return (
+                      <Option key={`key_${item}`} value={item}>
+                        {item}
+                      </Option>
+                    );
+                  })}
+              </Select>
+            )}
             <SelectMessage>지역의 배달 주문량</SelectMessage>
           </SelectContainer>
           <SubmitBtnContainer>
@@ -253,6 +263,7 @@ const Mytown = () => {
               <Option value="by_time">시간에 따라</Option>
               <Option value="by_day">요일에 따라</Option>
               <Option value="by_holiday">공휴일에 따라</Option>
+              <Option value="by_corona">코로나에 따라</Option>
             </Select>
             {standardBy === "by_holiday" && (
               <Select onChange={changeYear} value={year}>

@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { ResponsiveBar } from "@nivo/bar";
 
-const colors = {
+const COLORS = {
   월: "blue",
   화: "blue",
   수: "blue",
@@ -10,19 +10,27 @@ const colors = {
   토: "red",
   일: "red",
 };
-const standard = {
+const STANDARD = {
   by_time: "time",
   by_day: "day",
   by_holiday: "holiday",
+  by_corona: "year_month",
 };
-const getColor = (bar) => colors[bar.indexValue];
+const KEY_STANDARDS = {
+  by_time: "freqavg",
+  by_day: "freqavg",
+  by_holiday: "freqavg",
+  by_corona: "sum",
+};
+
+const getColor = (bar) => COLORS[bar.indexValue];
 const MyResponsiveBar = ({ data, standardBy }) => {
   return (
     <ResponsiveBar
       colors={getColor}
       data={data}
-      keys={["freqavg"]}
-      indexBy={standard[standardBy]}
+      keys={["sum"]}
+      indexBy={STANDARD[standardBy]}
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.4}
       valueScale={{ type: "linear" }}
