@@ -15,6 +15,8 @@ import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 import { loadingState, menuState } from "../state";
 import { CONTENTS_BUTTON } from "../constants/Mytown_data";
 import Map from "../Components/Map/Map";
+import MyCombinedChart from "../Components/MyCombinedChart";
+import SorryImg from "../img/sorry.png";
 
 const MytownContainer = styled(Container)`
   display: flex;
@@ -115,6 +117,11 @@ const SubmitButton = styled.button`
   height: 28px;
 `;
 
+const SorryImgTag = styled.img`
+  width: 300px;
+  height: 200px;
+`;
+
 const Mytown = () => {
   const firstLocation = useRecoilValue(menuState)[0]; //메뉴 버튼들 중 첫번째 메뉴를 의미
   const [isLoading, setIsLoading] = useRecoilState(loadingState);
@@ -122,7 +129,9 @@ const Mytown = () => {
   const [detailArea, setDetailArea] = useState([]); //area가 결정되면 두번째 Select에 값 담기 위한 변수
   const [dAreaValue, setDAreaValue] = useState(""); //두번째 Select의 값
   const [apiRes, setApiRes] = useState([]); //api 통신 값을 담을 변수
+  const [covidApiRes, setCovidApiRes] = useState([]); //코로나 api 통신 값을 담을 변수
   const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
+  const [year, setYear] = useState();
 
   useEffect(() => {
     console.log(standardBy);
@@ -153,6 +162,23 @@ const Mytown = () => {
     }
   }, [area, dAreaValue]);
 
+  useEffect(() => {
+    //기준 값 바뀔때마다 api 실행
+    if (area !== "" && dAreaValue !== "") {
+      apiExecute();
+    }
+    if (standardBy === "by_corona") {
+      setApiRes([]);
+      apiExecute();
+    }
+  }, [standardBy]);
+
+  //apiRes 감지
+  useEffect(() => {
+    console.log(apiRes);
+    console.log(covidApiRes);
+  }, [apiRes, covidApiRes]);
+
   //확인하러 가기 버튼에 연결
   const searchArea = () => {
     //첫번째 셀렉트가 입력이 안된경우
@@ -179,6 +205,7 @@ const Mytown = () => {
             .get_Time_Average(area, dAreaValue)
             .then((response) => {
               setApiRes(response.data);
+              console.log(response.data);
               response.data.map((i, idx) =>
                 console.log(i["time"], i["freqavg"])
               );
@@ -186,18 +213,44 @@ const Mytown = () => {
           break;
         case "by_day":
           console.log("요일에 따라");
-          if (area !== "세종특별자치시" && dAreaValue === "전체") {
-            alert("세부지역을 다시 설정해주세요.");
-            break;
-          }
           await deliveryApi
             .get_Day_Average(area, dAreaValue)
             .then((response) => {
               setApiRes(response.data);
               console.log(response.data);
+              response.data.map((i, idx) =>
+                console.log(i["day"], i["freqavg"])
+              );
             });
           break;
+        case "by_holiday":
+          console.log("공휴일에 따라");
+          await deliveryApi
+            .get_Holiday_Average(area, dAreaValue)
+            .then((response) => {
+              let res = response.data.filter((it) => it.year == year);
+              console.log(res);
+              setApiRes(res);
+              res.map((i, idx) => console.log(i["year"], typeof i["year"]));
+            });
+          break;
+        // 수정 필요 - 딕셔너리 합치기 위해서
+        case "by_corona":
+          console.log("코로나에 따라");
+          await deliveryApi.get_Delta_Sum(area).then((res) => {
+            console.log(res.data);
+            const newData = res.data.map((data) => {
+              return {
+                year_month: data.year_month,
+                배달건수: data.sum,
+                "전달대비 확진자 증감수": data.delta,
+              };
+            });
+            setCovidApiRes(newData);
+          });
+          break;
       }
+
       // await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
       //   setApiRes(response.data);
       //   response.data.map((i, idx) => console.log(i["time"], i["freqavg"]));
@@ -221,6 +274,13 @@ const Mytown = () => {
 
   const changeStandardBySelect = (e) => {
     setStandardBy(e.target.value);
+  };
+
+  //연도 변경
+  const changeYear = (e) => {
+    console.log(typeof parseInt(e.target.value));
+    console.log(parseInt(e.target.value));
+    setYear(parseInt(e.target.value));
   };
 
   return (
@@ -259,7 +319,16 @@ const Mytown = () => {
               <Select onChange={changeStandardBySelect} value={standardBy}>
                 <Option value="by_time">시간에 따라</Option>
                 <Option value="by_day">요일에 따라</Option>
+                <Option value="by_holiday">공휴일에 따라</Option>
+                <Option value="by_corona">코로나에 따라</Option>
               </Select>
+              {standardBy === "by_holiday" && (
+                <Select onChange={changeYear} value={year}>
+                  <Option value="2019">2019</Option>
+                  <Option value="2020">2020</Option>
+                  <Option value="2021">2021</Option>
+                </Select>
+              )}
               <SubmitButton onClick={searchArea}>
                 {CONTENTS_BUTTON}
               </SubmitButton>
@@ -273,6 +342,14 @@ const Mytown = () => {
             <GraphContentsArea>
               {!isLoading && apiRes.length !== 0 && (
                 <MyResponsiveBar data={apiRes} standardBy={standardBy} />
+              )}
+              {!isLoading &&
+                covidApiRes.length !== 0 &&
+                standardBy === "by_corona" && (
+                  <MyCombinedChart data={covidApiRes} standardBy={standardBy} />
+                )}
+              {area !== "" && apiRes.length === 0 && (
+                <SorryImgTag src={SorryImg} />
               )}
               {isLoading && <Loading />}
             </GraphContentsArea>
