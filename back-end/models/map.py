@@ -41,8 +41,3 @@ class lon_lat_level3(db.Model):
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name in ['longitude','latitude']}
 
-def init_db():
-    db.create_all()
-    
-if __name__ == '__main__':
-    init_db()
