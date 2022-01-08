@@ -7,6 +7,7 @@ export const Dark = {
   menuColor: "#bababa",
   modalBgColor: "#bababa",
   modalTitColor: "#ffffff",
+  hBtnColor: "#82ca9d",
 };
 
 export const Light = {
@@ -18,4 +19,5 @@ export const Light = {
   menuColor: "#bababa",
   modalBgColor: "#212121",
   modalTitColor: "#ffffff",
+  hBtnColor: "#82ca9d",
 };
