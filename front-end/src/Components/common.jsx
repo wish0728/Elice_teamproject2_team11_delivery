@@ -49,7 +49,6 @@ export const MenuWrapper = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  border: 1px solid black;
   padding: 1.125rem;
   box-sizing: border-box;
   background-color: ${(props) => props.theme.wrapColor};

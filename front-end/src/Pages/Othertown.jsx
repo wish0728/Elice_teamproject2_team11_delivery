@@ -24,7 +24,6 @@ const OthertownBody = styled.div`
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
-
   padding: 20px;
 `;
 
@@ -42,15 +41,16 @@ const MainContents = styled.div`
   flex-grow: 4;
 `;
 
+const SelectWrap = styled(MenuWrapper)`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
 const SelectContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: baseline;
-`;
-
-const SelectWrap = styled(MenuWrapper)`
-  width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `;
 
 const SearchContainer = styled.div`
@@ -429,23 +429,29 @@ const Othertown = () => {
               <SelectMessage>배달 주문량</SelectMessage>
             </SelectContainer>
             <SubmitBtnContainer>
-              <Select onChange={changeStandardBySelect} value={standardBy}>
-                <Option value="by_time">시간에 따라</Option>
-                <Option value="by_day">요일에 따라</Option>
-                <Option value="">공휴일에 따라</Option>
-                {/* <Option value="by_corona">코로나에 따라</Option> */}
-              </Select>
-              {standardBy === "by_holiday" && (
-                <Select onChange={changeYear} value={year}>
-                  <Option value="2019">2019</Option>
-                  <Option value="2020">2020</Option>
-                  <Option value="2021">2021</Option>
+              <SelectContainer>
+                <Select onChange={changeStandardBySelect} value={standardBy}>
+                  <Option value="by_time">시간에 따라</Option>
+                  <Option value="by_day">요일에 따라</Option>
+                  <Option value="">공휴일에 따라</Option>
+                  {/* <Option value="by_corona">코로나에 따라</Option> */}
                 </Select>
+              </SelectContainer>
+              {standardBy === "by_holiday" && (
+                <SelectContainer>
+                  <Select onChange={changeYear} value={year}>
+                    <Option value="2019">2019</Option>
+                    <Option value="2020">2020</Option>
+                    <Option value="2021">2021</Option>
+                  </Select>
+                </SelectContainer>
               )}
-              <Select onChange={changeGraphOption} value={graphOption}>
-                <Option value="by_bar">막대그래프</Option>
-                <Option value="by_line">꺾은선</Option>
-              </Select>
+              <SelectContainer>
+                <Select onChange={changeGraphOption} value={graphOption}>
+                  <Option value="by_bar">막대그래프</Option>
+                  <Option value="by_line">꺾은선</Option>
+                </Select>
+              </SelectContainer>
               <SubmitBtn onClick={onSubmitClick}>비교하기</SubmitBtn>
             </SubmitBtnContainer>
           </SelectWrap>

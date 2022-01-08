@@ -30,7 +30,7 @@ const ModalContents = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  background-color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.modalBgColor};
   color: ${(props) => props.theme.titleColor};
   box-sizing: border-box;
   z-index: 999;
@@ -57,6 +57,7 @@ const ModalTitle = styled.div`
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 14px;
+  color: ${(props) => props.theme.modalTitColor};
 `;
 
 const ModalEmail = styled.input.attrs({
@@ -100,7 +101,7 @@ const ModalCreate = styled.button`
 `;
 
 const StyledLink = styled(Link)`
-  color: ${(props) => props.theme.titleColor};
+  color: ${(props) => props.theme.modalTitColor};
   text-decoration: none;
   &:focus,
   &:hover,

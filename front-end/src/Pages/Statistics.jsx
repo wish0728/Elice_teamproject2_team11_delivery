@@ -42,6 +42,11 @@ const MainContents = styled.div`
   flex-grow: 4;
 `;
 
+const SelectWrap = styled(MenuWrapper)`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
 const SelectContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -61,11 +66,6 @@ const SearchContainer = styled.div`
 const SelectMessage = styled.div`
   margin-left: 20px;
   width: 100px;
-`;
-
-const SelectWrap = styled(MenuWrapper)`
-  width: 100%;
-  margin-bottom: 20px;
 `;
 
 const ContentsArea = styled.div`

@@ -61,6 +61,10 @@ const HeaderBtn = styled.button`
   width: 130px;
   height: 40px;
   font-size: 15px;
+  border-radius: 8px;
+  margin-right: 15px;
+  border: none;
+  background-color: ${(props) => props.theme.menuColor};
 `;
 
 const HomeHeader = () => {
@@ -102,22 +106,18 @@ const HomeHeader = () => {
   return (
     <HeaderContainer>
       <HeaderEmptyDiv />
-      <DarkModeContainer>
-        <HeaderBtn onClick={onChangeToggle}>
-          {isDarkMode ? "다크 모드로 보기" : "라이트 모드로 보기"}
-        </HeaderBtn>
-      </DarkModeContainer>
-      <LoginContainer>
-        {!isLoggedInValue && (
-          <HeaderBtn onClick={onClickModal}>LOGIN</HeaderBtn>
-        )}
-        {isLoggedInValue && (
-          <UserContainer>
-            <UserIcon />
-            <Username>{userName}님 반갑습니다</Username>
-          </UserContainer>
-        )}
-      </LoginContainer>
+
+      <HeaderBtn onClick={onChangeToggle}>
+        {isDarkMode ? "라이트 모드로 보기" : "다크 모드로 보기"}
+      </HeaderBtn>
+
+      {!isLoggedInValue && <HeaderBtn onClick={onClickModal}>LOGIN</HeaderBtn>}
+      {isLoggedInValue && (
+        <UserContainer>
+          <UserIcon />
+          <Username>{userName}님 반갑습니다</Username>
+        </UserContainer>
+      )}
     </HeaderContainer>
   );
 };
