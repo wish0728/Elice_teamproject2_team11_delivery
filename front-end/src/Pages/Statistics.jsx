@@ -23,6 +23,8 @@ const OthertownBody = styled.div`
   flex-grow: 5;
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
+
   padding: 20px;
 `;
 

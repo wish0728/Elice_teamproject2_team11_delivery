@@ -3,13 +3,13 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
 
 const COLORS = {
-  월: "blue",
-  화: "blue",
-  수: "blue",
-  목: "blue",
-  금: "blue",
-  토: "red",
-  일: "red",
+  월: "#8884d8",
+  화: "#8884d8",
+  수: "#8884d8",
+  목: "#8884d8",
+  금: "#8884d8",
+  토: "#cc0000",
+  일: "#cc0000",
   평일: "red",
 };
 

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import deliveryApi from "../apis/delivery";
-import { Container, Option, Select } from "../Components/common";
+import { Container, MenuWrapper, Option, Select } from "../Components/common";
 import Menu from "../Components/Menu";
 import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
-import MyCombinedBar from "../Components/MyCombinedBar";
+import MyCombinedBar from "../Components/MyCombinedBar.jsx";
 import MyCombinedLine from "../Components/MyCombinedLine";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 
@@ -23,6 +23,8 @@ const OthertownBody = styled.div`
   flex-grow: 5;
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
+
   padding: 20px;
 `;
 
@@ -44,6 +46,11 @@ const SelectContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: baseline;
+`;
+
+const SelectWrap = styled(MenuWrapper)`
+  width: 100%;
+  margin-bottom: 20px;
 `;
 
 const SearchContainer = styled.div`
@@ -73,6 +80,8 @@ const ContentsArea = styled.div`
   flex-direction: row;
   width: 100%;
   height: 500px;
+  box-sizing: border-box;
+  padding: 20px;
 `;
 
 const GrapArea = styled.div`
@@ -98,7 +107,7 @@ const Othertown = () => {
   const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
   const [year, setYear] = useState(2019);
 
-  const [graphOption, setGraphOption] = useState(); // 그래프 선택 기준 (바 형태, 꺾은선 형태)
+  const [graphOption, setGraphOption] = useState("by_bar"); // 그래프 선택 기준 (바 형태, 꺾은선 형태)
   const [twoApiRes, setTwoApiRes] = useState([]);
 
   useEffect(() => {
@@ -147,8 +156,6 @@ const Othertown = () => {
     console.log("todo 확인");
   }, []);
   useEffect(() => {
-    //todo : 우리 동네와 다른 동네가 서로 안겹치도록 설정
-
     console.log(graphOption);
   }, [graphOption]);
 
@@ -359,85 +366,89 @@ const Othertown = () => {
       <OthertownBody>
         <OthertownMenu />
         <MainContents>
-          <SelectContainer>
-            <Select
-              name="areaData"
-              onChange={changeMyFirstSelect}
-              value={myArea}
-            >
-              <Option value="">도/시 선택</Option>
-              {AREAS.map((item) => {
-                return (
-                  <Option key={`key_${item}`} value={item}>
-                    {item}
-                  </Option>
-                );
-              })}
-            </Select>
-            <Select onChange={changeMySecondSelect} value={myDAreaValue}>
-              <Option value="">군/구 선택</Option>
-              {myDetailArea.length !== 0 &&
-                myDetailArea.map((item) => {
+          <SelectWrap>
+            <SelectContainer>
+              <Select
+                name="areaData"
+                onChange={changeMyFirstSelect}
+                value={myArea}
+              >
+                <Option value="">도/시 선택</Option>
+                {AREAS.map((item) => {
                   return (
                     <Option key={`key_${item}`} value={item}>
                       {item}
                     </Option>
                   );
                 })}
-            </Select>
-
-            <SelectMessage>배달 주문량</SelectMessage>
-          </SelectContainer>
-
-          <SelectContainer>
-            <Select
-              name="areaData"
-              onChange={changeOtherFirstSelect}
-              value={otherArea}
-            >
-              <Option value="">도/시 선택</Option>
-              {AREAS.map((item) => {
-                return (
-                  <Option key={`key_${item}`} value={item}>
-                    {item}
-                  </Option>
-                );
-              })}
-            </Select>
-            <Select onChange={changeOtherSecondSelect} value={otherDAreaValue}>
-              <Option value="">군/구 선택</Option>
-              {otherDetailArea.length !== 0 &&
-                otherDetailArea.map((item) => {
-                  return (
-                    <Option key={`key_${item}`} value={item}>
-                      {item}
-                    </Option>
-                  );
-                })}
-            </Select>
-            <SelectMessage>배달 주문량</SelectMessage>
-          </SelectContainer>
-          <SubmitBtnContainer>
-            <Select onChange={changeStandardBySelect} value={standardBy}>
-              <Option value="by_time">시간에 따라</Option>
-              <Option value="by_day">요일에 따라</Option>
-              <Option value="">공휴일에 따라</Option>
-              {/* <Option value="by_corona">코로나에 따라</Option> */}
-            </Select>
-            {standardBy === "by_holiday" && (
-              <Select onChange={changeYear} value={year}>
-                <Option value="2019">2019</Option>
-                <Option value="2020">2020</Option>
-                <Option value="2021">2021</Option>
               </Select>
-            )}
-            <Select onChange={changeGraphOption} value={graphOption}>
-              <Option value="by_bar">막대그래프</Option>
-              <Option value="by_line">꺾은선</Option>
-            </Select>
-            <SubmitBtn onClick={onSubmitClick}>비교하기</SubmitBtn>
-          </SubmitBtnContainer>
+              <Select onChange={changeMySecondSelect} value={myDAreaValue}>
+                <Option value="">군/구 선택</Option>
+                {myDetailArea.length !== 0 &&
+                  myDetailArea.map((item) => {
+                    return (
+                      <Option key={`key_${item}`} value={item}>
+                        {item}
+                      </Option>
+                    );
+                  })}
+              </Select>
 
+              <SelectMessage>배달 주문량</SelectMessage>
+            </SelectContainer>
+
+            <SelectContainer>
+              <Select
+                name="areaData"
+                onChange={changeOtherFirstSelect}
+                value={otherArea}
+              >
+                <Option value="">도/시 선택</Option>
+                {AREAS.map((item) => {
+                  return (
+                    <Option key={`key_${item}`} value={item}>
+                      {item}
+                    </Option>
+                  );
+                })}
+              </Select>
+              <Select
+                onChange={changeOtherSecondSelect}
+                value={otherDAreaValue}
+              >
+                <Option value="">군/구 선택</Option>
+                {otherDetailArea.length !== 0 &&
+                  otherDetailArea.map((item) => {
+                    return (
+                      <Option key={`key_${item}`} value={item}>
+                        {item}
+                      </Option>
+                    );
+                  })}
+              </Select>
+              <SelectMessage>배달 주문량</SelectMessage>
+            </SelectContainer>
+            <SubmitBtnContainer>
+              <Select onChange={changeStandardBySelect} value={standardBy}>
+                <Option value="by_time">시간에 따라</Option>
+                <Option value="by_day">요일에 따라</Option>
+                <Option value="">공휴일에 따라</Option>
+                {/* <Option value="by_corona">코로나에 따라</Option> */}
+              </Select>
+              {standardBy === "by_holiday" && (
+                <Select onChange={changeYear} value={year}>
+                  <Option value="2019">2019</Option>
+                  <Option value="2020">2020</Option>
+                  <Option value="2021">2021</Option>
+                </Select>
+              )}
+              <Select onChange={changeGraphOption} value={graphOption}>
+                <Option value="by_bar">막대그래프</Option>
+                <Option value="by_line">꺾은선</Option>
+              </Select>
+              <SubmitBtn onClick={onSubmitClick}>비교하기</SubmitBtn>
+            </SubmitBtnContainer>
+          </SelectWrap>
           <ContentsArea>
             {graphOption === "by_bar" &&
               twoApiRes.length !== 0 &&
