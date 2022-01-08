@@ -7,6 +7,7 @@ import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 import { CONTENTS_BUTTON } from "../constants/Mytown_data";
+import Sorry from "../img/sorrySejong.png";
 
 const OthertownContainer = styled(Container)`
   display: flex;
@@ -91,12 +92,28 @@ const SubmitButton = styled.button`
   height: 28px;
 `;
 
+const SorryImg = styled.img`
+  width: 600px;
+  height: 100%;
+  margin-right: 20px;
+`;
+
 const Statistics = () => {
   const [area, setArea] = useState(""); //첫번째 Select 도/시 선택시 값이 담길 변수
   const [detailArea, setDetailArea] = useState([]); //area가 결정되면 두번째 Select에 값 담기 위한 변수
   const [dAreaValue, setDAreaValue] = useState(""); //두번째 Select의 값
   const [apiRes, setApiRes] = useState([]); //api 통신 값을 담을 변수
-  const standardBy = "by_mealtime";
+  const [standardBy, setStandardBy] = useState();
+
+  useEffect(() => {
+    if (dAreaValue == "전체") {
+      setStandardBy("by_mealtime1");
+      console.log("by_mealtime1");
+    } else {
+      setStandardBy("by_mealtime2");
+      console.log("by_mealtime2");
+    }
+  }, [dAreaValue]);
 
   useEffect(() => {
     //첫번째 Select가 초기화 될경우
@@ -149,12 +166,14 @@ const Statistics = () => {
       const tmpObj = {};
       //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 ) 굳이 필요는 없음
       switch (standardBy) {
-        case "by_mealtime":
+        case "by_mealtime1":
+        case "by_mealtime2":
           console.log("식사 시간에 따라");
           await deliveryApi
             .get_MealTime_Average(area, dAreaValue)
             .then((response) => {
-              setApiRes(response.data);
+              const newData = response.data.slice(0, 3);
+              setApiRes(newData);
               response.data.map((i, idx) => (tmpObj[i.year] = { ...i }));
             })
             .then((tmpObj) => console.log(tmpObj));
@@ -221,9 +240,10 @@ const Statistics = () => {
             </SubmitBtnContainer>
           </SelectWrap>
           <GrapArea>
-            {apiRes.length !== 0 && (
+            {area !== "세종특별자치시" && apiRes.length !== 0 && (
               <MyResponsiveBar data={apiRes} standardBy={standardBy} />
             )}
+            {area === "세종특별자치시" && <SorryImg alt="sorry" src={Sorry} />}
           </GrapArea>
         </MainContents>
       </OthertownBody>
