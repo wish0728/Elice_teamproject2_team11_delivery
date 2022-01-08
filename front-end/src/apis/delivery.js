@@ -36,6 +36,11 @@ const deliveryApi = {
   get_Delta_Sum: async (keyword1) => {
     return await api(`${DELIVERY_END_POINT}/getDeltaSum/${keyword1}`);
   },
+  get_MealTime_Average: async (keyword1, keyword2) => {
+    return await api(
+      `${DELIVERY_END_POINT}/getFreqByMealtime/${keyword1}/${keyword2}`
+    );
+  },
   // get_Sum: async (keyword1) => {
   //   return await api(`${DELIVERY_END_POINT}/getSum/${keyword1}`);
   // },
