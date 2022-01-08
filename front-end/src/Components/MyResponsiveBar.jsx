@@ -20,7 +20,7 @@ const STANDARD = {
 };
 
 const MAX_STANDARD = {
-  by_time: 30,
+  by_time: "auto",
   by_day: "auto",
   by_holiday: "auto",
   by_mealtime: "auto",
