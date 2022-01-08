@@ -42,7 +42,8 @@ const MyCombinedChart = ({ data, standardBy }) => {
           yAxisId="left"
           type="monotone"
           dataKey="전달대비 확진자 증감수"
-          stroke="#ff7300"
+          stroke="#9B111E"
+          strokeWidth={5}
         />
       </ComposedChart>
     </ResponsiveContainer>

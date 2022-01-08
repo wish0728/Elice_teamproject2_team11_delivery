@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { EmptyDiv, StyledLink } from "./common";
 import ToggleSwitch from "./ToggleSwitch";
-import { loginState, modalState } from "../state";
+import { loginState, modalState, themeState } from "../state";
+import { Dark, Light } from "../Themes/theme";
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -54,11 +55,39 @@ const UserIcon = styled.div`
 
 const Username = styled.div``;
 
+const HeaderBtn = styled.button`
+  width: 130px;
+  height: 40px;
+  font-size: 15px;
+`;
+
 const HomeHeader = () => {
   const [modalOpen, setModalOpen] = useRecoilState(modalState); //모달 여닫기
 
   const { isLoggedIn: isLoggedInValue } = useRecoilValue(loginState); //로그인 상태 감지
   const { name: userName } = useRecoilValue(loginState); //로그인한 유저 이름
+
+  const [theme, setTheme] = useRecoilState(themeState);
+
+  //새로 랜더링 될때마다 라이트모드로 돌아감 => 홈으로 갈때마다 라이트 모드로 돌아감
+  const { name: themeName } = useRecoilValue(themeState);
+  //삼항 연산자를 사용하여 홈으로 돌아갈때마다 false로 초기화 되지 않도록 바꿈
+  const [isDarkMode, setIsDarkMode] = useState(false); //체크 감지
+
+  //토글 변경될때마다 isDarkMode 값 변경
+  const onChangeToggle = () => {
+    setIsDarkMode((current) => !current);
+  };
+
+  useEffect(() => {
+    if (isDarkMode) {
+      //다크모드
+      setTheme(Dark);
+      return;
+    }
+    //그 외의 경우에는 라이트모드
+    setTheme(Light);
+  }, [isDarkMode]);
 
   useEffect(() => {
     console.log("모달 열림. : ", modalOpen);
@@ -72,10 +101,14 @@ const HomeHeader = () => {
     <HeaderContainer>
       <HeaderEmptyDiv />
       <DarkModeContainer>
-        <ToggleSwitch />
+        <HeaderBtn onClick={onChangeToggle}>
+          {isDarkMode ? "다크 모드로 보기" : "라이트 모드로 보기"}
+        </HeaderBtn>
       </DarkModeContainer>
       <LoginContainer>
-        {!isLoggedInValue && <LoginBtn onClick={onClickModal}>LOGIN</LoginBtn>}
+        {!isLoggedInValue && (
+          <HeaderBtn onClick={onClickModal}>LOGIN</HeaderBtn>
+        )}
         {isLoggedInValue && (
           <UserContainer>
             <UserIcon />

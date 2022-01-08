@@ -42,6 +42,9 @@ const authApi = {
   valid_id: async (id) => {
     return await get_api(`${AUTH_END_POINT}/register/${id}`);
   },
+  new_register: async (data) => {
+    return await post_api(`${AUTH_END_POINT}/register`, data);
+  },
 };
 
 export default authApi;
