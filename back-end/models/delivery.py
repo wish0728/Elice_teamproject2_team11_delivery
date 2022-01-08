@@ -148,4 +148,36 @@ class delta_sum_by_area1(db.Model):
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name}
 
+class freqavg_by_weather1(db.Model):
+    __tablename__ = "freqavg_by_weather1"
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    normal = db.Column(db.Float, nullable=False)
+    rain = db.Column(db.Float, nullable=False)
+    snow = db.Column(db.Float, nullable=False)
+    hot = db.Column(db.Float, nullable=False)
+    cold = db.Column(db.Float, nullable=False)
+
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name}
+
+class freqavg_by_weather2(db.Model):
+    __tablename__ = "freqavg_by_weather2"
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    area1= db.Column(db.String(45), nullable=False)
+    area2= db.Column(db.String(45), nullable=False)
+    normal = db.Column(db.Float, nullable=False)
+    rain = db.Column(db.Float, nullable=False)
+    snow = db.Column(db.Float, nullable=False)
+    hot = db.Column(db.Float, nullable=False)
+    cold = db.Column(db.Float, nullable=False)
+
+
+    def as_dict(self):
+        return {x.name: getattr(self, x.name) for x in self.__table__.columns if x.name}
 

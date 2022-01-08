@@ -46,35 +46,13 @@ class getDeltaSum(Resource):
         '''해당 지역에 일치하는 총배달건수합, 전달대비 코로나 확진자 증감수를 가져옵니다.(2019.08~2021.08)''' 
         return deliveryService.getDeltaSum(area1)
 
+@Deliveryfreq.route('/getFreqByWeather/<string:area1>/<string:area2>')
+class getFreqByWeather(Resource):
+    def get(self, area1, area2):
+        '''해당 지역에 일치하는 날씨별 배달건수 평균을 가져옵니다''' 
+        return deliveryService.getFreqByWeather(area1,area2)
 
 
 
-# @Deliveryfreq.route('/getFreqByYear/<int:year>/<string:area1>/<string:area2>')
-# class getFreqByYear(Resource): 
-#     def get(self,year,area1,area2):
-#         '''해당 연도와 지역과 일치하는 시간대별 배달건수 평균을 가져옵니다.'''
-#         if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
 
-#         start = date(year=year, month=1, day=1)
-#         end = date(year=year, month=12, day=31)
-#         if area2 == '전체':
-#             rows = d.query.filter(d.date >= start, d.date <= end).filter_by(
-#                 area1_City_Do=area1).all()
-#         else:
-#             rows = d.query.filter(d.date >= start, d.date <= end).filter_by(
-#                 area1_City_Do=area1, area2_Si_Gun_Gu=area2).all()
-#         data = {}
-#         a = {}
-#         for row in rows:
-#             time = int(row.time)
-#             freq = int(row.delivery_freq)
-#             try:
-#                 data[time] += freq
-#                 a[time] += 1
-#             except KeyError:
-#                 data[time] = freq
-#                 a[time] = 1
-#         for key in data.keys():
-#             data[key] = round(data[key]/a[key])
-#         return jsonify(json_list=data)
 

@@ -12,6 +12,7 @@ import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 import { loadingState, menuState } from "../state";
 import { CONTENTS_ARTICLE, CONTENTS_BUTTON } from "../constants/Mytown_data";
 import Map from "../Components/Map/Map";
+import Sorry from "../img/sorry.png";
 
 const MytownContainer = styled(Container)`
   display: flex;
@@ -98,6 +99,11 @@ const SubmitButton = styled.button`
   height: 28px;
 `;
 
+const SorryImg = styled.img`
+  width: 600px;
+  height: 100%;
+  margin-right: 20px;
+`;
 const Mytown = () => {
   const firstLocation = useRecoilValue(menuState)[0]; //메뉴 버튼들 중 첫번째 메뉴를 의미
   const [isLoading, setIsLoading] = useRecoilState(loadingState);
@@ -128,6 +134,7 @@ const Mytown = () => {
 
   //바로 실행되지 않는 문제 해결
   useEffect(() => {
+    apiExecute();
     if (dAreaValue === "전체") {
       apiExecute();
     }
@@ -294,6 +301,9 @@ const Mytown = () => {
                 <MyResponsiveBar data={apiRes} standardBy={standardBy} />
               )}
             {isLoading && <Loading />}
+            {!isLoading && apiRes.length === 0 && (
+              <SorryImg alt="sorry" src={Sorry} />
+            )}
             {!isLoading &&
               apiRes.length !== 0 &&
               standardBy === "by_corona" && (

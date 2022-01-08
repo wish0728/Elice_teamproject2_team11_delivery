@@ -382,7 +382,7 @@ const Mytown = () => {
               {!isLoading &&
                 covidApiRes.length !== 0 &&
                 standardBy === "by_corona" && (
-                  <MyCombinedChart data={covidApiRes} standardBy={standardBy} />
+                  <MyCombinedChart data={covidApiRes} />
                 )}
               {!isLoading &&
                 standardBy !== "by_corona" &&
