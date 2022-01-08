@@ -16,8 +16,3 @@ class area2_for_exception (db.Model):
     area1= db.Column(db.String(45), nullable=False)
     area2= db.Column(db.String(45), nullable=False)
 
-def init_db():
-    db.create_all()
-    
-if __name__ == '__main__':
-    init_db()

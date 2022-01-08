@@ -24,3 +24,7 @@ npm i @nivo/line
 ## @svg-maps/south-korea
 
 npm i @svg-maps/south-korea
+
+## recharts
+
+npm install recharts --save

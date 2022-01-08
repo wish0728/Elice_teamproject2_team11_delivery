@@ -1,5 +1,4 @@
 from flask_restx import Resource, Namespace,fields
-# from services.deliveryService import getFreq, getFreqByDay
 from . import deliveryService
 Deliveryfreq = Namespace("delivery", description="배달 관련 api")
 
@@ -33,12 +32,6 @@ class getFreqByMealtime(Resource):
         '''해당 지역과 일치하는 점심(11-13), 저녁(17-20), 야식(21-23)에 해당하는 배달건수 Top3를 가져옵니다.''' 
         return deliveryService.getFreqByMealtime(area1,area2)
 
-@Deliveryfreq.route('/getFreqByMealtime/<string:area1>/<string:area2>')
-class getFreqByMealtime(Resource):
-    @Deliveryfreq.expect(area)
-    def get(self, area1, area2):
-        '''해당 지역과 일치하는 점심(11-13), 저녁(17-20), 야식(21-23)에 해당하는 배달건수 Top3를 가져옵니다.''' 
-        return deliveryService.getFreqByMealtime(area1,area2)
 
 @Deliveryfreq.route('/getFreqByHoliday/<string:area1>/<string:area2>')
 class getFreqByHoliday(Resource):
@@ -46,6 +39,15 @@ class getFreqByHoliday(Resource):
     def get(self, area1, area2):
         '''해당 지역과 일치하는 공휴일 평균 배달건수를 가져옵니다.''' 
         return deliveryService.getFreqByHoliday(area1,area2)
+
+@Deliveryfreq.route('/getDeltaSum/<string:area1>')
+class getDeltaSum(Resource):
+    def get(self, area1):
+        '''해당 지역에 일치하는 총배달건수합, 전달대비 코로나 확진자 증감수를 가져옵니다.(2019.08~2021.08)''' 
+        return deliveryService.getDeltaSum(area1)
+
+
+
 
 # @Deliveryfreq.route('/getFreqByYear/<int:year>/<string:area1>/<string:area2>')
 # class getFreqByYear(Resource): 
