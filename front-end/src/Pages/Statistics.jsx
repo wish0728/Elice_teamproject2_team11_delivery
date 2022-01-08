@@ -73,7 +73,10 @@ const ContentsArea = styled.div`
 `;
 
 const GrapArea = styled.div`
-  flex-grow: 1;
+  width: 600px;
+  height: 500px;
+  box-sizing: border-box;
+  padding: 10px;
 `;
 
 const SubmitBtnContainer = styled.div`
@@ -93,7 +96,7 @@ const Statistics = () => {
   const [detailArea, setDetailArea] = useState([]); //area가 결정되면 두번째 Select에 값 담기 위한 변수
   const [dAreaValue, setDAreaValue] = useState(""); //두번째 Select의 값
   const [apiRes, setApiRes] = useState([]); //api 통신 값을 담을 변수
-  const standardBy = "by_time";
+  const standardBy = "by_mealtime";
 
   useEffect(() => {
     //첫번째 Select가 초기화 될경우
@@ -146,8 +149,8 @@ const Statistics = () => {
       const tmpObj = {};
       //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 ) 굳이 필요는 없음
       switch (standardBy) {
-        case "by_time":
-          console.log("시간에 따라");
+        case "by_mealtime":
+          console.log("식사 시간에 따라");
           await deliveryApi
             .get_MealTime_Average(area, dAreaValue)
             .then((response) => {
@@ -217,6 +220,11 @@ const Statistics = () => {
               </SubmitButton>
             </SubmitBtnContainer>
           </SelectWrap>
+          <GrapArea>
+            {apiRes.length !== 0 && (
+              <MyResponsiveBar data={apiRes} standardBy={standardBy} />
+            )}
+          </GrapArea>
         </MainContents>
       </OthertownBody>
     </OthertownContainer>
