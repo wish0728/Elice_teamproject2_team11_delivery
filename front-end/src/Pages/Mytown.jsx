@@ -171,6 +171,10 @@ const Mytown = () => {
       setApiRes([]);
       apiExecute();
     }
+    if (standardBy !== "by_corona") {
+      setCovidApiRes([]);
+      apiExecute();
+    }
   }, [standardBy]);
 
   //apiRes 감지
@@ -348,9 +352,12 @@ const Mytown = () => {
                 standardBy === "by_corona" && (
                   <MyCombinedChart data={covidApiRes} standardBy={standardBy} />
                 )}
-              {area !== "" && apiRes.length === 0 && (
-                <SorryImgTag src={SorryImg} />
-              )}
+              {area !== "" &&
+                standardBy !== "by_corona" &&
+                apiRes.length === 0 && <SorryImgTag src={SorryImg} />}
+              {area !== "" &&
+                standardBy === "by_corona" &&
+                covidApiRes.length === 0 && <SorryImgTag src={SorryImg} />}
               {isLoading && <Loading />}
             </GraphContentsArea>
           </ContentsArea>
