@@ -15,3 +15,4 @@ class area2_for_exception (db.Model):
     id = db.Column(db.String(10), primary_key=True, nullable=False)
     area1= db.Column(db.String(45), nullable=False)
     area2= db.Column(db.String(45), nullable=False)
+

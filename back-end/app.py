@@ -7,15 +7,14 @@ from flask_cors import CORS
 from db_connect import db
 
 import config
-
+    
+ 
 def create_app():
     app = Flask(__name__)
     CORS(app)
-    
     #일단 services로 대체 -> 후에 resolver로 하기 
     from apis.delivery.deliveryResolver import Deliveryfreq
-    from apis.auth.auth import Auth
-    # from apis.auth.authResolver import Auth
+    from apis.auth.authResolver import Auth
     from apis.map.mapResolver  import Map
     app.config.from_object(config)  # config 에서 가져온 파일을 사용합니다.
 

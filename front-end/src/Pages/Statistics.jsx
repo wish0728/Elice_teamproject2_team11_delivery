@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import deliveryApi from "../apis/delivery";
-import {
-  Container,
-  MenuWrapper,
-  MenuWrapperHeader,
-} from "../Components/common";
-import Loading from "../Components/Loading";
+import { Container, MenuWrapper, Option, Select } from "../Components/common";
 import Menu from "../Components/Menu";
 import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
-import { loadingState, menuState } from "../state";
 import { CONTENTS_BUTTON } from "../constants/Mytown_data";
-import Map from "../Components/Map/Map";
 
-const MytownContainer = styled(Container)`
+const OthertownContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   background-color: ${(props) => props.theme.bgColor};
@@ -24,17 +16,16 @@ const MytownContainer = styled(Container)`
   overflow: scroll;
 `;
 
-const MytownBody = styled.div`
+const OthertownBody = styled.div`
   width: 100%;
   height: 100%;
   flex-grow: 5;
   display: flex;
   flex-direction: row;
-  box-sizing: border-box;
   padding: 20px;
 `;
 
-const MytownMenu = styled(Menu)`
+const OthertownMenu = styled(Menu)`
   flex-grow: 1;
   padding: 10px;
   box-sizing: border-box;
@@ -46,39 +37,6 @@ const MainContents = styled.div`
   padding: 20px;
   box-sizing: border-box;
   flex-grow: 4;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SelectWrap = styled(MenuWrapper)`
-  width: 100%;
-  margin-bottom: 20px;
-`;
-
-const ContentsArea = styled(MenuWrapper)`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 600px;
-  padding: 10px;
-  box-sizing: border-box;
-`;
-
-const MapContentsArea = styled(MenuWrapper)`
-  width: 600px;
-  height: 500px;
-  margin-right: 20px;
-  box-sizing: border-box;
-  padding: 10px;
-`;
-
-const GraphContentsArea = styled(MenuWrapper)`
-  width: 600px;
-  height: 500px;
-  box-sizing: border-box;
-  padding: 10px;
 `;
 
 const SelectContainer = styled.div`
@@ -87,20 +45,35 @@ const SelectContainer = styled.div`
   align-items: baseline;
 `;
 
-//셀렉트를 위한
-const Select = styled.select`
-  padding: 5px;
-  border-radius: 5px;
-  margin-right: 8px;
-  width: 130px;
-`;
-
-const Option = styled.option`
-  border-radius: 5px;
+const SearchContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+  height: 300px;
+  overflow: scroll;
+  z-index: 99;
+  box-sizing: border-box;
 `;
 
 const SelectMessage = styled.div`
-  font-size: 22px;
+  margin-left: 20px;
+  width: 100px;
+`;
+
+const SelectWrap = styled(MenuWrapper)`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const ContentsArea = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 500px;
+`;
+
+const GrapArea = styled.div`
+  flex-grow: 1;
 `;
 
 const SubmitBtnContainer = styled.div`
@@ -115,18 +88,12 @@ const SubmitButton = styled.button`
   height: 28px;
 `;
 
-const Mytown = () => {
-  const firstLocation = useRecoilValue(menuState)[0]; //메뉴 버튼들 중 첫번째 메뉴를 의미
-  const [isLoading, setIsLoading] = useRecoilState(loadingState);
+const Statistics = () => {
   const [area, setArea] = useState(""); //첫번째 Select 도/시 선택시 값이 담길 변수
   const [detailArea, setDetailArea] = useState([]); //area가 결정되면 두번째 Select에 값 담기 위한 변수
   const [dAreaValue, setDAreaValue] = useState(""); //두번째 Select의 값
   const [apiRes, setApiRes] = useState([]); //api 통신 값을 담을 변수
-  const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
-
-  useEffect(() => {
-    console.log(standardBy);
-  }, [standardBy]);
+  const standardBy = "by_time";
 
   useEffect(() => {
     //첫번째 Select가 초기화 될경우
@@ -145,13 +112,19 @@ const Mytown = () => {
     }
   }, [area]);
 
-  //지도 클릭시 바로 실행되지 않는 문제 해결
   useEffect(() => {
-    if (dAreaValue === "전체") {
-      apiExecute();
-      return;
-    }
-  }, [area, dAreaValue]);
+    console.log(apiRes);
+  }, [apiRes]);
+
+  //첫번째 셀렉트 변화 감지
+  const changeFirstSelect = (e) => {
+    setArea(e.target.value);
+  };
+
+  //두번째 셀렉트 변화 감지
+  const changeSecondSelect = (e) => {
+    setDAreaValue(e.target.value);
+  };
 
   //확인하러 가기 버튼에 연결
   const searchArea = () => {
@@ -170,19 +143,18 @@ const Mytown = () => {
   //api 받아오는 메소드
   const apiExecute = async () => {
     try {
+      const tmpObj = {};
       //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 ) 굳이 필요는 없음
-      setIsLoading(true);
       switch (standardBy) {
         case "by_time":
           console.log("시간에 따라");
           await deliveryApi
-            .get_Time_Average(area, dAreaValue)
+            .get_Holiday_Average(area, dAreaValue)
             .then((response) => {
               setApiRes(response.data);
-              response.data.map((i, idx) =>
-                console.log(i["time"], i["freqavg"])
-              );
-            });
+              response.data.map((i, idx) => (tmpObj[i.year] = { ...i }));
+            })
+            .then((tmpObj) => console.log(tmpObj));
           break;
         case "by_day":
           console.log("요일에 따라");
@@ -206,28 +178,13 @@ const Mytown = () => {
       console.log(e);
     }
     //로딩 완료
-    setIsLoading(false);
-  };
-
-  //첫번째 셀렉트 변화 감지
-  const changeFirstSelect = (e) => {
-    setArea(e.target.value);
-  };
-
-  //두번째 셀렉트 변화 감지
-  const changeSecondSelect = (e) => {
-    setDAreaValue(e.target.value);
-  };
-
-  const changeStandardBySelect = (e) => {
-    setStandardBy(e.target.value);
   };
 
   return (
-    <MytownContainer>
+    <OthertownContainer>
       <MenuHeader />
-      <MytownBody>
-        <MytownMenu />
+      <OthertownBody>
+        <OthertownMenu />
         <MainContents>
           <SelectWrap>
             <SelectContainer>
@@ -254,33 +211,16 @@ const Mytown = () => {
               </Select>
               <SelectMessage>지역의 배달 주문량</SelectMessage>
             </SelectContainer>
-
             <SubmitBtnContainer>
-              <Select onChange={changeStandardBySelect} value={standardBy}>
-                <Option value="by_time">시간에 따라</Option>
-                <Option value="by_day">요일에 따라</Option>
-              </Select>
               <SubmitButton onClick={searchArea}>
                 {CONTENTS_BUTTON}
               </SubmitButton>
             </SubmitBtnContainer>
           </SelectWrap>
-          <ContentsArea>
-            <MapContentsArea>
-              <MenuWrapperHeader>지도로 보기</MenuWrapperHeader>
-              <Map area={area} setArea={setArea} />
-            </MapContentsArea>
-            <GraphContentsArea>
-              {!isLoading && apiRes.length !== 0 && (
-                <MyResponsiveBar data={apiRes} standardBy={standardBy} />
-              )}
-              {isLoading && <Loading />}
-            </GraphContentsArea>
-          </ContentsArea>
         </MainContents>
-      </MytownBody>
-    </MytownContainer>
+      </OthertownBody>
+    </OthertownContainer>
   );
 };
 
-export default Mytown;
+export default Statistics;
