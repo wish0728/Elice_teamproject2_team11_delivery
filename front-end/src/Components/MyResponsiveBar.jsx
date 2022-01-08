@@ -16,12 +16,14 @@ const STANDARD = {
   by_time: "time",
   by_day: "day",
   by_holiday: "holiday",
+  by_mealtime: "mealtime",
 };
 
 const MAX_STANDARD = {
   by_time: 30,
   by_day: "auto",
-  by_holiday: "holiday",
+  by_holiday: "auto",
+  by_mealtime: "auto",
 };
 
 const getColor = (bar) => COLORS[bar.indexValue];
