@@ -131,7 +131,7 @@ const Mytown = () => {
   const [apiRes, setApiRes] = useState([]); //api 통신 값을 담을 변수
   const [covidApiRes, setCovidApiRes] = useState([]); //코로나 api 통신 값을 담을 변수
   const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
-  const [year, setYear] = useState();
+  const [year, setYear] = useState(2019);
 
   useEffect(() => {
     console.log(standardBy);
@@ -142,6 +142,7 @@ const Mytown = () => {
     if (area == "") {
       //두번째 Select도 초기화
       setDetailArea([]);
+      return;
     } else {
       DETAIL_AREAS.find((element) => {
         if (element.id == area) {
@@ -176,6 +177,11 @@ const Mytown = () => {
       apiExecute();
     }
   }, [standardBy]);
+
+  useEffect(() => {
+    apiExecute();
+    return;
+  }, [year]);
 
   //apiRes 감지
   useEffect(() => {
@@ -344,9 +350,11 @@ const Mytown = () => {
               <Map area={area} setArea={setArea} />
             </MapContentsArea>
             <GraphContentsArea>
-              {!isLoading && apiRes.length !== 0 && (
-                <MyResponsiveBar data={apiRes} standardBy={standardBy} />
-              )}
+              {!isLoading &&
+                apiRes.length !== 0 &&
+                standardBy !== "by_corona" && (
+                  <MyResponsiveBar data={apiRes} standardBy={standardBy} />
+                )}
               {!isLoading &&
                 covidApiRes.length !== 0 &&
                 standardBy === "by_corona" && (
