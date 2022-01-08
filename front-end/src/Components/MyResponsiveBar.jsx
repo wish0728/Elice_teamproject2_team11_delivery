@@ -12,20 +12,20 @@ const COLORS = {
   일: "red",
   평일: "red",
 };
+
 const STANDARD = {
   by_time: "time",
   by_day: "day",
   by_holiday: "holiday",
-  by_mealtime: "mealtime",
+  by_mealtime1: "area2",
+  by_mealtime2: "area3",
 };
-
 const MAX_STANDARD = {
   by_time: "auto",
   by_day: "auto",
   by_holiday: "auto",
   by_mealtime: "auto",
 };
-
 const getColor = (bar) => COLORS[bar.indexValue];
 
 const MyResponsiveBar = ({ data, standardBy }) => {

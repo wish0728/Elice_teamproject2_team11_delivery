@@ -5,6 +5,8 @@ import { Container, Option, Select } from "../Components/common";
 import Menu from "../Components/Menu";
 import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
+import MyCombinedBar from "../Components/MyCombinedBar";
+import MyCombinedLine from "../Components/MyCombinedLine";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 
 const OthertownContainer = styled(Container)`
@@ -96,6 +98,9 @@ const Othertown = () => {
   const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
   const [year, setYear] = useState(2019);
 
+  const [graphOption, setGraphOption] = useState(); // 그래프 선택 기준 (바 형태, 꺾은선 형태)
+  const [twoApiRes, setTwoApiRes] = useState([]);
+
   useEffect(() => {
     //우리동네 첫번째 Select가 초기화 될경우
     if (myArea === "") {
@@ -141,10 +146,48 @@ const Othertown = () => {
 
     console.log("todo 확인");
   }, []);
+  useEffect(() => {
+    //todo : 우리 동네와 다른 동네가 서로 안겹치도록 설정
 
+    console.log(graphOption);
+  }, [graphOption]);
+
+  // api 두 개 합치는 함수
   useEffect(() => {
     console.log(myApiRes, otherApiRes);
-  }, [myApiRes, otherApiRes]);
+    if (myApiRes.length !== 0 && otherApiRes.length !== 0) {
+      switch (standardBy) {
+        case "by_time":
+          let x = [];
+          for (let i = 0; i < myApiRes.length; i++) {
+            x.push({
+              time: i,
+              freqavg1: myApiRes[i].freqavg,
+              freqavg2: otherApiRes[i].freqavg,
+            });
+          }
+          console.log("newData");
+          console.log(x);
+          setTwoApiRes(x);
+          break;
+        case "by_day":
+          let y = [];
+          for (let i = 0; i < myApiRes.length; i++) {
+            y.push({
+              day: myApiRes[i].day,
+              freqavg1: myApiRes[i].freqavg,
+              freqavg2: otherApiRes[i].freqavg,
+            });
+          }
+          console.log("newData");
+          console.log(y);
+          setTwoApiRes(y);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [myApiRes, otherApiRes, standardBy]);
 
   //우리동네 첫번째 셀렉트 변화 감지
   const changeMyFirstSelect = (e) => {
@@ -176,6 +219,11 @@ const Othertown = () => {
     console.log(typeof parseInt(e.target.value));
     console.log(parseInt(e.target.value));
     setYear(parseInt(e.target.value));
+  };
+
+  // 그래프 옵션
+  const changeGraphOption = (e) => {
+    setGraphOption(e.target.value);
   };
 
   //비교하기 버튼
@@ -373,8 +421,8 @@ const Othertown = () => {
             <Select onChange={changeStandardBySelect} value={standardBy}>
               <Option value="by_time">시간에 따라</Option>
               <Option value="by_day">요일에 따라</Option>
-              <Option value="by_holiday">공휴일에 따라</Option>
-              <Option value="by_corona">코로나에 따라</Option>
+              <Option value="">공휴일에 따라</Option>
+              {/* <Option value="by_corona">코로나에 따라</Option> */}
             </Select>
             {standardBy === "by_holiday" && (
               <Select onChange={changeYear} value={year}>
@@ -383,11 +431,26 @@ const Othertown = () => {
                 <Option value="2021">2021</Option>
               </Select>
             )}
+            <Select onChange={changeGraphOption} value={graphOption}>
+              <Option value="by_bar">막대그래프</Option>
+              <Option value="by_line">꺾은선</Option>
+            </Select>
             <SubmitBtn onClick={onSubmitClick}>비교하기</SubmitBtn>
           </SubmitBtnContainer>
 
           <ContentsArea>
-            <GrapArea>
+            {graphOption === "by_bar" &&
+              twoApiRes.length !== 0 &&
+              standardBy !== "by_holiday" && (
+                <MyCombinedBar data={twoApiRes} standardBy={standardBy} />
+              )}
+            {graphOption === "by_line" &&
+              twoApiRes.length !== 0 &&
+              standardBy !== "by_holiday" && (
+                <MyCombinedLine data={twoApiRes} standardBy={standardBy} />
+              )}
+
+            {/* <GrapArea>
               {myApiRes.length !== 0 && (
                 <MyResponsiveBar data={myApiRes} standardBy={standardBy} />
               )}
@@ -396,7 +459,7 @@ const Othertown = () => {
               {otherApiRes.length !== 0 && (
                 <MyResponsiveBar data={otherApiRes} standardBy={standardBy} />
               )}
-            </GrapArea>
+            </GrapArea> */}
           </ContentsArea>
         </MainContents>
       </OthertownBody>
