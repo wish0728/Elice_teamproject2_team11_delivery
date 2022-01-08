@@ -92,10 +92,12 @@ const Home = () => {
             <StyledLink to="/mytown">
               <Button>{MENU_BTN_1}</Button>
             </StyledLink>
-            <StyledLink to="othertown">
+            <StyledLink to="/othertown">
               <Button>{MENU_BTN_2}</Button>
             </StyledLink>
-            <Button>{MENU_BTN_3}</Button>
+            <StyledLink to="/statistics">
+              <Button>{MENU_BTN_3}</Button>
+            </StyledLink>
           </ButtonContainer>
         </MenuContainer>
       </HomeContainer>
