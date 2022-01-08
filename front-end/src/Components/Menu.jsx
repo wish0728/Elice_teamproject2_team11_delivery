@@ -21,7 +21,7 @@ const Wrap = styled.div`
 `;
 
 const MenuBtn = styled.div`
-  color: ${(props) => (props.checked ? "#ffffff" : "#a538ff")};
+  color: ${(props) => (props.checked ? props.theme.titleColor : "#a538ff")};
   display: flex;
   flex-direction: row;
   width: 220px;
@@ -30,7 +30,8 @@ const MenuBtn = styled.div`
   align-items: center;
   border-radius: 5px;
   box-sizing: border-box;
-  background-color: ${(props) => (props.checked ? "#a538ff" : "#ffffff")};
+  background-color: ${(props) =>
+    props.checked ? "#a538ff" : props.theme.menuColor};
 `;
 
 const EmptyDiv = styled.div`
@@ -52,6 +53,11 @@ const Menu = () => {
       setMenuLocation([false, true, false]);
       return;
     }
+    if (location.includes("statistics")) {
+      console.log("세번째 메뉴");
+      setMenuLocation([false, false, true]);
+      return;
+    }
     console.log("menu Location:", location, menuLocation);
     setMenuLocation([false, false, false]);
   }, [location]);
@@ -69,7 +75,7 @@ const Menu = () => {
           <MenuBtn checked={menuLocation[1]}>{MENU_BTN_2}</MenuBtn>
         </StyledLink>
 
-        <StyledLink to="/">
+        <StyledLink to="/statistics">
           <MenuBtn checked={menuLocation[2]}>{MENU_BTN_3}</MenuBtn>
         </StyledLink>
       </Wrap>

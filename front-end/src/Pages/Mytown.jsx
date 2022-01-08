@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import deliveryApi from "../apis/delivery";
-import { Container } from "../Components/common";
+import {
+  Container,
+  MenuWrapper,
+  MenuWrapperHeader,
+} from "../Components/common";
 import Loading from "../Components/Loading";
 import Menu from "../Components/Menu";
 import MenuHeader from "../Components/MenuHeader";
 import MyResponsiveBar from "../Components/MyResponsiveBar";
 import { AREAS, DETAIL_AREAS } from "../constants/delivery_data";
 import { loadingState, menuState } from "../state";
-import { CONTENTS_ARTICLE, CONTENTS_BUTTON } from "../constants/Mytown_data";
+import { CONTENTS_BUTTON } from "../constants/Mytown_data";
 import Map from "../Components/Map/Map";
 
 const MytownContainer = styled(Container)`
@@ -17,6 +21,7 @@ const MytownContainer = styled(Container)`
   flex-direction: column;
   background-color: ${(props) => props.theme.bgColor};
   color: ${(props) => props.theme.titleColor};
+  overflow: scroll;
 `;
 
 const MytownBody = styled.div`
@@ -25,6 +30,8 @@ const MytownBody = styled.div`
   flex-grow: 5;
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
+  padding: 20px;
 `;
 
 const MytownMenu = styled(Menu)`
@@ -45,22 +52,33 @@ const MainContents = styled.div`
   align-items: center;
 `;
 
-const ContentsArea = styled.div`
+const SelectWrap = styled(MenuWrapper)`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const ContentsArea = styled(MenuWrapper)`
   display: flex;
   flex-direction: row;
-  width: 1200px;
-  height: 500px;
+  width: 100%;
+  height: 600px;
   padding: 10px;
   box-sizing: border-box;
 `;
 
-const MapContentsArea = styled.div`
-  display: inline-flex;
-  width: 500px;
+const MapContentsArea = styled(MenuWrapper)`
+  width: 600px;
   height: 500px;
-  padding: 10px;
+  margin-right: 20px;
   box-sizing: border-box;
-  align-items: center;
+  padding: 10px;
+`;
+
+const GraphContentsArea = styled(MenuWrapper)`
+  width: 600px;
+  height: 500px;
+  box-sizing: border-box;
+  padding: 10px;
 `;
 
 const SelectContainer = styled.div`
@@ -91,6 +109,7 @@ const SubmitBtnContainer = styled.div`
   align-items: baseline;
   margin-top: 20px;
 `;
+
 const SubmitButton = styled.button`
   border-radius: 3px;
   height: 28px;
@@ -126,7 +145,7 @@ const Mytown = () => {
     }
   }, [area]);
 
-  //바로 실행되지 않는 문제 해결
+  //지도 클릭시 바로 실행되지 않는 문제 해결
   useEffect(() => {
     if (dAreaValue === "전체") {
       apiExecute();
@@ -210,45 +229,53 @@ const Mytown = () => {
       <MytownBody>
         <MytownMenu />
         <MainContents>
-          <SelectContainer>
-            <Select name="areaData" onChange={changeFirstSelect} value={area}>
-              <Option value="">도/시 선택</Option>
-              {AREAS.map((item) => {
-                return (
-                  <Option key={`key_${item}`} value={item}>
-                    {item}
-                  </Option>
-                );
-              })}
-            </Select>
-            <Select onChange={changeSecondSelect} value={dAreaValue}>
-              <Option value="">군/구 선택</Option>
-              {detailArea.length !== 0 &&
-                detailArea.map((item) => {
+          <SelectWrap>
+            <SelectContainer>
+              <Select name="areaData" onChange={changeFirstSelect} value={area}>
+                <Option value="">도/시 선택</Option>
+                {AREAS.map((item) => {
                   return (
                     <Option key={`key_${item}`} value={item}>
                       {item}
                     </Option>
                   );
                 })}
-            </Select>
-            <SelectMessage>지역의 배달 주문량</SelectMessage>
-          </SelectContainer>
-          <SubmitBtnContainer>
-            <Select onChange={changeStandardBySelect} value={standardBy}>
-              <Option value="by_time">시간에 따라</Option>
-              <Option value="by_day">요일에 따라</Option>
-            </Select>
-            <SubmitButton onClick={searchArea}>{CONTENTS_BUTTON}</SubmitButton>
-          </SubmitBtnContainer>
+              </Select>
+              <Select onChange={changeSecondSelect} value={dAreaValue}>
+                <Option value="">군/구 선택</Option>
+                {detailArea.length !== 0 &&
+                  detailArea.map((item) => {
+                    return (
+                      <Option key={`key_${item}`} value={item}>
+                        {item}
+                      </Option>
+                    );
+                  })}
+              </Select>
+              <SelectMessage>지역의 배달 주문량</SelectMessage>
+            </SelectContainer>
+
+            <SubmitBtnContainer>
+              <Select onChange={changeStandardBySelect} value={standardBy}>
+                <Option value="by_time">시간에 따라</Option>
+                <Option value="by_day">요일에 따라</Option>
+              </Select>
+              <SubmitButton onClick={searchArea}>
+                {CONTENTS_BUTTON}
+              </SubmitButton>
+            </SubmitBtnContainer>
+          </SelectWrap>
           <ContentsArea>
             <MapContentsArea>
+              <MenuWrapperHeader>지도로 보기</MenuWrapperHeader>
               <Map area={area} setArea={setArea} />
             </MapContentsArea>
-            {!isLoading && apiRes.length !== 0 && (
-              <MyResponsiveBar data={apiRes} standardBy={standardBy} />
-            )}
-            {isLoading && <Loading />}
+            <GraphContentsArea>
+              {!isLoading && apiRes.length !== 0 && (
+                <MyResponsiveBar data={apiRes} standardBy={standardBy} />
+              )}
+              {isLoading && <Loading />}
+            </GraphContentsArea>
           </ContentsArea>
         </MainContents>
       </MytownBody>
