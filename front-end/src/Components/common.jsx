@@ -34,3 +34,23 @@ export const Option = styled.option`
 `;
 
 export const EmptyDiv = styled.div``;
+
+export const MenuWrapperHeader = styled.div`
+  font-weight: 600;
+  font-size: 18px;
+  width: 100%;
+  border-bottom: 1px solid rgba(188, 188, 188, 0.4);
+  margin-bottom: 10px;
+`;
+
+export const MenuWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid black;
+  padding: 1.125rem;
+  box-sizing: border-box;
+  background-color: ${(props) => props.theme.wrapColor};
+`;
