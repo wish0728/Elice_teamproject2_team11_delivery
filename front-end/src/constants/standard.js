@@ -18,3 +18,12 @@ export const REGIST_ID_SUCCESS = "사용 가능한 아이디 입니다.";
 export const REGIST_ID_VALID_CHECK = "사용 가능한 아이디인지 확인해주세요.";
 export const REGIST_PWD_EMPTY = "비밀번호 확인을 체크해주세요.";
 export const REGIST_PWD_ERROR = "비밀번호와 비밀번호 확인이 동일하지 않습니다.";
+
+//standard
+export const STANDARD_TITLE = {
+  by_time: "시간별",
+  by_day: "요일별",
+  by_holiday: "공휴일",
+  by_mealtime: "점심시간",
+  by_corona: "코로나",
+};

@@ -17,6 +17,7 @@ import { CONTENTS_BUTTON } from "../constants/Mytown_data";
 import Map from "../Components/Map/Map";
 import MyCombinedChart from "../Components/MyCombinedChart";
 import SorryImg from "../img/sorry.png";
+import { STANDARD_TITLE } from "../constants/standard";
 
 const MytownContainer = styled(Container)`
   display: flex;
@@ -43,7 +44,7 @@ const MytownMenu = styled(Menu)`
 `;
 
 const MainContents = styled.div`
-  width: 100%;
+  width: 80%;
   height: 100%;
   padding: 20px;
   box-sizing: border-box;
@@ -80,7 +81,7 @@ const GraphContentsArea = styled(MenuWrapper)`
   width: 600px;
   height: 500px;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 30px 10px 10px 10px;
 `;
 
 const SelectContainer = styled.div`
@@ -158,6 +159,10 @@ const Mytown = () => {
   //지도 클릭시 바로 실행되지 않는 문제 해결
   useEffect(() => {
     if (dAreaValue === "전체") {
+      apiExecute();
+      return;
+    }
+    if (dAreaValue !== "") {
       apiExecute();
       return;
     }
@@ -350,11 +355,30 @@ const Mytown = () => {
               <Map area={area} setArea={setArea} />
             </MapContentsArea>
             <GraphContentsArea>
+              {!isLoading && apiRes.length !== 0 && standardBy !== "by_corona" && (
+                <MenuWrapperHeader>
+                  <span>
+                    {area} {dAreaValue}
+                  </span>
+                  <span>{STANDARD_TITLE[standardBy]}</span>
+                </MenuWrapperHeader>
+              )}
               {!isLoading &&
                 apiRes.length !== 0 &&
                 standardBy !== "by_corona" && (
                   <MyResponsiveBar data={apiRes} standardBy={standardBy} />
                 )}
+              {!isLoading &&
+                covidApiRes.length !== 0 &&
+                standardBy === "by_corona" && (
+                  <MenuWrapperHeader>
+                    <span>
+                      {area} {dAreaValue}
+                    </span>
+                    <span>{STANDARD_TITLE[standardBy]}</span>
+                  </MenuWrapperHeader>
+                )}
+
               {!isLoading &&
                 covidApiRes.length !== 0 &&
                 standardBy === "by_corona" && (
@@ -367,7 +391,6 @@ const Mytown = () => {
                 !isLoading &&
                 standardBy === "by_corona" &&
                 covidApiRes.length === 0 && <SorryImgTag src={SorryImg} />}
-              {isLoading && <Loading />}
             </GraphContentsArea>
           </ContentsArea>
         </MainContents>

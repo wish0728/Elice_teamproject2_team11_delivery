@@ -51,6 +51,9 @@ const Button = styled.button`
   font-weight: 500;
   border-radius: 5px;
   color: #a538ff;
+  &:hover {
+    background-color: rgba(165, 56, 255, 0.5);
+  }
 `;
 
 const UserContainer = styled.div`

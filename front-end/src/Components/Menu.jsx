@@ -31,7 +31,10 @@ const MenuBtn = styled.div`
   border-radius: 5px;
   box-sizing: border-box;
   background-color: ${(props) =>
-    props.checked ? "#a538ff" : props.theme.menuColor};
+    props.checked ? "rgb(165, 56, 255)" : props.theme.menuColor};
+  &:hover {
+    background-color: rgba(165, 56, 255, 0.5);
+  }
 `;
 
 const EmptyDiv = styled.div`

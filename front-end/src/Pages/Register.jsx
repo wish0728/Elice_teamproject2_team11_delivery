@@ -173,13 +173,8 @@ const Register = () => {
   const api_regist = async () => {
     try {
       console.log(id, passwd, name, userArea);
-      await axios
-        .post("http://127.0.0.1:5000/auth/register", {
-          id: id,
-          password: passwd,
-          name: name,
-          area: userArea,
-        })
+      await authApi
+        .new_register({ id: id, password: passwd, name: name, area: userArea })
         .then((response) => {
           if (response.status) {
             resetState();

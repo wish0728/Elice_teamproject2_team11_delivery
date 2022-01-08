@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import Logo from "./Logo";
 import LogoSrc from "../img/chef.png";
-import { useRecoilValue } from "recoil";
-import { loginState } from "../state";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { loginState, themeState } from "../state";
 
 const MytownHeader = styled.div`
   width: 100%;
