@@ -360,10 +360,11 @@ const Mytown = () => {
                 standardBy === "by_corona" && (
                   <MyCombinedChart data={covidApiRes} standardBy={standardBy} />
                 )}
-              {area !== "" &&
+              {!isLoading &&
                 standardBy !== "by_corona" &&
                 apiRes.length === 0 && <SorryImgTag src={SorryImg} />}
               {area !== "" &&
+                !isLoading &&
                 standardBy === "by_corona" &&
                 covidApiRes.length === 0 && <SorryImgTag src={SorryImg} />}
               {isLoading && <Loading />}
