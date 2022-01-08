@@ -48,6 +48,7 @@ def getFreqByDay(area1: str, area2: str):
     return jsonify(items)
 
 def getFreqByMealtime(area1: str, area2: str):
+    if area1 == '세종특별자치시':   return {"message":"Unavailable area1"}, 400
     if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
     if area2 == '전체':
         rows = fm1.query.filter_by(area1=area1).all()
@@ -75,38 +76,5 @@ def getDeltaSum(area1: str):
 
 
 
-
-
-# @Deliveryfreq.route('/getFreqByYear/<int:year>/<string:area1>/<string:area2>')
-# class getFreqByYear(Resource): 
-#     def get(self,year,area1,area2):
-#         '''해당 연도와 시군구와 일치하는 시간대별 배달건수 평균을 가져옵니다.'''
-#         if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
-
-#         start = date(year=year, month=1, day=1)
-#         end = date(year=year, month=12, day=31)
-#         if area2 == '전체':
-#             rows = d.query.filter(d.date >= start, d.date <= end).filter_by(
-#                 area1_City_Do=area1).all()
-#         else:
-#             rows = d.query.filter(d.date >= start, d.date <= end).filter_by(
-#                 area1_City_Do=area1, area2_Si_Gun_Gu=area2).all()
-#         data = {}
-#         a = {}
-#         for row in rows:
-#             time = int(row.time)
-#             freq = int(row.delivery_freq)
-#             try:
-#                 data[time] += freq
-#                 a[time] += 1
-#             except KeyError:
-#                 data[time] = freq
-#                 a[time] = 1
-#         for key in data.keys():
-#             data[key] = round(data[key]/a[key])
-#         return jsonify(json_list=data)
-
-# # 시군구 입력 -> 시간대별 총합
-# # 시군구 전체 데이터를 보고 싶으면 area2에 '전체'를 보내주기
 
 
