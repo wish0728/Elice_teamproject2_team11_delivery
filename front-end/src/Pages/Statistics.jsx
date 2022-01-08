@@ -149,7 +149,7 @@ const Statistics = () => {
         case "by_time":
           console.log("시간에 따라");
           await deliveryApi
-            .get_Holiday_Average(area, dAreaValue)
+            .get_MealTime_Average(area, dAreaValue)
             .then((response) => {
               setApiRes(response.data);
               response.data.map((i, idx) => (tmpObj[i.year] = { ...i }));

@@ -10,7 +10,7 @@ export const MENU_BTN_3 = "숫자로 보는 배달";
 
 //api 주소
 export const API_END_POINT =
-  "http://elice-kdt-3rd-team-11.koreacentral.cloudapp.azure.com:5000/";
+  "http://elice-kdt-3rd-team-11.koreacentral.cloudapp.azure.com:5000";
 
 //message
 export const REGIST_ID_ERROR = "다른 아이디를 사용해보세요. 😢 ";
