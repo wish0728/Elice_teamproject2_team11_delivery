@@ -1,5 +1,4 @@
 import { React, useState, useEffect, PureComponent } from "react";
-import { ResponsiveLine } from "@nivo/line";
 import {
   ComposedChart,
   Line,
@@ -12,7 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const MyCombinedChart = ({ data, standardBy }) => {
+const MyCombinedChart = ({ data }) => {
   console.log(data);
   return (
     <ResponsiveContainer width="100%" height="100%">
