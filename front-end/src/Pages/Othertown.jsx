@@ -59,6 +59,13 @@ const SelectMessage = styled.div`
   width: 100px;
 `;
 
+const SubmitBtnContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-top: 20px;
+`;
+
 const ContentsArea = styled.div`
   display: flex;
   flex-direction: row;
@@ -86,7 +93,8 @@ const Othertown = () => {
   const [otherDAreaValue, setOtherDAreaValue] = useState(""); // 다른동네 두번째 Select의 값
   const [otherApiRes, setOtherApiRes] = useState([]); //otherTown api 통신 값
 
-  const standardBy = "by_time"; //데이터 받아오는 기준 (default : 시간)
+  const [standardBy, setStandardBy] = useState("by_time"); //데이터 받아오는 기준 (default : 시간)
+  const [year, setYear] = useState(2019);
 
   useEffect(() => {
     //우리동네 첫번째 Select가 초기화 될경우
@@ -101,13 +109,14 @@ const Othertown = () => {
       console.log(myArea);
       DETAIL_AREAS.find((element) => {
         if (element.id == myArea) {
-          setMyDetailArea(element.value); //두번째 Select를 위한 값 설정
+          let tmpArr = element.value.filter((item) => item != otherDAreaValue);
+          setMyDetailArea(tmpArr);
         }
       });
       console.log(myDetailArea);
       return;
     }
-  }, [myArea]);
+  }, [myArea, myDAreaValue]);
 
   useEffect(() => {
     //다른 동네
@@ -119,12 +128,13 @@ const Othertown = () => {
     if (otherArea !== "") {
       DETAIL_AREAS.find((element) => {
         if (element.id == otherArea) {
-          setOtherDetailArea(element.value); //두번째 Select를 위한 값 설정
+          let tmpOArr = element.value.filter((item) => item != myDAreaValue);
+          setOtherDetailArea(tmpOArr); //두번째 Select를 위한 값 설정
         }
       });
       return;
     }
-  }, [otherArea]);
+  }, [otherArea, otherDAreaValue]);
 
   useEffect(() => {
     //todo : 우리 동네와 다른 동네가 서로 안겹치도록 설정
@@ -156,6 +166,18 @@ const Othertown = () => {
     setOtherDAreaValue(e.target.value);
   };
 
+  //기준 Select 변화 감지
+  const changeStandardBySelect = (e) => {
+    setStandardBy(e.target.value);
+  };
+
+  //연도 설정
+  const changeYear = (e) => {
+    console.log(typeof parseInt(e.target.value));
+    console.log(parseInt(e.target.value));
+    setYear(parseInt(e.target.value));
+  };
+
   //비교하기 버튼
   const onSubmitClick = () => {
     //첫번째 셀렉트가 입력이 안된경우
@@ -183,7 +205,6 @@ const Othertown = () => {
   const myApiExecute = async () => {
     try {
       //로딩 처리 (추후 시간을 재서 일정 시간보다 로딩이 빨리 끝날 경우 default 로딩 시간 지정 ) 굳이 필요는 없음
-      //setIsLoading(true);
       switch (standardBy) {
         case "by_time":
           console.log("시간에 따라");
@@ -191,26 +212,37 @@ const Othertown = () => {
             .get_Time_Average(myArea, myDAreaValue)
             .then((response) => {
               setMyApiRes(response.data);
+              console.log(response.data);
               response.data.map((i, idx) =>
                 console.log(i["time"], i["freqavg"])
               );
             });
           break;
-        //=======추후 삭제 예정=======
         case "by_day":
           console.log("요일에 따라");
-          if (myTownValue === "전체") {
-            alert("세부지역을 다시 설정해주세요.");
-            break;
-          }
           await deliveryApi
             .get_Day_Average(myArea, myDAreaValue)
             .then((response) => {
               setMyApiRes(response.data);
               console.log(response.data);
+              response.data.map((i, idx) =>
+                console.log(i["day"], i["freqavg"])
+              );
+            });
+          break;
+        case "by_holiday":
+          console.log("공휴일에 따라");
+          await deliveryApi
+            .get_Holiday_Average(myArea, myDAreaValue)
+            .then((response) => {
+              let res = response.data.filter((it) => it.year == year);
+              console.log(res);
+              setMyApiRes(res);
+              res.map((i, idx) => console.log(i["year"], typeof i["year"]));
             });
           break;
       }
+
       // await deliveryApi.get_Time_Average(area, dAreaValue).then((response) => {
       //   setApiRes(response.data);
       //   response.data.map((i, idx) => console.log(i["time"], i["freqavg"]));
@@ -219,7 +251,6 @@ const Othertown = () => {
       console.log(e);
     }
     //로딩 완료
-    //setIsLoading(false);
   };
 
   const otherApiExecute = async () => {
@@ -233,6 +264,7 @@ const Othertown = () => {
             .get_Time_Average(otherArea, otherDAreaValue)
             .then((response) => {
               setOtherApiRes(response.data);
+              console.log(response.data);
               response.data.map((i, idx) =>
                 console.log(i["time"], i["freqavg"])
               );
@@ -240,15 +272,25 @@ const Othertown = () => {
           break;
         case "by_day":
           console.log("요일에 따라");
-          if (otherTownValue === "전체") {
-            alert("세부지역을 다시 설정해주세요.");
-            break;
-          }
           await deliveryApi
             .get_Day_Average(otherArea, otherDAreaValue)
             .then((response) => {
               setOtherApiRes(response.data);
               console.log(response.data);
+              response.data.map((i, idx) =>
+                console.log(i["day"], i["freqavg"])
+              );
+            });
+          break;
+        case "by_holiday":
+          console.log("공휴일에 따라");
+          await deliveryApi
+            .get_Holiday_Average(otherArea, otherDAreaValue)
+            .then((response) => {
+              let res = response.data.filter((it) => it.year == year);
+              console.log(res);
+              setOtherApiRes(res);
+              res.map((i, idx) => console.log(i["year"], typeof i["year"]));
             });
           break;
       }
@@ -327,7 +369,23 @@ const Othertown = () => {
             </Select>
             <SelectMessage>배달 주문량</SelectMessage>
           </SelectContainer>
-          <SubmitBtn onClick={onSubmitClick}>비교하기</SubmitBtn>
+          <SubmitBtnContainer>
+            <Select onChange={changeStandardBySelect} value={standardBy}>
+              <Option value="by_time">시간에 따라</Option>
+              <Option value="by_day">요일에 따라</Option>
+              <Option value="by_holiday">공휴일에 따라</Option>
+              <Option value="by_corona">코로나에 따라</Option>
+            </Select>
+            {standardBy === "by_holiday" && (
+              <Select onChange={changeYear} value={year}>
+                <Option value="2019">2019</Option>
+                <Option value="2020">2020</Option>
+                <Option value="2021">2021</Option>
+              </Select>
+            )}
+            <SubmitBtn onClick={onSubmitClick}>비교하기</SubmitBtn>
+          </SubmitBtnContainer>
+
           <ContentsArea>
             <GrapArea>
               {myApiRes.length !== 0 && (
