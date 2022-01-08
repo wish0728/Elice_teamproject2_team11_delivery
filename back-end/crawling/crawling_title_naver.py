@@ -11,7 +11,7 @@ from datetime import datetime as dt
 now = dt.now()
 print(f'현재시간 : {now}')
 # creationDate = now.strftime("%Y/%m/%d %H:00")
-creationDate = now.strftime("%Y/%m/%d %H:%M")
+creationDate = now.strftime("%Y.%m.%d %H:%M")
 print(creationDate)
 conn = sqlite3.connect("../NaplessRabbit.db")
 cursor = conn.cursor()
