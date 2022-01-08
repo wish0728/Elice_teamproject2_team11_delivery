@@ -15,6 +15,13 @@ const standard = {
   by_day: "day",
   by_holiday: "holiday",
 };
+
+const maxStandard = {
+  by_time: 30,
+  by_day: "auto",
+  by_holiday: "holiday",
+};
+
 const getColor = (bar) => colors[bar.indexValue];
 const MyResponsiveBar = ({ data, standardBy }) => {
   return (
@@ -23,6 +30,7 @@ const MyResponsiveBar = ({ data, standardBy }) => {
       data={data}
       keys={["freqavg"]}
       indexBy={standard[standardBy]}
+      maxValue={maxStandard[standardBy]}
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.4}
       valueScale={{ type: "linear" }}
