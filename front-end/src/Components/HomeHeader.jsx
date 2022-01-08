@@ -47,13 +47,15 @@ const UserContainer = styled.div`
 `;
 
 const UserIcon = styled.div`
-  background-color: black;
+  background-color: ${(props) => props.theme.titleColor};
   border-radius: 25px;
   width: 50px;
   height: 50px;
 `;
 
-const Username = styled.div``;
+const Username = styled.div`
+  color: ${(props) => props.theme.titleColor};
+`;
 
 const HeaderBtn = styled.button`
   width: 130px;
