@@ -59,6 +59,9 @@ const HeaderBtn = styled.button`
   width: 130px;
   height: 40px;
   font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: ${(props) => props.theme.hBtnColor};
 `;
 
 const HomeHeader = () => {
@@ -102,7 +105,7 @@ const HomeHeader = () => {
       <HeaderEmptyDiv />
       <DarkModeContainer>
         <HeaderBtn onClick={onChangeToggle}>
-          {isDarkMode ? "다크 모드로 보기" : "라이트 모드로 보기"}
+          {isDarkMode ? "라이트 모드로 보기" : "다크 모드로 보기"}
         </HeaderBtn>
       </DarkModeContainer>
       <LoginContainer>
