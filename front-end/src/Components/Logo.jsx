@@ -38,8 +38,6 @@ const Logo = ({ logoWidth, logoHeight, logoFontSize }) => {
     >
       <LogoContainer>
         <LogoText fontsize={logoFontSize}>배달의</LogoText>
-      </LogoContainer>
-      <LogoContainer width={logoWidth}>
         <LogoText fontsize={logoFontSize}>만족</LogoText>
       </LogoContainer>
     </BannerContainer>

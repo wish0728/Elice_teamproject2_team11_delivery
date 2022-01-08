@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { MENU_BTN_1, MENU_BTN_2, MENU_BTN_3 } from "../constants/standard";
 import { menuState } from "../state";
 import { StyledLink } from "./common";
+import ToggleSwitch from "./ToggleSwitch";
 
 const MenuContainer = styled.div`
   display: flex;
@@ -15,19 +16,22 @@ const MenuContainer = styled.div`
 `;
 
 const Wrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 90px;
+  border-radius: 5px;
+  margin-bottom: 20px;
 `;
 
-const MenuBtn = styled.button`
-  color: ${(props) => (props.checked ? "#ffffff" : "#a538ff")};
-  width: 200px;
+const MenuBtn = styled.div`
+  color: ${(props) => (props.checked ? props.theme.titleColor : "#a538ff")};
+  display: flex;
+  flex-direction: row;
+  width: 220px;
   height: 30px;
+  padding: 25px;
+  align-items: center;
   border-radius: 5px;
-  background-color: ${(props) => (props.checked ? "#a538ff" : "#ffffff")};
+  box-sizing: border-box;
+  background-color: ${(props) =>
+    props.checked ? "#a538ff" : props.theme.menuColor};
 `;
 
 const EmptyDiv = styled.div`
@@ -49,29 +53,40 @@ const Menu = () => {
       setMenuLocation([false, true, false]);
       return;
     }
+    if (location.includes("statistics")) {
+      console.log("세번째 메뉴");
+      setMenuLocation([false, false, true]);
+      return;
+    }
     console.log("menu Location:", location, menuLocation);
     setMenuLocation([false, false, false]);
   }, [location]);
 
   return (
     <MenuContainer>
-      <EmptyDiv />
       <Wrap>
         <StyledLink to="/mytown">
-          <MenuBtn checked={menuLocation[0]}>{MENU_BTN_1}</MenuBtn>
+          <MenuBtn checked={menuLocation[0]}>
+            <span>{MENU_BTN_1}</span>
+          </MenuBtn>
         </StyledLink>
-      </Wrap>
-      <Wrap>
+
         <StyledLink to="/othertown">
           <MenuBtn checked={menuLocation[1]}>{MENU_BTN_2}</MenuBtn>
         </StyledLink>
-      </Wrap>
-      <Wrap>
-        <StyledLink to="/">
+
+        <StyledLink to="/statistics">
           <MenuBtn checked={menuLocation[2]}>{MENU_BTN_3}</MenuBtn>
         </StyledLink>
       </Wrap>
-      <EmptyDiv />
+
+      <Wrap>
+        <MenuBtn>
+          <span>🌙 다크모드</span>
+          <ToggleSwitch />
+        </MenuBtn>
+        <MenuBtn>유저 정보</MenuBtn>
+      </Wrap>
     </MenuContainer>
   );
 };
