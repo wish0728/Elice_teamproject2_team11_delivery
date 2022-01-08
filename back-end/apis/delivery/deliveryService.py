@@ -6,6 +6,7 @@ from models.delivery  import freqavg_by_day1 as fd1, freqavg_by_day2 as fd2
 from models.delivery  import freqavg_by_mealtime1 as fm1, freqavg_by_mealtime2 as fm2
 from models.delivery  import freqavg_by_holiday1 as fh1, freqavg_by_holiday2 as fh2
 from models.delivery  import delta_sum_by_area1 as ds1
+from models.delivery  import freqavg_by_weather1 as fw1, freqavg_by_weather2 as fw2
 
 def exceptionForArea1(area1: str):
     area1_list = [row.area1 for row in a1.query.all()]
@@ -71,6 +72,18 @@ def getDeltaSum(area1: str):
     rows = ds1.query.filter_by(area1=area1).all()
     items = [row.as_dict() for row in rows]
     return jsonify(items)
+
+def getFreqByWeather(area1: str, area2: str):
+    if exceptionForArea(area1,area2): return exceptionForArea(area1,area2)
+    if area2 == '전체':
+        rows = fw1.query.filter_by(area1=area1).all()
+    else:   
+        rows = fw2.query.filter_by(area1=area1, area2=area2).all()
+    items = [row.as_dict() for row in rows]
+    return jsonify(items)
+
+
+
 
 
 
