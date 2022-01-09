@@ -38,7 +38,8 @@ const MenuBtn = styled.div`
 `;
 
 const EmptyDiv = styled.div`
-  flex-grow: 2;
+  width: 30px;
+  margin-left: 20px;
 `;
 
 const Menu = () => {
@@ -86,6 +87,7 @@ const Menu = () => {
       <Wrap>
         <MenuBtn>
           <span>🌙 다크모드</span>
+          <EmptyDiv />
           <ToggleSwitch />
         </MenuBtn>
         <MenuBtn>유저 정보</MenuBtn>

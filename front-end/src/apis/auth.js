@@ -36,12 +36,15 @@ const post_api = async (url, data) => {
 };
 
 const authApi = {
+  //로그인 요청
   send_login: async (data) => {
     return await post_api(`${AUTH_END_POINT}/login`, data);
   },
+  //id 유효성 검사
   valid_id: async (id) => {
     return await get_api(`${AUTH_END_POINT}/register/${id}`);
   },
+  //회원가입
   new_register: async (data) => {
     return await post_api(`${AUTH_END_POINT}/register`, data);
   },
