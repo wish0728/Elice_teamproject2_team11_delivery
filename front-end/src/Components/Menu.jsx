@@ -90,7 +90,9 @@ const Menu = () => {
           <EmptyDiv />
           <ToggleSwitch />
         </MenuBtn>
-        <MenuBtn>유저 정보</MenuBtn>
+        <StyledLink to="/usersetting">
+          <MenuBtn>유저 정보</MenuBtn>
+        </StyledLink>
       </Wrap>
     </MenuContainer>
   );

@@ -466,17 +466,6 @@ const Othertown = () => {
               standardBy !== "by_holiday" && (
                 <MyCombinedLine data={twoApiRes} standardBy={standardBy} />
               )}
-
-            {/* <GrapArea>
-              {myApiRes.length !== 0 && (
-                <MyResponsiveBar data={myApiRes} standardBy={standardBy} />
-              )}
-            </GrapArea>
-            <GrapArea>
-              {otherApiRes.length !== 0 && (
-                <MyResponsiveBar data={otherApiRes} standardBy={standardBy} />
-              )}
-            </GrapArea> */}
           </ContentsArea>
         </MainContents>
       </OthertownBody>
