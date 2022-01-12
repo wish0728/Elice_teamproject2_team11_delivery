@@ -1,1 +1,5 @@
+back-end filter=lfs diff=lfs merge=lfs -text
+raw-data filter=lfs diff=lfs merge=lfs -text
+rawdata filter=lfs diff=lfs merge=lfs -text
+cleaned-data filter=lfs diff=lfs merge=lfs -text
 *.{zip,jar} filter=lfs diff=lfs merge=lfs -text
