@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 #mealtime1테이블만 수정하고 싶다면 mealtime2와 관련된 테이블은 주석처리 한 뒤 실행한다. 예시는 freqavg_by_mealtime_to_sql.py참고
->>>>>>> feature_data
 import sqlite3
 import pandas as pd
 
@@ -17,10 +14,6 @@ cursor.execute('''CREATE TABLE freqavg_by_mealtime1 (
                id INTEGER PRIMARY KEY AUTOINCREMENT, 
                area1 VARCHAR(45) NOT NULL, 
                area2 VARCHAR(45) NOT NULL,
-<<<<<<< HEAD
-               area3 VARCHAR(45) NOT NULL, 
-=======
->>>>>>> feature_data
                mealtime VARCHAR(10) NOT NULL, 
                freqavg INT NOT NULL) ''')
 
@@ -52,22 +45,13 @@ for area1 in level1_list:
   for time in peakTime_list:
     #원하는 시간대만 추출한 뒤 평균 배달건수가 가장 많은 3지역만 얻는다. (3개보다 적을 수 있다.)
     peak_df = region_df[(region_df['시간대']>= time[0]) & (region_df['시간대']<=time[1])]
-<<<<<<< HEAD
-    peak_df = peak_df.groupby(['광역시도','시군구', '읍면동'])['배달건수'].mean().sort_values(ascending=False).reset_index().head(3)
-=======
     peak_df = peak_df.groupby(['광역시도','시군구'])['배달건수'].mean().sort_values(ascending=False).reset_index().head(3)
->>>>>>> feature_data
     peak_df['배달건수'] = peak_df['배달건수'].round()
     peak_df = peak_df.astype({'배달건수':'int'})
     #insert
     for row in peak_df.itertuples():
-<<<<<<< HEAD
-           cursor.execute('''INSERT INTO freqavg_by_mealtime1 (area1, area2, area3, mealtime, freqavg) VALUES(?, ?, ?, ?, ?)''', 
-      [row.광역시도, row.시군구, row.읍면동, time[2], row.배달건수])
-=======
            cursor.execute('''INSERT INTO freqavg_by_mealtime1 (area1, area2, mealtime, freqavg) VALUES(?, ?, ?, ?)''', 
       [row.광역시도, row.시군구, time[2], row.배달건수])
->>>>>>> feature_data
 
 '''시군구 단위'''
 for area1, area2 in region_list:
